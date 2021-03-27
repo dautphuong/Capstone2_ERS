@@ -11,6 +11,8 @@ router.post('/savedata/',function(req,res){
         res.send(data);
     });
 });
+
+
 //get data firebase 
 router.get('/userdata/',function(req,res){
     ogetData._getData(function(data){
