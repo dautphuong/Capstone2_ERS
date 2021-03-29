@@ -6,167 +6,216 @@
  * @flow strict-local
  */
 
-import React, { Component } from 'react';
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import {
-    SafeAreaView,
-    StyleSheet,
-    ScrollView,
-    View,
-    Text,
-    TextInput,
-    Keyboard,
-    TouchableOpacity,
-    TouchableWithoutFeedback,
-} from 'react-native';
-
-import {
-    Header,
-    LearnMoreLinks,
-    Colors,
-    DebugInstructions,
-    ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-export default class Login extends Component {
-    render() {
-        const Divider = (props) => {
-            return <View {...props}>
-                <View style={styles.line}></View>
-                <Text style={styles.textOR}>OR</Text>
-                <View style={styles.line}></View>
-            </View>
-        }
-        return (
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
-                <View style={styles.container}>
-                <View style={styles.up}>
-                    <Ionicons 
-                    name="school-outline"
-                    size={100}
-                    color={"rgba(255, 35, 88, 1)"}>
-                    </Ionicons>
-                    < Text style={styles.title}>
-                        English Review System
-                    </Text>
-                    <Text Text style={styles.description}>
-                        Login
-                    </Text>
-                </View>
-                <View style={styles.down}>
-                    <View style={styles.TextInputContainer}>
-                        <TextInput style={styles.input}
-                        textContentType='username'
-                        keyboardType='email-address'
-                        placeholder='Enter your UserName'
-                        >
-                        </TextInput>
-                    </View>
-                    <View style={styles.TextInputContainer}>
-                        <TextInput style={styles.input}
-                        placeholder='Enter your password'
-                        secureTextEntry= {true}
-                        >
-                        </TextInput>
-                    </View>
-                    <TouchableOpacity style={styles.loginButton}>
-                        <Text style={styles.loginButtonTitle}>
-                            Login
-                        </Text>
-                    </TouchableOpacity>
-                    <Divider style={styles.divider}></Divider>
-                    <FontAwesome.Button 
-                    style={styles.googleButton}
-                    name="google"
-                    backgroundColor="red"
-                    >
-                        <Text style={styles.loginButtonTitle}>
-                            Login With Google
-                        </Text>
-                    </FontAwesome.Button>
-                </View>
-            </View>
-            </TouchableWithoutFeedback>
-        )
-    }
-};
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        flexDirection: "column",
-        justifyContent: 'center',
-        alignItems: 'stretch',
-        backgroundColor: "rgba(255, 181, 88, 1)"
-    },
-    up: {
-        flex: 3,
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        // backgroundColor: "red"
-    },
-    down: {
-        flex: 6.5,
-        flexDirection: "column",
-        justifyContent: "flex-start",
-        alignItems: "center",
-    },
-    title:{
-        textAlign: "center",
-        width: 400,
-        fontSize: 35,
-        color: "white",
-    },
-    description:{
-        textAlign: "center",
-        width: 200,
-        color: "white",
-        fontSize: 30
-    },
-    TextInputContainer:{
-        paddingHorizontal: 10,
-        borderRadius:6,
-        marginBottom: 20,
-        backgroundColor: "rgba(249, 124, 28, 0.4)",
-    },
-    input:{
-        width: 280,
-        height: 45,
-    },
-    loginButton: {
-        width: 300,
-        height: 45,
-        borderRadius: 6,
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "rgba(249, 124, 28, 1)",
-    },
-    loginButtonTitle:{
-        fontSize: 20,
-        color: "white",
-    },
-    googleButton:{
-        width: 300,
-        height: 45,
-        borderRadius: 6,
-        justifyContent: "center",
-    },
-    line: {
-        height:1,
-        flex: 2,
-        backgroundColor: "black",
-    },
-    textOR:{
-        flex:1,
-        textAlign: "center",
-    },
-    divider:{
-        flexDirection: "row",
-        width : 300,
-        height :40,
-        justifyContent: "center",
-        alignItems: "center",
-    }
-})
+ import React, { Component } from 'react';
+ import Ionicons from 'react-native-vector-icons/Ionicons'
+ import FontAwesome from 'react-native-vector-icons/FontAwesome'
+ import {
+     StyleSheet,
+     View,
+     Text,
+     ImageBackground,
+     Image,
+     TextInput,
+     Keyboard,
+     TouchableOpacity,
+     TouchableWithoutFeedback,
+     Dimensions,
+ } from 'react-native';
+ import bgImage from '../image/logins.jpg';
+ import logo from '../image/English_REVIEW.png';
+ 
+ const {width: WIDTH} = Dimensions.get('window')
+ 
+ export default class Login extends Component {
+     constructor() {
+         super()
+         this.state = {
+             showPass: true,
+             press: false
+         }
+     }
+     showPass = () =>{
+         if(this.state.press == false){
+             this.setState({showPass: false, press: true})
+         }else{
+             this.setState({showPass:true, press: false})
+         }
+     }
+     render() {
+         const Divider = (props) => {
+             return <View {...props}>
+                 <View style={styles.line}></View>
+                 <Text style={styles.textOR}>OR</Text>
+                 <View style={styles.line}></View>
+             </View>
+         }
+         return (
+             <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
+             <ImageBackground source={bgImage} style={styles.imageBackgroundContainer}>
+                 <View style={styles.containerLogo}>
+                     <Image source = {logo} style={styles.logo}></Image>
+                     <Text style={styles.textLogin}>Sign In</Text>
+                 </View>
+ 
+                 <View style={styles.inputContainer}>
+                     <Ionicons name={'person-outline'} 
+                     size = {28} 
+                     color={'rgba(255,255,255,0.7)'} 
+                     style={styles.inputIcon}/>
+                     <TextInput 
+                         style={styles.input}
+                         placeholder={'UserName'}
+                         placeholderTextColor={'rgba(68, 248, 161, 0.7)'}
+                         underlineColorAndroid='transparent'
+                         />
+                 </View>
+ 
+                 <View style={styles.inputContainer}>
+                     <Ionicons name={'lock-closed-outline'} 
+                     size = {28} 
+                     color={'rgba(255,255,255,0.7)'} 
+                     style={styles.passIcon}/>
+                     <TextInput 
+                         style={styles.input}
+                         placeholder={'Password'}
+                         secureTextEntry={this.state.showPass}
+                         placeholderTextColor={'rgba(68, 248, 161, 0.7)'}
+                         underlineColorAndroid='transparent'
+                     />
+                     <TouchableOpacity style={styles.btnEye}
+                     onPress={this.showPass.bind(this)}>
+                         <Ionicons name={ this.state.press == false ? 'eye-outline' :'eye-off-outline'} 
+                         size= {26} 
+                         color={'rgba(255,255,255,0.7)'} >
+                         </Ionicons>
+                     </TouchableOpacity>
+                 </View>
+                 <TouchableOpacity style={styles.btnLogin}>
+                     <Text style={styles.Text}>Login</Text>
+                 </TouchableOpacity>
+ 
+                 <TouchableOpacity style={styles.btnRegister}>
+                     <Text style={styles.Text}>Create Account</Text>
+                 </TouchableOpacity>
+                 <Divider style={styles.divider}></Divider>
+                 <TouchableOpacity style={styles.btnGoogle}>
+                 <Ionicons name={'logo-google'} 
+                     size = {28} 
+                     color={'rgba(238,0,0,0.7)'} 
+                     style={styles.inputIconGoogle}/>
+                     <Text style={styles.textGoogle}>Login With Google</Text>
+                 </TouchableOpacity>
+             </ImageBackground>
+         </TouchableWithoutFeedback>
+         );
+     }
+ };
+ 
+ const styles = StyleSheet.create({
+     imageBackgroundContainer:{
+         flex: 1,
+         width: null,
+         height: null,
+         justifyContent: 'center',
+         alignItems: 'center',
+     },
+     containerLogo:{
+         bottom: 120,
+         alignItems: 'center',
+     },
+     logo: {
+         width: 250,
+         height:250,
+     },
+     textLogin:{
+         color: 'green',
+         fontSize:25,
+         fontWeight: '200',
+         opacity:0.6
+     },
+     input:{
+         width: WIDTH -55,
+         height: 55,
+         bottom: 120,
+         borderRadius:25,
+         fontSize:16,
+         paddingLeft:45,
+         backgroundColor:'rgba(0,0,0,0.35)',
+         color:'rgba(255,255,255,0.7)',
+         marginHorizontal: 25,
+     },
+     inputIcon:{
+         position:'absolute',
+         bottom: 133,
+         left:37
+     },
+     passIcon:{
+         position:'absolute',
+         bottom: 135,
+         left:37
+     },
+     inputContainer:{
+         marginTop:15,
+     },
+     btnEye:{
+         position:'absolute',
+         bottom: 133,
+         right:37
+     },
+     btnLogin:{
+         width: WIDTH -55,
+         height: 45,
+         borderRadius:25,
+         backgroundColor:'#3399CC',
+         justifyContent:'center',
+         bottom: 90
+     },
+     Text:{
+         textAlign: 'center',
+         fontSize: 20,
+         color: '#F8F8FF'
+     },
+     btnRegister:{
+         width: WIDTH -55,
+         height: 45,
+         borderRadius:25,
+         backgroundColor:'#3399CC',
+         justifyContent:'center',
+         bottom: 75
+     },
+     line: {
+         height:1,
+         flex: 2,
+         backgroundColor: "black",
+     },
+     textOR:{
+         flex:1,
+         textAlign: "center",
+     },
+     divider:{
+         flexDirection: "row",
+         width : 300,
+         height :40,
+         justifyContent: "center",
+         alignItems: "center",
+         bottom: 75
+     },
+     btnGoogle:{
+         width: WIDTH -55,
+         height: 45,
+         borderRadius:25,
+         backgroundColor:'#3399CC',
+         justifyContent:'center',
+         bottom: 75
+     },
+     inputIconGoogle:{
+         position:'absolute',
+         left:20 
+     },
+     textGoogle:{
+         textAlign: 'center',
+         fontSize: 20,
+         color: '#F8F8FF'
+     }
+ })
+         
