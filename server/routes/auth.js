@@ -6,8 +6,11 @@ const firebase=require('../firebase/firebase_connect');
 router.post('/register/',function(req,res){   
     let user = new User(req.body.username,req.body.email);
 
-    firebase.database().ref("users/"+req.username).once("value").then(function(snapshot){
+    firebase.database().ref("users/"+user.username).once("value").then(function(snapshot){
         if (snapshot.exists()) {
+            res.send("Account already exists");
+          }
+          else {
             try{
                 firebase.database().ref("users/"+user.username).set({
                     email: user.email, 
@@ -16,9 +19,6 @@ router.post('/register/',function(req,res){
             }catch(err){
                 res.status(400).res(err);
             }
-          }
-          else {
-            res.send("Account already exists");
           }
         });
 }); 
