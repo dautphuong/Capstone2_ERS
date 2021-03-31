@@ -10,6 +10,7 @@ const swaggerJsDoc = require("swagger-jsdoc");
 app.use(bodyParser.json());//this will accept json request
 app.use(bodyParser.urlencoded({extended:true}));
 
+//Middlewares
 app.use(cors());
 
 const options = {
@@ -21,14 +22,13 @@ const options = {
       },
       servers: [
         {
-            url: "http://localhost:3001",
+            url: "http://localhost:4000",
         },
         ],
     },
     apis: ['./routes/*.js'], // files containing annotations as above
   };
 const specs = swaggerJsDoc(options);
-
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 
 
