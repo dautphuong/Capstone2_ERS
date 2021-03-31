@@ -2,6 +2,10 @@ const router=require('express').Router();
 const jwt=require('jsonwebtoken');
 const User=require('../models/user');
 const firebase=require('../util/firebase_connect');
+const { validationResult } = require('express-validator');
+const { validate } = require('../util/validator');
+
+// const validate=require('../util/validator');
 
 /**
  * @swagger
@@ -20,14 +24,14 @@ const firebase=require('../util/firebase_connect');
  *           type: string
  *           description: the email
  *       example:
- *         username: phuong
- *         email: dautuanphuong@gmail.com
+ *         username: test
+ *         email: test@gmail.com
  */
 
  /**
   * @swagger
   * tags:
-  *   name: User
+  *   name: Auth
   *   description: The auth managing API
   */
 
@@ -35,8 +39,8 @@ const firebase=require('../util/firebase_connect');
  * @swagger
  * /user/register:
  *   post:
- *     summary: Create a new account
- *     tags: [User]
+ *     summary: Đắng ký một account mới
+ *     tags: [Auth]
  *     requestBody:
  *       required: true
  *       content:
@@ -53,24 +57,27 @@ const firebase=require('../util/firebase_connect');
  *       500:
  *         description: Some server error
  */
-router.post('/register',function(req,res){   
-    let user = new User(req.body.username,req.body.email);
-
-    firebase.database().ref("users/"+user.username).once("value").then(function(snapshot){
+router.post('/register',
+validate.validateRegisterUser(),
+(req, res) => {   
+    //req validation
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    firebase.database().ref("users/"+req.body.username).once("value").then(function(snapshot){
         if (snapshot.exists()) {
             res.send("Account already exists");
           }
           else {
             try{
-                firebase.database().ref("users/"+user.username).set({
-                    email: user.email, 
-                });
-                res.status(201).send(user)
+                user.Create(req.body);
+                res.send(req.body);
             }catch(err){
-                res.status(400).res(err);
+                res.status(400).send(err);
             }
           }
-        });
+    });
 }); 
 
 
