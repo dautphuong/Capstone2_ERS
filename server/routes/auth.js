@@ -1,9 +1,59 @@
 const router=require('express').Router();
 const jwt=require('jsonwebtoken');
 const User=require('../models/user');
-const firebase=require('../firebase/firebase_connect');
+const firebase=require('../util/firebase_connect');
 
-router.post('/register/',function(req,res){   
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Auth:
+ *       type: object
+ *       required:
+ *         - username
+ *         - password
+ *       properties:
+ *         username:
+ *           type: string
+ *           description: the username
+ *         email:
+ *           type: string
+ *           description: the email
+ *       example:
+ *         username: phuong
+ *         email: dautuanphuong@gmail.com
+ */
+
+ /**
+  * @swagger
+  * tags:
+  *   name: User
+  *   description: The auth managing API
+  */
+
+/**
+ * @swagger
+ * /user/register:
+ *   post:
+ *     summary: Create a new account
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Auth'
+ *     responses:
+ *       200:
+ *         description: The account was successfully created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Auth'
+ *       500:
+ *         description: Some server error
+ */
+router.post('/register',function(req,res){   
     let user = new User(req.body.username,req.body.email);
 
     firebase.database().ref("users/"+user.username).once("value").then(function(snapshot){
@@ -15,7 +65,7 @@ router.post('/register/',function(req,res){
                 firebase.database().ref("users/"+user.username).set({
                     email: user.email, 
                 });
-                res.send(user)
+                res.status(201).send(user)
             }catch(err){
                 res.status(400).res(err);
             }
