@@ -7,8 +7,7 @@
  */
 
  import React, { Component } from 'react';
- import Ionicons from 'react-native-vector-icons/Ionicons'
- import FontAwesome from 'react-native-vector-icons/FontAwesome'
+ import Ionicons from 'react-native-vector-icons/Ionicons';
  import {
      StyleSheet,
      View,
@@ -41,15 +40,19 @@
              this.setState({showPass:true, press: false})
          }
      }
+     
      render() {
-         const Divider = (props) => {
+        const {navigation} =this.props;
+        const Divider = (props) => {
              return <View {...props}>
                  <View style={styles.line}></View>
                  <Text style={styles.textOR}>OR</Text>
                  <View style={styles.line}></View>
              </View>
          }
+         
          return (
+
              <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
              <ImageBackground source={bgImage} style={styles.imageBackgroundContainer}>
                  <View style={styles.containerLogo}>
@@ -94,7 +97,10 @@
                      <Text style={styles.Text}>Login</Text>
                  </TouchableOpacity>
  
-                 <TouchableOpacity style={styles.btnRegister}>
+                 <TouchableOpacity 
+                 style={styles.btnRegister}
+                 onPress={() => navigation.navigate('Register')}
+                 >
                      <Text style={styles.Text}>Create Account</Text>
                  </TouchableOpacity>
                  <Divider style={styles.divider}></Divider>
@@ -110,6 +116,7 @@
          );
      }
  };
+ 
  
  const styles = StyleSheet.create({
      imageBackgroundContainer:{
