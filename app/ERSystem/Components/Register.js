@@ -41,6 +41,7 @@
          }
      }
      render() {
+         const {navigation} = this.props;
          return (
              <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
              <ImageBackground source={bgImage} style={styles.imageBackgroundContainer}>
@@ -118,7 +119,10 @@
                              underlineColorAndroid='transparent'
                              />
                  </View>
-                 <TouchableOpacity style={styles.btnRegister}>
+                 <TouchableOpacity 
+                 style={styles.btnRegister}
+                 onPress={() => navigation.navigate('Login')}
+                 >
                          <Text style={styles.Text}>Register</Text>
                      </TouchableOpacity>
              </ImageBackground>
@@ -137,7 +141,7 @@
          alignItems: 'center',
      },
      containerLogo:{
-         bottom: 120,
+         bottom: 110,
          alignItems: 'center',
      },
      logo: {
