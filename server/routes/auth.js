@@ -5,7 +5,6 @@ const firebase=require('../util/firebase_connect');
 const { validationResult } = require('express-validator');
 const { validate } = require('../util/validator');
 
-// const validate=require('../util/validator');
 
 /**
  * @swagger
@@ -39,7 +38,7 @@ const { validate } = require('../util/validator');
  * @swagger
  * /user/register:
  *   post:
- *     summary: Đắng ký một account mới
+ *     summary: Đăng ký một account mới
  *     tags: [Auth]
  *     requestBody:
  *       required: true
@@ -60,32 +59,30 @@ const { validate } = require('../util/validator');
 router.post('/register',
 validate.validateRegisterUser(),
 (req, res) => {   
+    const user=new User(
+        req.body.username,
+        req.body.email,
+    );
     //req validation
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-    firebase.database().ref("users/"+req.body.username).once("value").then(function(snapshot){
-        if (snapshot.exists()) {
-            res.send("Account already exists");
-          }
-          else {
-            try{
-                user.Create(req.body);
-                res.send(req.body);
-            }catch(err){
-                res.status(400).send(err);
-            }
-          }
-    });
+    try{
+        user.save(user,function(data){
+            res.send(data)
+        });
+    }catch(err){
+        res.status(400).send(err);
+    }
 }); 
 
 
-router.post('/login',(req,res)=>{
-    const username=req.body.username
-    const user ={name:username}
-    const accessToken=jwt.sign(user,process.env.ACCESS_TOKEN_SECRET)
-    res.json({accessToken:accessToken})
-})
+// router.post('/login',(req,res)=>{
+//     const username=req.body.username
+//     const user ={name:username}
+//     const accessToken=jwt.sign(user,process.env.ACCESS_TOKEN_SECRET)
+//     res.json({accessToken:accessToken})
+// })
 
 module.exports=router;

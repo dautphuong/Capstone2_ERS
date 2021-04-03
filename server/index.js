@@ -36,11 +36,12 @@ app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 const firebaseRouter = require('./routes/firebase');
 const authRouter = require('./routes/auth');
 const lessonRouter=require('./routes/lesson');
+const userRouter=require('./routes/user');
 
 //Router Middlewares
 app.use('/',firebaseRouter);
 app.use('/user',authRouter);
 app.use('/lesson',lessonRouter);
-
+app.use('/user',userRouter);
 
 app.listen(port,()=> console.log('Server up and running'));
