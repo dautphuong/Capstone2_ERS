@@ -1,4 +1,4 @@
-const firebase = require("./firebase_connect");
+const firebase = require("../util/firebase_connect");
 
 module.exports={
     saveData:function(req,callback){
