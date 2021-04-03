@@ -10,4 +10,5 @@ module.exports=class Lesson{
         this.blog=blog;
     }
 
+    
 }

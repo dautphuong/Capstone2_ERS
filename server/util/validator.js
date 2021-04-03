@@ -12,6 +12,12 @@ let validateRegisterUser = () => {
     ]; 
   }
 
+  let validateUser=()=>{
+    return[
+      
+    ]
+  }
+
 
 
   let validate = {
