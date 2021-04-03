@@ -31,7 +31,7 @@ export default class Login extends React.Component {
                             Rất hân hạnh được giúp bạn học Tiếng Anh.
                         </Text>
                         <Text >
-                             Chúng ta bắt đầu nào.
+                            Chúng ta bắt đầu nào.
                         </Text>
                     </Text>
                     <View style={styles.box}>
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
         padding: 20,
         backgroundColor: "#F5FBEF",
         borderRadius: 40,
-        flexDirection:'column',
+        flexDirection: 'column',
     },
     content: {
         marginTop: 20,
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
         fontFamily: "RobotoBold",
         color: "#FFF",
         height: 130,
-        paddingTop:20,
+        paddingTop: 20,
         width: 330,
     },
 })
