@@ -93,7 +93,9 @@
                          </Ionicons>
                      </TouchableOpacity>
                  </View>
-                 <TouchableOpacity style={styles.btnLogin}>
+                 <TouchableOpacity 
+                 style={styles.btnLogin}
+                 onPress={() => navigation.navigate('Home')}>
                      <Text style={styles.Text}>Login</Text>
                  </TouchableOpacity>
  

@@ -7,10 +7,9 @@ import Pra from '../image/Pra.jpg';
 import Exam from '../image/Exam.jpg';
 import Learn from '../image/startlearn.jpg';
 
-
-
 export default class Login extends React.Component {
     render() {
+        const {navigation} =this.props;
         return (
             <ImageBackground
                 source={bgImage}
@@ -26,16 +25,21 @@ export default class Login extends React.Component {
                     <Text style={styles.welcome}>
                         Yay, you're here!
                     </Text>
-                    <Text style={styles.welcomehere}>
+                    <Text style={styles.welcomeHere}>
                         <Text >
                             Rất hân hạnh được giúp bạn học Tiếng Anh.
+                            {"\n"}
+                            {"\n"}
+                            Chúng ta bắt đầu nào.
                         </Text>
                         <Text >
-                            Chúng ta bắt đầu nào.
+                            
                         </Text>
                     </Text>
                     <View style={styles.box}>
-                        <TouchableOpacity style={styles.content}>
+                        <TouchableOpacity 
+                        style={styles.content}
+                        onPress={() => navigation.navigate('ListTopic')}>
                             <Image
                                 source={Learn}
                                 style={styles.image}
@@ -101,11 +105,11 @@ const styles = StyleSheet.create({
         padding: 15,
     },
     logo: {
-        width: 150,
-        height: 150,
+        width: 175,
+        height: 175,
     },
     accountCircle: {
-        marginLeft: 200,
+        marginLeft: 120,
     },
     header: {
         paddingHorizontal: 40,
@@ -116,7 +120,7 @@ const styles = StyleSheet.create({
         color: "#522289",
         fontFamily: "RobotoBold",
     },
-    welcomehere: {
+    welcomeHere: {
         fontSize: 17,
         fontFamily: "RobotoBold",
         color: "#FFF",
