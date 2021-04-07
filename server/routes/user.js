@@ -1,5 +1,37 @@
-const router=require('express').Router();
-const User=require('../models/user');
+const router = require('express').Router();
+const User = require('../models/user');
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     UserCreate:
+ *       type: object
+ *       required:
+ *         - username
+ *         - password
+ *         - email
+ *         - role;
+ *       properties:
+ *         username:
+ *           type: string
+ *           description: the username
+ *         password:
+ *           type: string
+ *           description: the username
+ *         email:
+ *           type: string
+ *           description: the email
+ *         role:
+ *           type: string
+ *           description: admin or learner
+ *       example:
+ *         username: phuong
+ *         password: ad1234
+ *         email: dau@gmail.com
+ *         role: learner
+ */
+
 
 /**
  * @swagger
@@ -11,57 +43,99 @@ const User=require('../models/user');
  *         - username
  *         - password
  *         - email
+ *         - role
  *         - avatar
- *         - createOnUTC
  *         - isLessonConfirm
- *         - role;
  *         - lastLogin
  *       properties:
  *         username:
  *           type: string
  *           description: the username
+ *         password:
+ *           type: string
+ *           description: the username
  *         email:
  *           type: string
  *           description: the email
- *         avatar:
- *           type: string
- *           description: the avatar
- *         createOnUTC:
- *           type: string
- *           description: the time create account
- *         isLessonConfirm:
- *           type: array
- *           description: the array id lesson confirm
  *         role:
  *           type: string
+ *           description: admin - learner
+ *         avatar:
+ *           type: string
  *           description: admin or learner
+ *         isLessonConfirm:
+ *           type: array
+ *           description: list id lesson confirm
  *         lastLogin:
- *           type: date
- *           description: last login by account
+ *           type: string
+ *           description: date time last login
  *       example:
  *         username: phuong
- *         password: 12345
- *         email: dau@gmail.com
- *         avatar: avatar.jpg
- *         createOnUTC: 3/4/2021 10:00:00
- *         isLessonConfirm : [Q1,Q2]
+ *         password: ad1234
  *         role: learner
- *         lastLogin: 3/4/2021 10:00:00
+ *         email: dau@gmail.com
+ *         avatar: urlImage
+ *         isLessonConfirm: [Q1,Q2]
+ *         lastLogin: 2021-04-07 06:25:45
  */
 
- /**
-  * @swagger
-  * tags:
-  *   name: User
-  *   description: The user managing API
-  */
+/**
+ * @swagger
+ * tags:
+ *   name: User
+ *   description: The user managing API
+ */
+
+/**
+ * @swagger
+ * /user/save:
+ *   post:
+ *     summary: Tạo một người dùng mới
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UserCreate'
+ *     responses:
+ *       200:
+ *         description: The account was successfully created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserCreate'
+ *       500:
+ *         description: Some server error
+ */
+router.post('/save', (req, res) => {
+    const user = new User(
+        req.body.username,
+        req.body.password,
+        req.body.email,
+        req.body.role,
+    );
+    try {
+        if (user.role == 'learner') {
+            user.register(user, function(data) {
+                res.send(data)
+            });
+        } else {
+            user.createAdmin(user, function(data) {
+                res.send(data)
+            });
+        }
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});
 
 
 /**
  * @swagger
- * /user/findAll:
+ * /user/findAllUser:
  *   get:
- *     summary: Danh sách user
+ *     summary: Danh sách learner
  *     tags: [User]
  *     responses:
  *       200:
@@ -73,9 +147,32 @@ const User=require('../models/user');
  *               items:
  *                 $ref: '#/components/schemas/User'
  */
-router.get('/findAll/',function(req,res){
-    const user=new User();
-    user.findAll(function(data){
+router.get('/findAllUser', function(req, res) {
+    const user = new User();
+    user.findAllUser(function(data) {
+        res.send(data)
+    })
+});
+
+/**
+ * @swagger
+ * /user/findAllAdmin:
+ *   get:
+ *     summary: Danh sách admin
+ *     tags: [User]
+ *     responses:
+ *       200:
+ *         description: The list of the account
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ */
+router.get('/findAllAdmin', function(req, res) {
+    const user = new User();
+    user.findAllAdmin(function(data) {
         res.send(data)
     })
 });
@@ -84,7 +181,7 @@ router.get('/findAll/',function(req,res){
  * @swagger
  * /user/findById/{username}:
  *   get:
- *     summary: account theo id
+ *     summary: thông tin người dùng bằng username
  *     tags: [User]
  *     parameters:
  *       - in: path
@@ -103,21 +200,44 @@ router.get('/findAll/',function(req,res){
  *       404:
  *         description: The user was not found
  */
-router.get('/findById/:username',function(req,res){
-    const user=new User();
-    user.findById(req.params.username,function(data){
+router.get('/findById/:username', function(req, res) {
+    const user = new User();
+    user.findById(req.params.username, function(data) {
         res.send(data)
     })
 });
 
 
-router.put('/update/',function(req,res){
-    const user=new User();
-    try{
-        user.update(req.body,function(data){
+/**
+ * @swagger
+ * /user/update:
+ *   put:
+ *     summary: update thông tin user
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       200:
+ *         description: The account was successfully created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       500:
+ *         description: Some server error
+ */
+router.put('/update', function(req, res) {
+    const user = new User();
+    try {
+        user.updateUser(req.body, function(data) {
             res.send(data)
         });
-    }catch(err){
+
+    } catch (err) {
         res.status(400).send(err);
     }
 });
@@ -125,30 +245,29 @@ router.put('/update/',function(req,res){
 
 /**
  * @swagger
- * /books/{id}:
+ * /user/delete/{username}:
  *   delete:
- *     summary: Remove the book by id
- *     tags: [Books]
+ *     summary: Xóa người dùng
+ *     tags: [User]
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: username
  *         schema:
  *           type: string
  *         required: true
- *         description: The book id
- * 
+ *         description: The user username
  *     responses:
  *       200:
- *         description: The book was deleted
+ *         description: The user was deleted
  *       404:
- *         description: The book was not found
+ *         description: The user was not found
  */
-router.delete("/delete/:username",function(req,res){
-    const user=new User();
-    user.delete(req.params.username,function(data){
+router.delete("/delete/:username", function(req, res) {
+    const user = new User();
+    user.deleteUser(req.params.username, function(data) {
         res.send(data);
     })
 });
 
 
-module.exports=router;
+module.exports = router;

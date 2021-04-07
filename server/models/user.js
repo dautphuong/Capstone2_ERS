@@ -1,77 +1,153 @@
-const firebase=require('../util/firebase_connect');
+const firebase = require('../util/firebase_connect');
+const md5 = require('md5');
 
-module.exports=class User{
+module.exports = class User {
     username; //String
-    password;//String
-    email;//String
-    avatar;//auto
-    createOnUTC;//Date 
-    isLessonConfirm;//Array (id lesson user confirm)
-    role;//Admin - Learner
-    lastLogin;//Date
+    password; //String
+    email; //String
+    avatar; //auto
+    createOnUTC; //Date
+    isLessonConfirm; //Array (id lesson user confirm)
+    role; //Admin - Learner
+    lastLogin; //Date
 
-    constructor(username,email){
-        this.username=username;
-        this.email=email;
+
+    constructor(username, password, email, role) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
     };
 
-    save(req,callback){
-        firebase.database().ref("users/"+req.username).once("value").then(function(snapshot){
+    register(req, callback) {
+        firebase.database().ref("users/role_learner/" + req.username).once("value").then(function(snapshot) {
             if (snapshot.exists()) {
                 callback("Account already exists");
-              }
-              else {
-                    firebase.database().ref("users/"+req.username).set({
-                        username: req.username,
-                        email: req.email, 
-                    });
-                    callback(req);
-              }
+            } else {
+                firebase.database().ref("users/role_admin/" + req.username).once("value").then(function(snapshot) {
+                    if (snapshot.exists()) {
+                        callback("Account already exists");
+                    } else {
+                        firebase.database().ref("users/role_learner/" + req.username).set({
+                            username: req.username,
+                            password: md5(req.password),
+                            email: req.email,
+                            avatar: "urlImage",
+                            createOnUTC: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
+                            isLessonConfirm: [],
+                            role: req.role,
+                            lastLogin: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
+                        });
+                        //callback 
+                        firebase.database().ref("users/role_learner/" + req.username).once("value").then(function(snapshot) {
+                            callback(snapshot.val());
+                        })
+                    }
+                })
+            }
         });
     }
 
-    findAll(callback){
-        firebase.database().ref("users/").once("value").then(function(snapshot){
+    createAdmin(req, callback) {
+        firebase.database().ref("users/role_learner/" + req.username).once("value").then(function(snapshot) {
+            if (snapshot.exists()) {
+                callback("Account already exists");
+            } else {
+                firebase.database().ref("users/role_admin/" + req.username).once("value").then(function(snapshot) {
+                    if (snapshot.exists()) {
+                        callback("Account already exists");
+                    } else {
+                        firebase.database().ref("users/role_admin/" + req.username).set({
+                            username: req.username,
+                            password: md5(req.password),
+                            email: req.email,
+                            createOnUTC: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
+                            role: req.role,
+                            lastLogin: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
+                        });
+                        //callback 
+                        firebase.database().ref("users/role_admin/" + req.username).once("value").then(function(snapshot) {
+                            callback(snapshot.val());
+                        })
+                    }
+                })
+            }
+        });
+    }
+
+    findAllUser(callback) {
+        firebase.database().ref("users/role_learner").once("value").then(function(snapshot) {
+            callback(snapshot.val());
+        })
+    }
+    findAllAdmin(callback) {
+        firebase.database().ref("users/role_admin").once("value").then(function(snapshot) {
             callback(snapshot.val());
         })
     }
 
-    findById(id,callback){
-        firebase.database().ref("users/"+id).once("value").then(function(snapshot){
+    findById(id, callback) {
+        firebase.database().ref("users/role_learner/" + id).once("value").then(function(snapshot) {
             if (snapshot.exists()) {
                 callback(snapshot.val());
-            }
-            else{
-                callback("Data does not exist"); 
-            }
-        });
-    }
-    
-    update(req,callback){
-         firebase.database().ref("users/"+req.username).once("value").then(function(snapshot){
-            if (snapshot.exists()) {
-                firebase.database().ref("users/"+req.username+"/").update({
-                    username: req.username,
-                    email: req.email, 
-                 });
-                 callback("successfull");
-              }
-              else {
-                callback("Data does not exist"); 
+            } else {
+                firebase.database().ref("users/role_admin/" + id).once("value").then(function(snapshot) {
+                    if (snapshot.exists()) {
+                        callback(snapshot.val());
+                    } else {
+                        callback("Data does not exist");
+                    }
+                });
             }
         });
     }
 
-    delete(id,callback){
-        firebase.database().ref("users/"+id).once("value").then(function(snapshot){
+    updateUser(req, callback) {
+        firebase.database().ref("users/role_learner/" + req.username).once("value").then(function(snapshot) {
             if (snapshot.exists()) {
-                firebase.database().ref("users/"+id).remove();
-                callback("successfull");        
-              }
-              else {
-                callback("Data does not exist"); 
+                firebase.database().ref("users/role_learner/" + req.username).update({
+                    username: req.username,
+                    password: req.password,
+                    email: req.email,
+                    avatar: req.avatar,
+                    isLessonConfirm: req.isLessonConfirm,
+                    lastLogin: req.lastLogin
+                });
+                callback("successfull");
+            } else {
+                firebase.database().ref("users/role_admin/" + req.username).once("value").then(function(snapshot) {
+                    if (snapshot.exists()) {
+                        firebase.database().ref("users/role_admin/" + req.username).update({
+                            username: req.username,
+                            password: req.password,
+                            email: req.email,
+                            lastLogin: req.lastLogin
+                        });
+                        callback("successfull");
+                    } else {
+                        callback("Data does not exist");
+                    }
+                });
+            }
+        });
+    }
+
+
+    deleteUser(id, callback) {
+        firebase.database().ref("users/role_learner/" + id).once("value").then(function(snapshot) {
+            if (snapshot.exists()) {
+                firebase.database().ref("users/role_learner/" + id).remove();
+                callback("successfull");
+            } else {
+                firebase.database().ref("users/role_admin/" + id).once("value").then(function(snapshot) {
+                    if (snapshot.exists()) {
+                        firebase.database().ref("users/role_admin/" + id).remove();
+                        callback("successfull");
+                    } else {
+                        callback("Data does not exist");
+                    }
+                });
             }
         });
     }
 }
-
