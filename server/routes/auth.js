@@ -15,16 +15,21 @@ const { validate } = require('../util/validator');
  *       required:
  *         - username
  *         - password
+ *         - email
  *       properties:
  *         username:
  *           type: string
  *           description: the username
+ *         password:
+ *           type: string
+ *           description: the password
  *         email:
  *           type: string
  *           description: the email
  *       example:
- *         username: test
- *         email: test@gmail.com
+ *         username: dauphuong
+ *         password: phuong123
+ *         email: dauphuong@gmail.com
  */
 
  /**
@@ -61,7 +66,9 @@ validate.validateRegisterUser(),
 (req, res) => {   
     const user=new User(
         req.body.username,
+        req.body.password,
         req.body.email,
+        'learner',
     );
     //req validation
     const errors = validationResult(req);
@@ -69,7 +76,7 @@ validate.validateRegisterUser(),
         return res.status(400).json({ errors: errors.array() });
     }
     try{
-        user.save(user,function(data){
+        user.register(user,function(data){
             res.send(data)
         });
     }catch(err){
