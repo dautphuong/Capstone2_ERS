@@ -1,7 +1,6 @@
 const firebase = require('../util/firebase_connect');
-
+const snapArray = require('../util/snapshot_to_array')
 module.exports = class Topic {
-    id;
     name; //String
 
     constructor(name) {
@@ -9,13 +8,11 @@ module.exports = class Topic {
     };
 
     save(req, callback) {
-        const id = 'T' + Math.floor(Math.random() * 10000) + 1 + Math.floor(Math.random() * 10000) + 1 + Math.floor(Math.random() * 10000) + 1;;
-        firebase.database().ref("topic/" + id).once("value").then(function(snapshot) {
-            if (snapshot.exists()) {
+        firebase.database().ref("topics/").once("value").then(function(snapshot) {
+            if (snapArray.snap_array(snapshot).some(value => value.name == req)) {
                 callback("Account already exists");
             } else {
-                firebase.database().ref("topic/" + id).set({
-                    id: id,
+                firebase.database().ref("topics/").push().set({
                     name: req,
                 });
                 callback("successfull");
@@ -24,15 +21,15 @@ module.exports = class Topic {
     }
 
     findAll(callback) {
-        firebase.database().ref("topic/").once("value").then(function(snapshot) {
-            callback(snapshot.val());
+        firebase.database().ref("topics/").once("value").then(function(snapshot) {
+            callback(snapArray.snap_array(snapshot));
         })
     }
 
     delete(id, callback) {
-        firebase.database().ref("topic/" + id).once("value").then(function(snapshot) {
-            if (snapshot.exists()) {
-                firebase.database().ref("topic/" + id).remove();
+        firebase.database().ref("topics/").once("value").then(function(snapshot) {
+            if (snapArray.snap_array(snapshot).some(value => value.id == id)) {
+                firebase.database().ref("topics/" + id).remove();
                 callback("successfull");
             } else {
                 callback("Data does not exist");

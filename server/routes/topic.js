@@ -85,26 +85,26 @@ router.get('/findAll', function(req, res) {
 
 /**
  * @swagger
- * /topic/delete/{name}:
+ * /topic/delete/{id}:
  *   delete:
- *     summary: Xóa topic
+ *     summary: Xóa topic theo id
  *     tags: [Topic]
  *     parameters:
  *       - in: path
- *         name: name
+ *         name: id
  *         schema:
  *           type: string
  *         required: true
- *         description: The name topic
+ *         description: The id lesson
  *     responses:
  *       200:
  *         description: The topic was deleted
  *       404:
  *         description: The topic was not found
  */
-router.delete("/delete/:name", function(req, res) {
+router.delete("/delete/:id", function(req, res) {
     const topic = new Topic();
-    topic.delete(req.params.name, function(data) {
+    topic.delete(req.params.id, function(data) {
         res.send(data);
     })
 });

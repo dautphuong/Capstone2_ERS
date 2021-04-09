@@ -40,6 +40,7 @@ const User = require('../models/user');
  *     User:
  *       type: object
  *       required:
+ *         - id
  *         - username
  *         - password
  *         - email
@@ -48,6 +49,9 @@ const User = require('../models/user');
  *         - isLessonConfirm
  *         - lastLogin
  *       properties:
+ *         id:
+ *           type: string
+ *           description: the id random
  *         username:
  *           type: string
  *           description: the username
@@ -70,6 +74,7 @@ const User = require('../models/user');
  *           type: string
  *           description: date time last login
  *       example:
+ *         id: random
  *         username: phuong
  *         password: ad1234
  *         role: learner
@@ -179,20 +184,20 @@ router.get('/findAllAdmin', function(req, res) {
 
 /**
  * @swagger
- * /user/findById/{username}:
+ * /user/findById/{id}:
  *   get:
  *     summary: thông tin người dùng bằng username
  *     tags: [User]
  *     parameters:
  *       - in: path
- *         name: username
+ *         name: id
  *         schema:
  *           type: string
  *         required: true
- *         description: The username 
+ *         description: The id 
  *     responses:
  *       200:
- *         description: The user description by username
+ *         description: The user description by id
  *         contens:
  *           application/json:
  *             schema:
@@ -200,9 +205,9 @@ router.get('/findAllAdmin', function(req, res) {
  *       404:
  *         description: The user was not found
  */
-router.get('/findById/:username', function(req, res) {
+router.get('/findById/:id', function(req, res) {
     const user = new User();
-    user.findById(req.params.username, function(data) {
+    user.findById(req.params.id, function(data) {
         res.send(data)
     })
 });
@@ -245,26 +250,26 @@ router.put('/update', function(req, res) {
 
 /**
  * @swagger
- * /user/delete/{username}:
+ * /user/delete/{id}:
  *   delete:
  *     summary: Xóa người dùng
  *     tags: [User]
  *     parameters:
  *       - in: path
- *         name: username
+ *         name: id
  *         schema:
  *           type: string
  *         required: true
- *         description: The user username
+ *         description: The user id
  *     responses:
  *       200:
  *         description: The user was deleted
  *       404:
  *         description: The user was not found
  */
-router.delete("/delete/:username", function(req, res) {
+router.delete("/delete/:topic/:id", function(req, res) {
     const user = new User();
-    user.deleteUser(req.params.username, function(data) {
+    user.deleteById(req.params.id, function(data) {
         res.send(data);
     })
 });

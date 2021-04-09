@@ -1,5 +1,6 @@
 const firebase = require('../util/firebase_connect');
 const md5 = require('md5');
+const snapArray = require('../util/snapshot_to_array')
 
 module.exports = class User {
     username; //String
@@ -8,7 +9,7 @@ module.exports = class User {
     avatar; //auto
     createOnUTC; //Date
     isLessonConfirm; //Array (id lesson user confirm)
-    role; //Admin - Learner
+    role; //admin or learner
     lastLogin; //Date
 
 
@@ -20,19 +21,19 @@ module.exports = class User {
     };
 
     register(req, callback) {
-        firebase.database().ref("users/role_learner/" + req.username).once("value").then(function(snapshot) {
-            if (snapshot.exists()) {
+        firebase.database().ref("users/role_learner/").once("value").then(function(snapshot) {
+            if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
                 callback("Account already exists");
             } else {
-                firebase.database().ref("users/role_admin/" + req.username).once("value").then(function(snapshot) {
-                    if (snapshot.exists()) {
+                firebase.database().ref("users/role_admin/").once("value").then(function(snapshot) {
+                    if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
                         callback("Account already exists");
                     } else {
-                        firebase.database().ref("users/role_learner/" + req.username).set({
+                        firebase.database().ref("users/role_learner/").push().set({
                             username: req.username,
                             password: md5(req.password),
                             email: req.email,
-                            avatar: "urlImage",
+                            avatar: "urlImage", //chưa lấy dc ảnh trong storage firebase
                             createOnUTC: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
                             isLessonConfirm: [],
                             role: req.role,
@@ -49,15 +50,15 @@ module.exports = class User {
     }
 
     createAdmin(req, callback) {
-        firebase.database().ref("users/role_learner/" + req.username).once("value").then(function(snapshot) {
-            if (snapshot.exists()) {
+        firebase.database().ref("users/role_learner/").once("value").then(function(snapshot) {
+            if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
                 callback("Account already exists");
             } else {
-                firebase.database().ref("users/role_admin/" + req.username).once("value").then(function(snapshot) {
-                    if (snapshot.exists()) {
+                firebase.database().ref("users/role_admin/").once("value").then(function(snapshot) {
+                    if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
                         callback("Account already exists");
                     } else {
-                        firebase.database().ref("users/role_admin/" + req.username).set({
+                        firebase.database().ref("users/role_admin/").push().set({
                             username: req.username,
                             password: md5(req.password),
                             email: req.email,
@@ -77,23 +78,27 @@ module.exports = class User {
 
     findAllUser(callback) {
         firebase.database().ref("users/role_learner").once("value").then(function(snapshot) {
-            callback(snapshot.val());
+            callback(snapArray.snap_array(snapshot));
         })
     }
     findAllAdmin(callback) {
         firebase.database().ref("users/role_admin").once("value").then(function(snapshot) {
-            callback(snapshot.val());
+            callback(snapArray.snap_array(snapshot));
         })
     }
 
     findById(id, callback) {
         firebase.database().ref("users/role_learner/" + id).once("value").then(function(snapshot) {
             if (snapshot.exists()) {
-                callback(snapshot.val());
+                var item = snapshot.val();
+                item.id = snapshot.key;
+                callback(item);
             } else {
                 firebase.database().ref("users/role_admin/" + id).once("value").then(function(snapshot) {
                     if (snapshot.exists()) {
-                        callback(snapshot.val());
+                        var item = snapshot.val();
+                        item.id = snapshot.key;
+                        callback(item);
                     } else {
                         callback("Data does not exist");
                     }
@@ -103,10 +108,9 @@ module.exports = class User {
     }
 
     updateUser(req, callback) {
-        firebase.database().ref("users/role_learner/" + req.username).once("value").then(function(snapshot) {
+        firebase.database().ref("users/role_learner/" + req.id).once("value").then(function(snapshot) {
             if (snapshot.exists()) {
-                firebase.database().ref("users/role_learner/" + req.username).update({
-                    username: req.username,
+                firebase.database().ref("users/role_learner/" + req.id).update({
                     password: req.password,
                     email: req.email,
                     avatar: req.avatar,
@@ -115,10 +119,9 @@ module.exports = class User {
                 });
                 callback("successfull");
             } else {
-                firebase.database().ref("users/role_admin/" + req.username).once("value").then(function(snapshot) {
+                firebase.database().ref("users/role_admin/" + req.id).once("value").then(function(snapshot) {
                     if (snapshot.exists()) {
-                        firebase.database().ref("users/role_admin/" + req.username).update({
-                            username: req.username,
+                        firebase.database().ref("users/role_admin/" + req.id).update({
                             password: req.password,
                             email: req.email,
                             lastLogin: req.lastLogin
@@ -133,7 +136,7 @@ module.exports = class User {
     }
 
 
-    deleteUser(id, callback) {
+    deleteById(id, callback) {
         firebase.database().ref("users/role_learner/" + id).once("value").then(function(snapshot) {
             if (snapshot.exists()) {
                 firebase.database().ref("users/role_learner/" + id).remove();
