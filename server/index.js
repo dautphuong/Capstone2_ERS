@@ -31,17 +31,21 @@ app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 
 
 //Import Router
-const firebaseRouter = require('./routes/firebase');
 const authRouter = require('./routes/auth');
 const lessonRouter = require('./routes/lesson');
 const userRouter = require('./routes/user');
 const topicRouter = require('./routes/topic');
+const questionRouter = require('./routes/question');
+const examRouter = require('./routes/exam');
+const contestRouter = require('./routes/contest');
 
 //Router Middlewares
-app.use('/', firebaseRouter);
 app.use('/user', authRouter);
 app.use('/lesson', lessonRouter);
 app.use('/user', userRouter);
 app.use('/topic', topicRouter);
+app.use('/question', questionRouter);
+app.use('/exam', examRouter);
+app.use('/contest', contestRouter);
 
 app.listen(port, () => console.log('Server up and running'));
