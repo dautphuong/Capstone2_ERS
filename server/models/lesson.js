@@ -6,11 +6,10 @@ module.exports = class Lesson {
     blog; //String
     topic; //id Topic
     listQuestion; //list id question 
-    constructor(title, blog, topic, listQuestion) {
+    constructor(title, blog, topic) {
         this.title = title;
         this.blog = blog;
         this.topic = topic;
-        this.listQuestion = listQuestion;
     }
 
     save(req, callback) {
@@ -20,9 +19,7 @@ module.exports = class Lesson {
                 firebase.database().ref("lessons/").push().set({
                     title: req.title,
                     blog: req.blog,
-                    listQuestion: req.listQuestion,
                     topic: topic
-                        // chưa kiểm tra list question tồn tại không ?
                 });
                 callback("successfull");
             } else {
@@ -67,7 +64,6 @@ module.exports = class Lesson {
                         firebase.database().ref("lessons/" + req.id).update({
                             title: req.title,
                             blog: req.blog,
-                            listQuestion: req.listQuestion,
                             topic: topic,
                             // chưa kiểm tra list question tồn tại không ?
                         });

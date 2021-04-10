@@ -14,6 +14,7 @@ const Question = require('../models/question');
  *         - answerRight
  *         - note
  *         - topic
+ *         - lesson
  *       properties:
  *         id:
  *           type: string
@@ -33,6 +34,9 @@ const Question = require('../models/question');
  *         topic:
  *           type: string
  *           description: the topic question
+ *         lesson:
+ *           type: string
+ *           description: the id lesson //có thể null
  *       example:
  *         id: random
  *         title: Tại sao ...
@@ -40,6 +44,7 @@ const Question = require('../models/question');
  *         answerRight: chọn A
  *         note: vì nó đúng
  *         topic: danh từ
+ *         lesson: null
  */
 
 /**
@@ -78,6 +83,7 @@ router.post('/save', (req, res) => {
         req.body.answerRight,
         req.body.note,
         req.body.topic,
+        req.body.lesson
     );
     try {
         question.save(question, function(data) {
@@ -114,6 +120,36 @@ router.post('/save', (req, res) => {
 router.get('/findByTopic/:topic', function(req, res) {
     const question = new Question();
     question.findAllByTopic(req.params.topic, function(data) {
+        res.send(data)
+    })
+});
+
+/**
+ * @swagger
+ * /question/findByLesson/{idLesson}:
+ *   get:
+ *     summary: danh sách question theo lesson
+ *     tags: [Question]
+ *     parameters:
+ *       - in: path
+ *         name: idLesson
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The id Lesson 
+ *     responses:
+ *       200:
+ *         description: The questions description by lesson
+ *         contens:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Question'
+ *       404:
+ *         description: The user was not found
+ */
+ router.get('/findByLesson/:lesson', function(req, res) {
+    const question = new Question();
+    question.findAllByLesson(req.params.lesson, function(data) {
         res.send(data)
     })
 });

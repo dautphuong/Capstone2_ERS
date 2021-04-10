@@ -33,7 +33,7 @@ module.exports = class User {
                             username: req.username,
                             password: md5(req.password),
                             email: req.email,
-                            avatar: "urlImage", //chưa lấy dc ảnh trong storage firebase
+                            avatar: "https://firebasestorage.googleapis.com/v0/b/er-system-2b346.appspot.com/o/avatar.jpg?alt=media&token=0ebb592a-5e15-42d1-8f0f-04998873d251",
                             createOnUTC: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
                             isLessonConfirm: [],
                             role: req.role,

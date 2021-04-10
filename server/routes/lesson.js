@@ -12,7 +12,6 @@ const Lesson = require('../models/lesson');
  *         - title
  *         - blog
  *         - topic
- *         - listQuestion
  *       properties:
  *         id:
  *           type: string
@@ -26,15 +25,11 @@ const Lesson = require('../models/lesson');
  *         topic:
  *           type: string
  *           description: The  topic lesson
- *         listQuestion:
- *           type: array
- *           description: The list id question
  *       example:
  *         id: L0123
  *         title: danh từ số ít
  *         blog: abc ....
  *         topic: danh từ
- *         listQuestion: [Q1,Q2]
  */
 
 /**
@@ -71,7 +66,6 @@ router.post('/save', (req, res) => {
         req.body.title,
         req.body.blog,
         req.body.topic,
-        req.body.listQuestion
     );
     try {
         lesson.save(lesson, function(data) {
