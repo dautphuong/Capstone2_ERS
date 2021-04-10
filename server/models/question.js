@@ -7,14 +7,18 @@ module.exports = class Quetion {
     answerRight; //String
     note; //String
     topic; //Topic
+    lesson// id lesson
 
-    constructor(title, answerChooses, answerRight, note, topic) {
+    constructor(title, answerChooses, answerRight, note, topic,lesson) {
         this.title = title;
         this.answerChooses = answerChooses;
         this.answerRight = answerRight;
         this.note = note;
         this.topic = topic;
+        this.lesson=lesson;
     }
+
+
 
     save(req, callback) {
         firebase.database().ref("topics/").once("value").then(function(snapshot) {
@@ -26,12 +30,11 @@ module.exports = class Quetion {
                     answerRight: req.answerRight,
                     topic: topic,
                     note: req.note,
-                    // chưa kiểm tra list question tồn tại không ?
+                    lesson: req.lesson
                 });
                 callback("successfull");
             } else {
                 callback("Topic does not exist")
-                    // chưa xử lý tự động thêm topic dc
             }
         });
     }
@@ -46,6 +49,24 @@ module.exports = class Quetion {
                         callback("Data does not exist");
                     }
                 });
+            }else{
+                callback("Data does not exist");
+            }
+        });
+    }
+
+    findAllByLesson(lesson, callback) {
+        firebase.database().ref("lessons/" + lesson).once("value").then(function(snapshot) {
+            if (snapshot.exists()) {
+                firebase.database().ref("questions/").once("value").then(function(snapshot) {
+                    if (snapshot.exists()) {
+                        callback(snapArray.snap_array(snapshot).filter(value => value.lesson == lesson));
+                    } else {
+                        callback("Data does not exist");
+                    }
+                });
+            }else{
+                callback("Data does not exist");
             }
         });
     }
@@ -74,12 +95,11 @@ module.exports = class Quetion {
                             answerRight: req.answerRight,
                             topic: topic,
                             note: req.note,
-                            // chưa kiểm tra list question tồn tại không ?
+                            lesson:lesson
                         });
                         callback("successfull");
                     } else {
                         callback("Topic does not exist");
-                        // chưa xử lý tự động thêm topic dc
                     }
                 });
 

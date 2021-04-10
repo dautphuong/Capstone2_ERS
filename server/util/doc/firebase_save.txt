@@ -17,12 +17,13 @@ topic
     name 
 //-------------------------------------------//
 question
-    topic//name topic
+    topic
     id;
     title;
     answerChooses;
     answerRight;
     note;
+    idLesson;
 //-------------------------------------------//
 report
     idQuestion//id question
@@ -34,7 +35,6 @@ lesson
     id;
     title;
     blog;
-    listQuestion;
 //-------------------------------------------//
 history
     idUser// username
@@ -48,7 +48,7 @@ exam
     id;
     name;
     timeSet;
-    listQuestion;    
+    listQuestion;   
  //-------------------------------------------//
  contest 
     id;
