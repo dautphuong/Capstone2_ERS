@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import {
     StyleSheet,
     View,
@@ -15,19 +16,37 @@ export default class ListLesson extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            pages: [
-                {id: '1', name:'Cấu trúc chung của một câu trong tiếng Anh'},
-            ],
+            lessons: []
+        }
+    }
+    async componentDidMount() {
+        const {id} = this.props.route.params;
+        console.log(this.props.route);
+        try {
+            axios.get(`/lessons?topic=${id}`)
+            // this.setState({
+            //     lessons
+            // });
+            .then(res => {
+                this.setState({
+                    lessons: res.data
+                })
+                console.log(res);
+            })
+        }catch(error){
+            console.error(error);
         }
     }
     render() {
-        const { pages } = this.state;
+        const { lessons } = this.state;
         return (
             <ImageBackground source={bgImage} style={styles.imageBackgroundContainer}>
                 <FlatList
-                    data={pages}
+                    data={lessons}
                     renderItem={({item}) =>(
-                <TouchableOpacity activeOpacity={0.6}>
+                <TouchableOpacity activeOpacity={0.6}
+                        
+                >
                 <View style={styles.container}>
                     <Text style={styles.title}>{item.name}</Text>
                     <Image style={styles.bookImage} source={dumbbell}></Image>
