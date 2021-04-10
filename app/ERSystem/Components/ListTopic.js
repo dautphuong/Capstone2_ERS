@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import {
     StyleSheet,
     View,
@@ -14,35 +15,40 @@ import book from '../image/book.png';
 import dumbbell from '../image/dumbbell.png';
 import exam from '../image/exam.png';
 
+axios.defaults.baseURL = 'https://ce1ee4c8a885.ngrok.io';
 export default class ListTopic extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            pages: [
-                {id: '1', name:'Cấu trúc chung của một câu trong tiếng Anh'},
-                {id: '2', name:'Noun phrase (ngữ danh từ)'},
-                {id: '3', name:'Verb phrase (ngữ động từ)'},
-                {id: '4', name:'Sự hòa hợp giữa chủ ngữ và động từ'},
-                {id: '5', name:'Đại từ'},
-                {id: '6', name:'Tân ngữ (complement / object) và các vấn đề liên quan'},
-                {id: '7', name:'Một số động từ đặc biệt (need, dare, to be, get)'},
-
-            ],
+            topics: []
         }
     }
+    componentDidMount() {
+        axios.get('/topics')
+            .then(res => {
+                this.setState({
+                    topics: res.data
+                })
+            })
+            .catch(error => {
+                console.error(error)
+            })
+    }
+
     render() {
         const {navigation} =this.props;
-        const { pages } = this.state;
+        const { topics } = this.state;
         return (
             <ImageBackground source={bgImage} style={styles.imageBackgroundContainer}>
                 <FlatList
-                    data={pages}
+                    data={topics}
                     renderItem={({item}) =>(
                 <TouchableOpacity 
                 activeOpacity={0.6}
-                onPress={() => navigation.navigate('ListLesson',{
-                    Topics: item.name
-                })}
+                    onPress={() => navigation.navigate('ListLesson',{
+                        Topics: item.name,
+                        id: item.id
+                    })}
                 >
                 <View style={styles.container}>
                     <Text style={styles.title}>{item.name}</Text>

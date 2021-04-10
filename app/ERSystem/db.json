@@ -1,0 +1,55 @@
+{
+  "login": [
+    {
+      "id": "c4ca4238a0b923820dcc509a6f75849b",
+      "username": "learner",
+      "password": "123",
+      "email": "loc2503@gmail.com"
+    }
+  ],
+  "topics": [
+    {
+      "id": "1",
+      "name": "Cấu trúc chung của một câu trong tiếng Anh"
+    },
+    {
+      "id": "2",
+      "name": "Noun phrase (ngữ danh từ)"
+    },
+    {
+      "id": "3",
+      "name": "Verb phrase (ngữ động từ)"
+    },
+    {
+      "id": "4",
+      "name": "Sự hòa hợp giữa chủ ngữ và động từ"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "1",
+      "name": "Subject (chủ ngữ)",
+      "topic": "1"
+    },
+    {
+      "id": "2",
+      "name": " Danh từ đếm được và không đếm được (Count noun/ Non-count noun)",
+      "topic": "2"
+    },
+    {
+      "id": "3",
+      "name": "Present tenses (các thời hiện tại)",
+      "topic": "3"
+    },
+    {
+      "id": "4",
+      "name": "Các trường hợp chủ ngữ đứng tách khỏi động từ",
+      "topic": "4"
+    },
+    {
+      "id": "5",
+      "name": "Các trường hợp chủ ngữ đứng tách khỏi động từ",
+      "topic": "1"
+    }
+  ]
+}
