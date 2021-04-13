@@ -7,6 +7,7 @@
  */
 
  import React, { Component } from 'react';
+ import  AsyncStorage  from '@react-native-async-storage/async-storage';
  import Ionicons from 'react-native-vector-icons/Ionicons';
  import {
      StyleSheet,
@@ -19,7 +20,9 @@
      TouchableOpacity,
      TouchableWithoutFeedback,
      Dimensions,
+     Alert,
  } from 'react-native';
+ import axios from 'axios';
  import bgImage from '../image/logins.jpg';
  import logo from '../image/English_REVIEW.png';
  
@@ -30,8 +33,64 @@
          super()
          this.state = {
              showPass: true,
-             press: false
+             press: false,
+             username: "",
+             password: "",
+             loading: false
          }
+     }
+
+     onChangeHandle(state, value) {
+         this.setState({
+             [state]: value
+         })
+     }
+     checkLogin() {
+        const {navigation} =this.props;
+        const {username, password } = this.state;
+        if(username && password) {
+            const req = {
+                "username": username,
+                "password": password
+            }
+            this.setState({
+                loading: true,
+            })
+            axios.post("https://reqres.in/api/login", req)
+            .then(
+                res => {
+                    this.setState({
+                        loading: false,
+                    })
+                    console.log(res.data.token)
+                    AsyncStorage.setItem("token", res.data.token)
+                    .then(
+                        res => {
+                            navigation.navigate('Home');
+                        }
+                    );
+                    
+                },
+                err => {
+                    this.setState({
+                        loading: false,
+                    })
+                    alert("UserName/ Password is incorrect !!!")
+                }
+            )
+        }else{
+            Alert.alert('Error', 'UserName/ Password Failed!!!',[{
+                text: 'Oke'
+            }])
+        }
+        /*if(username =='learner' && password =="123"){
+            navigation.navigate('Home')
+            console.log(navigation.navigate)
+        }else{
+            Alert.alert('Error', 'UserName/ Password Failed!!!',[{
+                text: 'Oke'
+            }])
+        }*/
      }
      showPass = () =>{
          if(this.state.press == false){
@@ -42,6 +101,7 @@
      }
      
      render() {
+        const {username, password, loading } = this.state;
         const {navigation} =this.props;
         const Divider = (props) => {
              return <View {...props}>
@@ -52,7 +112,6 @@
          }
          
          return (
-
              <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
              <ImageBackground source={bgImage} style={styles.imageBackgroundContainer}>
                  <View style={styles.containerLogo}>
@@ -70,6 +129,8 @@
                          placeholder={'UserName'}
                          placeholderTextColor={'rgba(68, 248, 161, 0.7)'}
                          underlineColorAndroid='transparent'
+                         value={username}
+                         onChangeText={(value) => this.onChangeHandle('username', value)}
                          />
                  </View>
  
@@ -84,6 +145,8 @@
                          secureTextEntry={this.state.showPass}
                          placeholderTextColor={'rgba(68, 248, 161, 0.7)'}
                          underlineColorAndroid='transparent'
+                         value={password}
+                         onChangeText={(value) => this.onChangeHandle('password', value)}
                      />
                      <TouchableOpacity style={styles.btnEye}
                      onPress={this.showPass.bind(this)}>
@@ -93,8 +156,18 @@
                          </Ionicons>
                      </TouchableOpacity>
                  </View>
-                 <TouchableOpacity style={styles.btnLogin}>
-                     <Text style={styles.Text}>Login</Text>
+                 <TouchableOpacity 
+                 activeOpacity={0.8}
+                 style={{
+                     ...styles.btnLogin,
+                     backgroundColor: loading ? "#ddd" :"#3399CC"
+                    }}
+                 onPress={() => this.checkLogin()}
+                 disabled={loading}
+                 >
+                     <Text style={styles.Text}>
+                         {loading ? "Loading..." : "Login"} 
+                         </Text>
                  </TouchableOpacity>
  
                  <TouchableOpacity 
@@ -173,7 +246,6 @@
          width: WIDTH -55,
          height: 45,
          borderRadius:25,
-         backgroundColor:'#3399CC',
          justifyContent:'center',
          bottom: 90
      },

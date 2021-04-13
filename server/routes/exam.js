@@ -1,74 +1,80 @@
 const router = require('express').Router();
-const Lesson = require('../models/lesson');
+const Exam = require('../models/exam');
 
 /**
  * @swagger
  * components:
  *   schemas:
- *     Lesson:
+ *     Exam:
  *       type: object
  *       required:
  *         - id
  *         - title
- *         - blog
- *         - topic
+ *         - type
+ *         - timeSet
+ *         - listQuestion
  *       properties:
  *         id:
  *           type: string
- *           description: The id create is random
+ *           description: the id exam is random
  *         title:
  *           type: string
- *           description: The lesson title
- *         blog:
- *           type: longblog
- *           description: The lesson content
- *         topic:
+ *           description: the title exam
+ *         type:
  *           type: string
- *           description: The  topic lesson
+ *           description: exam - practice
+ *         timeSet:
+ *           type: int
+ *           description: time the exam 
+ *         listQuestion:
+ *           type: array
+ *           description: array list id question
  *       example:
- *         id: L0123
- *         title: danh từ số ít
- *         blog: abc ....
- *         topic: danh từ
+ *         id: random
+ *         title: Đề ABC
+ *         type: practice
+ *         timeSet: 900000
+ *         listQuestion: [Q1,Q2,Q3]
  */
 
 /**
  * @swagger
  * tags:
- *   name: Lesson
- *   description: The lesson managing API
+ *   name: Exam
+ *   description: The exam managing API
  */
 
 /**
  * @swagger
- * /lesson/save:
+ * /exam/save:
  *   post:
- *     summary: Tạo một lesson mới
- *     tags: [Lesson]
+ *     summary: Tạo một exam mới
+ *     tags: [Exam]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Lesson'
+ *             $ref: '#/components/schemas/Exam'
  *     responses:
  *       200:
- *         description: The Lesson was successfully created
+ *         description: The Exam was successfully created
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Lesson'
+ *               $ref: '#/components/schemas/Exam'
  *       500:
  *         description: Some server error
  */
 router.post('/save', (req, res) => {
-    const lesson = new Lesson(
+    const exam = new Exam(
         req.body.title,
-        req.body.blog,
-        req.body.topic,
+        req.body.type,
+        req.body.timeSet,
+        req.body.listQuestion
     );
     try {
-        lesson.save(lesson, function(data) {
+        exam.save(exam, function(data) {
             res.send(data)
         });
     } catch (err) {
@@ -76,42 +82,43 @@ router.post('/save', (req, res) => {
     }
 });
 
+
 /**
  * @swagger
- * /lesson/findByTopic/{idTopic}:
+ * /exam/findByType/{type}:
  *   get:
- *     summary: danh sách lesson theo topic
- *     tags: [Lesson]
+ *     summary: danh sách exam theo topic
+ *     tags: [Exam]
  *     parameters:
  *       - in: path
- *         name: idTopic
+ *         name: type
  *         schema:
  *           type: string
  *         required: true
- *         description: The id topic 
+ *         description: The type exam 
  *     responses:
  *       200:
- *         description: The questions description by topic
+ *         description: The questions description by type
  *         contens:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Lesson'
+ *               $ref: '#/components/schemas/Exam'
  *       404:
  *         description: The user was not found
  */
-router.get('/findByTopic/:topic', function(req, res) {
-    const lesson = new Lesson();
-    lesson.findAllByTopic(req.params.topic, function(data) {
+router.get('/findByType/:type', function(req, res) {
+    const exam = new Exam();
+    exam.findAllByType(req.params.type, function(data) {
         res.send(data)
     })
 });
 
 /**
  * @swagger
- * /lesson/findById/{id}:
+ * /exam/findById/{id}:
  *   get:
- *     summary: danh sách lesson theo topic
- *     tags: [Lesson]
+ *     summary: danh sách exam theo topic
+ *     tags: [Exam]
  *     parameters: 
  *       - in: path
  *         name: id
@@ -125,43 +132,43 @@ router.get('/findByTopic/:topic', function(req, res) {
  *         contens:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Lesson'
+ *               $ref: '#/components/schemas/Exam'
  *       404:
  *         description: The user was not found
  */
 router.get('/findByid/:id', function(req, res) {
-    const lesson = new Lesson();
-    lesson.findById(req.params.id, function(data) {
+    const exam = new Exam();
+    exam.findById(req.params.id, function(data) {
         res.send(data)
     })
 });
 
 /**
  * @swagger
- * /lesson/update:
+ * /exam/update:
  *   put:
- *     summary: update thông tin lesson
- *     tags: [Lesson]
+ *     summary: update thông tin exam
+ *     tags: [Exam]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Lesson'
+ *             $ref: '#/components/schemas/Exam'
  *     responses:
  *       200:
- *         description: The lesson was successfully updated
+ *         description: The exam was successfully updated
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Lesson'
+ *               $ref: '#/components/schemas/Exam'
  *       500:
  *         description: Some server error
  */
 router.put('/update', function(req, res) {
-    const lesson = new Lesson();
+    const exam = new Exam();
     try {
-        lesson.update(req.body, function(data) {
+        exam.update(req.body, function(data) {
             res.send(data)
         });
     } catch (err) {
@@ -171,28 +178,27 @@ router.put('/update', function(req, res) {
 
 /**
  * @swagger
- * /lesson/delete/{id}:
+ * /exam/delete/{id}:
  *   delete:
- *     summary: Xóa lesson theo id
- *     tags: [Lesson]
+ *     summary: Xóa exam theo id
+ *     tags: [Exam]
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
  *           type: string
  *         required: true
- *         description: The id lesson
+ *         description: The id exam
  *     responses:
  *       200:
- *         description: The lesson was deleted
+ *         description: The exam was deleted
  *       404:
- *         description: The lesson was not found
+ *         description: The exam was not found
  */
 router.delete("/delete/:id", function(req, res) {
-    const lesson = new Lesson();
-    lesson.delete(req.params.id, function(data) {
+    const exam = new Exam();
+    exam.delete(req.params.id, function(data) {
         res.send(data);
     })
 });
-
 module.exports = router;

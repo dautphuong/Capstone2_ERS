@@ -1,0 +1,58 @@
+user 
+    admin
+        username; 
+        password;
+        createOnUTC;
+        lastLogin;
+    learner
+        username; 
+        password;
+        email;
+        avatar;
+        createOnUTC;
+        isLessonConfirm;
+        lastLogin;
+//-------------------------------------------//
+topic
+    name 
+//-------------------------------------------//
+question
+    topic
+    id;
+    title;
+    answerChooses;
+    answerRight;
+    note;
+    idLesson;
+//-------------------------------------------//
+report
+    idQuestion//id question
+        id;
+        content;
+//-------------------------------------------//
+lesson    
+    topic
+    id;
+    title;
+    blog;
+//-------------------------------------------//
+history
+    idUser// username
+        id;
+        idExam;
+        answer;
+        point;
+//-------------------------------------------//
+exam
+    type;   
+    id;
+    name;
+    timeSet;
+    listQuestion;   
+ //-------------------------------------------//
+ contest 
+    id;
+    name;
+    timeStart;
+    timeEnd;
+    exam;

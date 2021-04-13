@@ -10,46 +10,49 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import bgImage from '../image/logins.jpg';
+import logo from '../image/English_REVIEW.png';
+import book from '../image/book.png';
 import dumbbell from '../image/dumbbell.png';
+import exam from '../image/exam.png';
 
-export default class ListLesson extends Component {
+axios.defaults.baseURL = 'https://ce1ee4c8a885.ngrok.io';
+export default class ListTopic extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            lessons: []
+            topics: []
         }
     }
-    async componentDidMount() {
-        const {id} = this.props.route.params;
-        console.log(this.props.route);
-        try {
-            axios.get(`/lessons?topic=${id}`)
-            // this.setState({
-            //     lessons
-            // });
+    componentDidMount() {
+        axios.get('/topics')
             .then(res => {
                 this.setState({
-                    lessons: res.data
+                    topics: res.data
                 })
-                console.log(res);
             })
-        }catch(error){
-            console.error(error);
-        }
+            .catch(error => {
+                console.error(error)
+            })
     }
+
     render() {
-        const { lessons } = this.state;
+        const {navigation} =this.props;
+        const { topics } = this.state;
         return (
             <ImageBackground source={bgImage} style={styles.imageBackgroundContainer}>
                 <FlatList
-                    data={lessons}
+                    data={topics}
                     renderItem={({item}) =>(
-                <TouchableOpacity activeOpacity={0.6}
-                        
+                <TouchableOpacity 
+                activeOpacity={0.6}
+                    onPress={() => navigation.navigate('ListLesson',{
+                        Topics: item.name,
+                        id: item.id
+                    })}
                 >
                 <View style={styles.container}>
                     <Text style={styles.title}>{item.name}</Text>
-                    <Image style={styles.bookImage} source={dumbbell}></Image>
+                    <Image style={styles.bookImage} source={book}></Image>
                 </View>
                 </TouchableOpacity>
                 )}
@@ -69,7 +72,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'stretch',
         backgroundColor: '#fff',
-        paddingTop: 12,
+        paddingTop: 16,
         paddingLeft: 16,
         paddingRight:16,
     },
