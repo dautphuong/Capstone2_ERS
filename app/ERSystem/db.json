@@ -1,12 +1,5 @@
 {
-  "login": [
-    {
-      "id": "c4ca4238a0b923820dcc509a6f75849b",
-      "username": "learner",
-      "password": "123",
-      "email": "loc2503@gmail.com"
-    }
-  ],
+
   "topics": [
     {
       "id": "1",
@@ -28,27 +21,32 @@
   "lessons": [
     {
       "id": "1",
-      "name": "Subject (chủ ngữ)",
+      "title": "Subject (chủ ngữ)",
+      "blog": "Chủ ngữ là chủ thể của hành động trong câu, thường đứng trước động từ (verb). Chủ ngữ thường là một danh từ (noun) hoặc một ngữ danh từ (noun phrase - một nhóm từ kết thúc bằng một danh từ, trong trường hợp này ngữ danh từ không được bắt đầu bằng một giới từ). Chủ ngữ thường đứng ở đầu câu và quyết định việc chia động từ. \\n Chú ý rằng mọi câu trong tiếng Anh đều có chủ ngữ (Trong câu mệnh lệnh, chủ ngữ được ngầm hiểu là người nghe. Ví dụ: “Don't move!” = Đứng im!). \n \nMilk is delicious. (một danh từ) \nThat new, red car is mine. (một ngữ danh từ)\n \nĐôi khi câu không có chủ ngữ thật sự, trong trường hợp đó, It hoặc There đóng vai trò chủ ngữ giả.\n \n It is a nice day today\n There is a fire in that building. \n",
       "topic": "1"
     },
     {
       "id": "2",
-      "name": " Danh từ đếm được và không đếm được (Count noun/ Non-count noun)",
+      "title": " Danh từ đếm được và không đếm được (Count noun/ Non-count noun)",
+      "blog": "Danh từ đếm được: Là danh từ có thể dùng được với số đếm, do đó nó có 2 hình thái số ít và số nhiều. Nó dùng được với a hay với the. VD: one book, two books, ... \n \n Danh từ không đếm được: Không dùng được với số đếm, do đó nó không có hình thái số ít, số nhiều.\n\n Nó không thể dùng được với a, còn the chỉ trong một số trường hợp đặc biệt. VD: milk (sữa). Bạn không thể nói 'one milk', 'two milks' ... (Một số vật chất không đếm được có thể được chứa trong các bình đựng, bao bì... đếm được. VD: one glass of milk - một cốc sữa).\n\n Một số danh từ đếm được có hình thái số nhiều đặc biệt. VD: person - people; child - children; tooth – teeth; foot – feet; mouse – mice.\n\n Một số danh từ đếm được có dạng số ít/ số nhiều như nhau chỉ phân biệt bằng có 'a' và không có 'a': an aircraft/ aircraft; a sheep/ sheep; a fish/ fish.\n\nMột số các danh từ không đếm được như food, meat, money, sand, water ... đôi khi được dùng như các danh từ số nhiều để chỉ các dạng, loại khác nhau của vật liệu đó.\n\nThis is one of the foods that my doctor wants me to eat.\n\nDanh từ 'time' nếu dùng với nghĩa là 'thời gian' là không đếm được nhưng khi dùng với nghĩa là 'thờiđại' hay 'số lần' là danh từ đếm được.\n\n You have spent too much time on that homework. (thời gian, không đếm được) I have seen that movie three times before. (số lần, đếm được)", 
       "topic": "2"
     },
     {
       "id": "3",
-      "name": "Present tenses (các thời hiện tại)",
+      "title": "Present tenses (các thời hiện tại)",
+      "blog": "Bai moi 3", 
       "topic": "3"
     },
     {
       "id": "4",
-      "name": "Các trường hợp chủ ngữ đứng tách khỏi động từ",
+      "title": "Các trường hợp chủ ngữ đứng tách khỏi động từ",
+      "blog": "Bai moi 4", 
       "topic": "4"
     },
     {
       "id": "5",
-      "name": "Các trường hợp chủ ngữ đứng tách khỏi động từ",
+      "title": "Các trường hợp chủ ngữ đứng tách khỏi động từ",
+      "blog": "Bai moi 4", 
       "topic": "1"
     }
   ]

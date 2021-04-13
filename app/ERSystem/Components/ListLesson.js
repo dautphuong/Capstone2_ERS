@@ -23,15 +23,11 @@ export default class ListLesson extends Component {
         const {id} = this.props.route.params;
         console.log(this.props.route);
         try {
-            axios.get(`/lessons?topic=${id}`)
-            // this.setState({
-            //     lessons
-            // });
+            axios.get(`/lesson/findByTopic/${id}`)
             .then(res => {
                 this.setState({
                     lessons: res.data
                 })
-                console.log(res);
             })
         }catch(error){
             console.error(error);
@@ -39,16 +35,20 @@ export default class ListLesson extends Component {
     }
     render() {
         const { lessons } = this.state;
+        const {navigation} =this.props;
         return (
             <ImageBackground source={bgImage} style={styles.imageBackgroundContainer}>
                 <FlatList
                     data={lessons}
                     renderItem={({item}) =>(
                 <TouchableOpacity activeOpacity={0.6}
-                        
+                onPress={() => navigation.navigate('LessonContent',{
+                    name: item.title,
+                    idLesson: item.id,
+                })}
                 >
                 <View style={styles.container}>
-                    <Text style={styles.title}>{item.name}</Text>
+                    <Text style={styles.title}>{item.title}</Text>
                     <Image style={styles.bookImage} source={dumbbell}></Image>
                 </View>
                 </TouchableOpacity>

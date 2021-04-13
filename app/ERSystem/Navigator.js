@@ -8,6 +8,7 @@ import Register from './Components/Register';
 import Home from './Components/Home';
 import ListTopic from './Components/ListTopic';
 import ListLesson from './Components/ListLesson';
+import LessonContent from './Components/LessonContent';
 import Translate from './Components/Translate';
 import History from './Components/History';
 const Stack = createStackNavigator(); 
@@ -59,7 +60,24 @@ const TabNavigator = createBottomTabNavigator();
             options={({ route }) => 
            ({ 
               id: route.params.id,
-              title: route.params.Topics ,
+              title: route.params.Topics,
+              headerStyle: {
+              backgroundColor: '#78C8E8',
+             },
+             headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 15,
+              right: 25
+             },
+            })
+          }
+          />
+          <Stack.Screen name="LessonContent" 
+          component={LessonContent}  
+            options={({ route }) => 
+           ({ 
+              id: route.params.idLesson,
+              title: route.params.name,
               headerStyle: {
               backgroundColor: '#78C8E8',
              },
