@@ -2,6 +2,8 @@
   "name": "light-bootstrap-dashboard-react",
   "version": "2.0.0",
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^27.0.0",
+    "@ckeditor/ckeditor5-react": "^3.0.2",
     "@fortawesome/fontawesome-free": "5.15.2",
     "bootstrap": "4.6.0",
     "chartist": "0.10.1",
@@ -15,7 +17,8 @@
     "react-notification-alert": "0.0.13",
     "react-router": "5.2.0",
     "react-router-dom": "5.2.0",
-    "react-scripts": "4.0.1"
+    "react-scripts": "4.0.1",
+    "react-select": "^4.3.0"
   },
   "optionalDependencies": {
     "jquery": "3.5.1",
