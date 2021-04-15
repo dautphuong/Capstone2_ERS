@@ -95,7 +95,7 @@ router.get('/findAll', function(req, res) {
  *         schema:
  *           type: string
  *         required: true
- *         description: The id lesson
+ *         description: The id topic
  *     responses:
  *       200:
  *         description: The topic was deleted

@@ -38,6 +38,8 @@ const topicRouter = require('./routes/topic');
 const questionRouter = require('./routes/question');
 const examRouter = require('./routes/exam');
 const contestRouter = require('./routes/contest');
+const historyRouter = require('./routes/history');
+const reportRouter = require('./routes/report');
 
 //Router Middlewares
 app.use('/user', authRouter);
@@ -47,5 +49,8 @@ app.use('/topic', topicRouter);
 app.use('/question', questionRouter);
 app.use('/exam', examRouter);
 app.use('/contest', contestRouter);
+app.use('/history', historyRouter);
+app.use('/report', reportRouter);
 
-app.listen(port, () => console.log('Server up and running'));
+
+app.listen(port, () => console.log('Server up and running , Swagger : http://localhost:4000/api-docs/'));

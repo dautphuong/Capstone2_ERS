@@ -33,7 +33,7 @@ const Question = require('../models/question');
  *           description: the note why right answer
  *         topic:
  *           type: string
- *           description: the topic question
+ *           description: the id topic question
  *         lesson:
  *           type: string
  *           description: the id lesson //có thể null
@@ -43,7 +43,7 @@ const Question = require('../models/question');
  *         answerChooses: [chọn A,chọn B,chọn C,chọn D]
  *         answerRight: chọn A
  *         note: vì nó đúng
- *         topic: danh từ
+ *         topic: id topic
  *         lesson: null
  */
 
