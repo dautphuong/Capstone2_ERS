@@ -3,13 +3,13 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import'./Css/Authentication/Login.css';
 import App from './App';
-//import FileReader2 from './Component/FileReader2'
-import Login from './Component/Authentication/Login'
+import FileReader from './Component/FileReader'
+//import Login from './Component/Authentication/Login'
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Login/>
+    <FileReader/>
   </React.StrictMode>,
   document.getElementById('root')
 );

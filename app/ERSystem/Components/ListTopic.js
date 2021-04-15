@@ -15,7 +15,7 @@ import book from '../image/book.png';
 import dumbbell from '../image/dumbbell.png';
 import exam from '../image/exam.png';
 
-axios.defaults.baseURL = 'https://ce1ee4c8a885.ngrok.io';
+axios.defaults.baseURL = 'https://a8555e55a408.ngrok.io';
 export default class ListTopic extends Component {
     constructor(props) {
         super(props);
@@ -24,7 +24,7 @@ export default class ListTopic extends Component {
         }
     }
     componentDidMount() {
-        axios.get('/topics')
+        axios.get('/topic/findAll')
             .then(res => {
                 this.setState({
                     topics: res.data
