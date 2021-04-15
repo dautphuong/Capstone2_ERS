@@ -15,7 +15,6 @@ module.exports = class Contest {
     }
 
     save(req, callback) {
-        console.log(req)
         firebase.database().ref("contests/").push().set({
             name: req.name,
             timeStart: req.timeStart,
@@ -36,7 +35,8 @@ module.exports = class Contest {
             if (snapshot.exists()) {
                 var item = snapshot.val();
                 item.id = snapshot.key;
-                callback(item);
+                var arr=[item]
+                callback(arr);
             } else {
                 callback("Data does not exist");
             }

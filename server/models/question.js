@@ -21,14 +21,13 @@ module.exports = class Quetion {
 
 
     save(req, callback) {
-        firebase.database().ref("topics/").once("value").then(function(snapshot) {
-            if (snapArray.snap_array(snapshot).some(value => value.name == req.topic)) {
-                let topic = snapArray.snap_array(snapshot).find(value => value.name == req.topic).id;
+        firebase.database().ref("topics/"+req.topic).once("value").then(function(snapshot) {
+            if (snapshot.exists()) {
                 firebase.database().ref("questions/").push().set({
                     title: req.title,
                     answerChooses: req.answerChooses,
                     answerRight: req.answerRight,
-                    topic: topic,
+                    topic: req.topic,
                     note: req.note,
                     lesson: req.lesson
                 });
@@ -76,7 +75,8 @@ module.exports = class Quetion {
             if (snapshot.exists()) {
                 var item = snapshot.val();
                 item.id = snapshot.key;
-                callback(item);
+                var arr=[item]
+                callback(arr);
             } else {
                 callback("Data does not exist");
             }

@@ -40,7 +40,8 @@ module.exports = class Exam {
             if (snapshot.exists()) {
                 var item = snapshot.val();
                 item.id = snapshot.key;
-                callback(item);
+                var arr=[item]
+                callback(arr);
             } else {
                 callback("Data does not exist");
             }

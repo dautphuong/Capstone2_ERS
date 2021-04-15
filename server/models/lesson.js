@@ -39,6 +39,8 @@ module.exports = class Lesson {
                         callback("Data does not exist");
                     }
                 });
+            }else{
+                callback("Data does not exist");
             }
         });
     }
@@ -48,7 +50,7 @@ module.exports = class Lesson {
             if (snapshot.exists()) {
                 var item = snapshot.val();
                 item.id = snapshot.key;
-                var arr=[item]
+                var arr=[item];
                 callback(arr);
             } else {
                 callback("Data does not exist");

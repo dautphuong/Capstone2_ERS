@@ -40,8 +40,8 @@ module.exports = class User {
                             lastLogin: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
                         });
                         //callback 
-                        firebase.database().ref("users/role_learner/" + req.username).once("value").then(function(snapshot) {
-                            callback(snapshot.val());
+                        firebase.database().ref("users/role_learner/").once("value").then(function(snapshot) {
+                            callback(snapArray.snap_array(snapshot).some(value => value.username == req.username));
                         })
                     }
                 })
@@ -67,8 +67,8 @@ module.exports = class User {
                             lastLogin: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
                         });
                         //callback 
-                        firebase.database().ref("users/role_admin/" + req.username).once("value").then(function(snapshot) {
-                            callback(snapshot.val());
+                        firebase.database().ref("users/role_admin/").once("value").then(function(snapshot) {
+                            callback(snapArray.snap_array(snapshot).some(value => value.username == req.username));
                         })
                     }
                 })
@@ -92,13 +92,15 @@ module.exports = class User {
             if (snapshot.exists()) {
                 var item = snapshot.val();
                 item.id = snapshot.key;
-                callback(item);
+                var arr=[item];
+                callback(arr);
             } else {
                 firebase.database().ref("users/role_admin/" + id).once("value").then(function(snapshot) {
                     if (snapshot.exists()) {
                         var item = snapshot.val();
                         item.id = snapshot.key;
-                        callback(item);
+                        var arr=[item]
+                        callback(arr);
                     } else {
                         callback("Data does not exist");
                     }
