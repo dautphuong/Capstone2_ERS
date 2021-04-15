@@ -158,7 +158,7 @@ router.get('/findByTopic/:topic', function(req, res) {
  * @swagger
  * /question/findById/{id}:
  *   get:
- *     summary: danh sách question theo topic
+ *     summary: question theo id
  *     tags: [Question]
  *     parameters: 
  *       - in: path
