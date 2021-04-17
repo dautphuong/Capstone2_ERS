@@ -5,6 +5,7 @@ const firebase=require('../util/firebase_connect');
 const { validationResult } = require('express-validator');
 const { validate } = require('../util/validator');
 
+const {verifyToken}=require('../util/authorization')
 
 /**
  * @swagger
@@ -75,6 +76,7 @@ validate.validateRegisterUser(),
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
+
     try{
         user.register(user,function(data){
             res.send(data)
@@ -85,11 +87,29 @@ validate.validateRegisterUser(),
 }); 
 
 
-// router.post('/login',(req,res)=>{
-//     const username=req.body.username
-//     const user ={name:username}
-//     const accessToken=jwt.sign(user,process.env.ACCESS_TOKEN_SECRET)
-//     res.json({accessToken:accessToken})
-// })
+router.post('/login',(req,res)=>{
+    const username=req.body.username
+    const user ={name:username}
+    jwt.sign({user}, 'secretkey', { expiresIn: '2 days' }, (err, token) => {
+        res.json({
+          token
+        });
+      });
+})
+
+
+
+// router.post('/api/posts', verifyToken , (req, res) => {  
+//     jwt.verify(req.token, 'secretkey', (err, authData) => {
+//       if(err) {
+//         res.sendStatus(403);
+//       } else {
+//         res.json({
+//           message: 'Post created...',
+//           authData
+//         });
+//       }
+//     });
+//   });
 
 module.exports=router;

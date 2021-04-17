@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const Lesson = require('../models/lesson');
+const {verifyToken}=require('../util/authorization')
 
 /**
  * @swagger
@@ -119,6 +120,7 @@ router.get('/findByTopic/:topic', function(req, res) {
  *           type: string
  *         required: true
  *         description: The id
+ * 
  *     responses:
  *       200:
  *         description: The questions description by id
@@ -129,7 +131,7 @@ router.get('/findByTopic/:topic', function(req, res) {
  *       404:
  *         description: The user was not found
  */
-router.get('/findByid/:id', function(req, res) {
+router.get('/findByid/:id',verifyToken, function(req, res) {
     const lesson = new Lesson();
     lesson.findById(req.params.id, function(data) {
         res.send(data)

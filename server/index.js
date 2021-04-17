@@ -5,7 +5,7 @@ const app = express();
 const port = 4000;
 const cors = require("cors");
 const swaggerUI = require('swagger-ui-express');
-const swaggerJsDoc = require("swagger-jsdoc");
+const swaggerJsdoc = require("swagger-jsdoc");
 
 app.use(bodyParser.json()); //this will accept json request
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -13,21 +13,37 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //Middlewares
 app.use(cors());
 
-const options = {
-    definition: {
-        openapi: '3.0.0',
-        info: {
-            title: 'APi ENGLISH REIVEW SYSTEM',
-            version: '1.0.0',
-        },
-        servers: [{
-            url: "http://localhost:4000",
-        }, ],
+const swaggerSpec = swaggerJsdoc({
+    swaggerDefinition: {
+      openapi: "3.0.0",
+      info: {
+        title: "APi ENGLISH REIVEW SYSTEM",
+        version: "1.0.0",
+        description:
+          "A sample project to understand how easy it is to document and Express API",
+      },
+      servers: [{
+                    url: "http://localhost:4000",
+                }, ],
     },
+     components: {
+        securitySchemes: {
+          jwt: {
+            type: "http",
+            scheme: "bearer",
+            in: "header",
+            bearerFormat: "JWT"
+          },
+        }
+      }
+      ,
+      security: [{
+        jwt: []
+      }],
+    swagger: "2.0",
     apis: ['./routes/*.js'], // files containing annotations as above
-};
-const specs = swaggerJsDoc(options);
-app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
+  });
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 
 //Import Router
