@@ -50,6 +50,8 @@ module.exports = class User {
     }
 
     createAdmin(req, callback) {
+        // "swagger-jsdoc": "^6.0.1",
+        // "swagger-ui-express": "^4.1.6"
         firebase.database().ref("users/role_learner/").once("value").then(function(snapshot) {
             if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
                 callback("Account already exists");
