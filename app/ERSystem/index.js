@@ -8,6 +8,7 @@ import Tab from './Components/Tabs';
 import ListTopic from './Components/ListTopic';
 import ListLesson from './Components/ListLesson';
 import Navigator from './Navigator';
+import CalendarExam from './Components/CalendarExam';
 import LessonContent from './Components/LessonContent'
 import {name as appName} from './app.json';
 

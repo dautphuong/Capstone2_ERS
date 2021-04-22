@@ -10,22 +10,24 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import bgImage from '../image/logins.jpg';
-import book from '../image/book.png';
+import contest from '../image/contest.png';
 
-axios.defaults.baseURL = 'https://d706e12a539e.ngrok.io';
-export default class ListTopic extends Component {
+
+export default class CalendarExam extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            topics: []
+            contests: [],
         }
     }
     componentDidMount() {
-        axios.get('/topic/findAll')
+        axios.get('/contest/findAll')
             .then(res => {
                 this.setState({
-                    topics: res.data
+                  contests: res.data
+                   
                 })
+                console.log(res.data)
             })
             .catch(error => {
                 console.error(error)
@@ -34,22 +36,24 @@ export default class ListTopic extends Component {
 
     render() {
         const {navigation} =this.props;
-        const { topics } = this.state;
+        const { contests } = this.state;
         return (
             <ImageBackground source={bgImage} style={styles.imageBackgroundContainer}>
                 <FlatList
-                    data={topics}
+                    data={contests}
                     renderItem={({item}) =>(
                 <TouchableOpacity 
                 activeOpacity={0.6}
-                    onPress={() => navigation.navigate('ListLesson',{
-                        Topics: item.name,
-                        id: item.id
-                    })}
+                onPress={() => navigation.navigate('ReadyContest',{
+                    Contest: item.name,
+                    id: item.id
+                })}
                 >
                 <View style={styles.container}>
                     <Text style={styles.title}>{item.name}</Text>
-                    <Image style={styles.bookImage} source={book}></Image>
+                    <Text style={styles.title}>{item.timeStart}</Text>
+                    <Text style={styles.title}>{item.timeEnd}</Text>
+                    <Image style={styles.bookImage} source={contest}></Image>
                 </View>
                 </TouchableOpacity>
                 )}

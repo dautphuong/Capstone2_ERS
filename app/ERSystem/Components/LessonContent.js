@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
+import  AsyncStorage  from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {
     StyleSheet,
     View,
     Text,
     ImageBackground,
-    Image,
     FlatList,
     TouchableOpacity,
 } from 'react-native';
 import bgImage from '../image/logins.jpg';
-import dumbbell from '../image/dumbbell.png';
 
 export default class LessonContent extends Component {
     constructor(props) {
@@ -23,7 +22,11 @@ export default class LessonContent extends Component {
         const {idLesson} = this.props.route.params;
         console.log(this.props.route);
         try {
-            axios.get(`/lesson/findById/${idLesson}`)
+            axios.get(`/lesson/findById/${idLesson}`,{
+                headers: {
+                    'Authorization': 'Bearer ' + AsyncStorage.getItem("token")
+                  }
+            })
             .then(res => {
                 this.setState({
                     lessons: res.data

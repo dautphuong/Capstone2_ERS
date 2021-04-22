@@ -7,7 +7,7 @@ import Pra from '../image/Pra.jpg';
 import Exam from '../image/Exam.jpg';
 import Learn from '../image/startlearn.jpg';
 
-export default class Login extends React.Component {
+export default class ReadyContest extends React.Component {
     render() {
         const {navigation} =this.props;
         return (
@@ -16,25 +16,10 @@ export default class Login extends React.Component {
                 style={{ width: "100%", height: "100%" }}>
                 <View style={styles.menu}>
                     <Image source={Logo} style={styles.logo} />
-                    <Icon name={'account-circle'}
-                        size={50}
-                        color={'rgba(255,255,255,0.7)'}
-                        style={styles.accountCircle} />
                 </View>
                 <View style={styles.header}>
                     <Text style={styles.welcome}>
-                        Yay, you're here!
-                    </Text>
-                    <Text style={styles.welcomeHere}>
-                        <Text >
-                            Rất hân hạnh được giúp bạn học Tiếng Anh.
-                            {"\n"}
-                            {"\n"}
-                            Chúng ta bắt đầu nào.
-                        </Text>
-                        <Text >
-                            
-                        </Text>
+                        Yay, Ready to do test!
                     </Text>
                     <View style={styles.box}>
                         <TouchableOpacity 
@@ -45,7 +30,7 @@ export default class Login extends React.Component {
                                 style={styles.image}
                             />
                             <Text style={styles.Text}>
-                                Bắt đầu học
+                                Bắt đầu làm bài
                                 </Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.content}>
@@ -54,17 +39,7 @@ export default class Login extends React.Component {
                                 style={styles.image}
                             />
                             <Text style={styles.Text}>
-                                Luyện Tập
-                                </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity 
-                        style={styles.content}
-                        onPress={() => navigation.navigate('CalendarExam')}>
-                            <Image
-                                source={Exam}
-                                style={styles.image} />
-                            <Text style={styles.Text}>
-                                Thi
+                                Xem đáp án
                                 </Text>
                         </TouchableOpacity>
                     </View>
@@ -83,7 +58,7 @@ const styles = StyleSheet.create({
         height: 55,
         justifyContent: 'center',
         borderRadius: 50,
-
+        backgroundColor: 'white'
     },
     Text: {
         fontSize: 25,
@@ -107,20 +82,19 @@ const styles = StyleSheet.create({
         padding: 15,
     },
     logo: {
-        width: 175,
-        height: 175,
-    },
-    accountCircle: {
-        marginLeft: 120,
+        marginLeft: 100,
+        width: 200,
+        height: 200,
     },
     header: {
         paddingHorizontal: 40,
         marginTop: 25,
     },
     welcome: {
+        marginBottom: 30,
+        marginLeft: 45,
         fontSize: 25,
         color: "#522289",
-        fontFamily: "RobotoBold",
     },
     welcomeHere: {
         fontSize: 17,

@@ -11,6 +11,8 @@ import ListLesson from './Components/ListLesson';
 import LessonContent from './Components/LessonContent';
 import Translate from './Components/Translate';
 import History from './Components/History';
+import CalendarExam from './Components/CalendarExam';
+import  ReadyContest from './Components/ReadyContest';
 const Stack = createStackNavigator(); 
 const TabNavigator = createBottomTabNavigator();
  function AppNavigator() {
@@ -78,6 +80,38 @@ const TabNavigator = createBottomTabNavigator();
            ({ 
               id: route.params.idLesson,
               title: route.params.name,
+              headerStyle: {
+              backgroundColor: '#78C8E8',
+             },
+             headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 15,
+              right: 25
+             },
+            })
+          }
+          />
+          <Stack.Screen name="CalendarExam" 
+          component={CalendarExam} 
+          options={{
+            headerTitle: 'Danh Sách Cuộc Thi',
+            headerStyle: {
+                backgroundColor: '#78C8E8',
+                
+            },
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 20,
+              right: 25
+             },
+          }}
+          />
+          <Stack.Screen name="ReadyContest" 
+          component={ReadyContest} 
+          options={({ route }) => 
+           ({ 
+              id: route.params.id,
+              title: route.params.Contest,
               headerStyle: {
               backgroundColor: '#78C8E8',
              },

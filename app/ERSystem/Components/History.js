@@ -7,7 +7,7 @@ import Pra from '../image/Pra.jpg';
 import Exam from '../image/Exam.jpg';
 import Learn from '../image/startlearn.jpg';
 
-export default class Translate extends Component {
+export default class History extends Component {
     render() {
         return (
                 <Text>History</Text>
