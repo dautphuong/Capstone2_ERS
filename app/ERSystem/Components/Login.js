@@ -34,21 +34,18 @@
          this.state = {
              showPass: true,
              press: false,
-             username: "",
-             password: "",
+             username: '',
+             password: '',
+             messageSuccess: '',
+             messageError: '',
              loading: false
          }
      }
 
-     onChangeHandle(state, value) {
-         this.setState({
-             [state]: value
-         })
-     }
      checkLogin() {
         const {navigation} =this.props;
         const {username, password } = this.state;
-        if(username && password) {
+        if(username !=='' && password) {
             const req = {
                 "username": username,
                 "password": password
@@ -56,12 +53,15 @@
             this.setState({
                 loading: true,
             })
-            axios.post("https://reqres.in/api/login", req)
+            axios.post("/user/login", req)
             .then(
                 res => {
-                    this.setState({
+                    Alert.alert('Bạn đã đăng nhập thành công',
+                        this.setState({
                         loading: false,
-                    })
+                        "messageSuccess": this.state.messageSuccess,
+                        messageError: ''
+                })) 
                     console.log(res.data.token)
                     AsyncStorage.setItem("token", res.data.token)
                     .then(
@@ -70,27 +70,17 @@
                         }
                     );
                     
-                },
-                err => {
-                    this.setState({
-                        loading: false,
-                    })
-                    alert("UserName/ Password is incorrect !!!")
-                }
+                }, 
             )
         }else{
-            Alert.alert('Error', 'UserName/ Password Failed!!!',[{
-                text: 'Oke'
-            }])
+            Alert.alert('Tài khoản/ Mật khẩu không đúng',
+                        this.setState({
+                        loading: false,
+                        messageError: this.state.messageError,
+                        messageSuccess: ''
+                }))
         }
-        /*if(username =='learner' && password =="123"){
-            navigation.navigate('Home')
-            console.log(navigation.navigate)
-        }else{
-            Alert.alert('Error', 'UserName/ Password Failed!!!',[{
-                text: 'Oke'
-            }])
-        }*/
+        
      }
      showPass = () =>{
          if(this.state.press == false){
@@ -116,7 +106,7 @@
              <ImageBackground source={bgImage} style={styles.imageBackgroundContainer}>
                  <View style={styles.containerLogo}>
                      <Image source = {logo} style={styles.logo}></Image>
-                     <Text style={styles.textLogin}>Sign In</Text>
+                     <Text style={styles.textLogin}>Đăng Nhập</Text>
                  </View>
  
                  <View style={styles.inputContainer}>
@@ -126,11 +116,11 @@
                      style={styles.inputIcon}/>
                      <TextInput 
                          style={styles.input}
-                         placeholder={'UserName'}
+                         placeholder={'Tên tài khoản'}
                          placeholderTextColor={'rgba(68, 248, 161, 0.7)'}
                          underlineColorAndroid='transparent'
                          value={username}
-                         onChangeText={(value) => this.onChangeHandle('username', value)}
+                         onChangeText = { (text) => this.setState({ username: text }) }
                          />
                  </View>
  
@@ -141,12 +131,11 @@
                      style={styles.passIcon}/>
                      <TextInput 
                          style={styles.input}
-                         placeholder={'Password'}
+                         placeholder={'Mật Khẩu'}
                          secureTextEntry={this.state.showPass}
                          placeholderTextColor={'rgba(68, 248, 161, 0.7)'}
                          underlineColorAndroid='transparent'
-                         value={password}
-                         onChangeText={(value) => this.onChangeHandle('password', value)}
+                         onChangeText = { (text) => this.setState({ password: text }) }
                      />
                      <TouchableOpacity style={styles.btnEye}
                      onPress={this.showPass.bind(this)}>
@@ -166,7 +155,7 @@
                  disabled={loading}
                  >
                      <Text style={styles.Text}>
-                         {loading ? "Loading..." : "Login"} 
+                         {loading ? "Loading..." : "Đăng Nhập"} 
                          </Text>
                  </TouchableOpacity>
  
@@ -174,7 +163,7 @@
                  style={styles.btnRegister}
                  onPress={() => navigation.navigate('Register')}
                  >
-                     <Text style={styles.Text}>Create Account</Text>
+                     <Text style={styles.Text}>Tạo tài khoản</Text>
                  </TouchableOpacity>
                  <Divider style={styles.divider}></Divider>
                  <TouchableOpacity style={styles.btnGoogle}>
@@ -182,7 +171,7 @@
                      size = {28} 
                      color={'rgba(238,0,0,0.7)'} 
                      style={styles.inputIconGoogle}/>
-                     <Text style={styles.textGoogle}>Login With Google</Text>
+                     <Text style={styles.textGoogle}>Đăng nhập với Google</Text>
                  </TouchableOpacity>
              </ImageBackground>
          </TouchableWithoutFeedback>

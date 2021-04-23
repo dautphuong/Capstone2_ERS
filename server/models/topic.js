@@ -15,7 +15,7 @@ module.exports = class Topic {
                 firebase.database().ref("topics/").push().set({
                     name: req,
                 });
-                callback("successfull");
+                callback("Successful");
             }
         });
     }
