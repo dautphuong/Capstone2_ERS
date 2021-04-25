@@ -76,10 +76,10 @@ validate.validateRegisterUser(),
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-
     try{
         user.register(user,function(data){
             res.send(data)
+            console.log(data)
         });
     }catch(err){
         res.status(400).send(err);
@@ -88,13 +88,21 @@ validate.validateRegisterUser(),
 
 
 router.post('/login',(req,res)=>{
-    const username=req.body.username
-    const user ={name:username}
-    jwt.sign({user}, 'secretkey', { expiresIn: '2 days' }, (err, token) => {
-        res.json({
-          token
-        });
-      });
+    const user =new User();
+    user.checkLogin(req.body,function(data){
+        if(data!=null){
+        jwt.sign({data}, 'secretkey', { expiresIn: '2 days' }, (err, token) => {
+            const id=data.id
+            res.send({
+                id,
+                token
+            });
+          });
+        }else{
+            res.send("Data does not exist")
+        }
+    })
+    
 })
 
 

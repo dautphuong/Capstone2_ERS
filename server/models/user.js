@@ -41,7 +41,7 @@ module.exports = class User {
                         });
                         //callback 
                         firebase.database().ref("users/role_learner/").once("value").then(function(snapshot) {
-                            callback(snapArray.snap_array(snapshot).some(value => value.username == req.username));
+                            callback(snapArray.snap_array(snapshot).filter(value => value.username == req.username));
                         })
                     }
                 })
@@ -50,8 +50,6 @@ module.exports = class User {
     }
 
     createAdmin(req, callback) {
-        // "swagger-jsdoc": "^6.0.1",
-        // "swagger-ui-express": "^4.1.6"
         firebase.database().ref("users/role_learner/").once("value").then(function(snapshot) {
             if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
                 callback("Account already exists");
@@ -63,10 +61,7 @@ module.exports = class User {
                         firebase.database().ref("users/role_admin/").push().set({
                             username: req.username,
                             password: md5(req.password),
-                            email: req.email,
-                            createOnUTC: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
                             role: req.role,
-                            lastLogin: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
                         });
                         //callback 
                         firebase.database().ref("users/role_admin/").once("value").then(function(snapshot) {
@@ -154,6 +149,25 @@ module.exports = class User {
                         callback("Data does not exist");
                     }
                 });
+            }
+        });
+    }
+
+    checkLogin(req, callback) {
+        firebase.database().ref("users/role_learner/" ).once("value").then(function(snapshot) {
+            if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
+                var item = snapArray.snap_array(snapshot).filter(value => value.username == req.username)[0]
+                console.log(item)
+                console.log(item.password)
+                console.log(md5(req.password))
+                // if(item.password == md5(req.password)){
+                callback(item);
+                // }
+                // else{
+                //     callback(null);
+                // }
+            }else{
+                callback(null);
             }
         });
     }
