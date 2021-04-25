@@ -5,8 +5,7 @@ module.exports = class Lesson {
     title; //String
     blog; //String
     topic; //id Topic
-    listQuestion; //list id question 
-    constructor(title, blog, topic) {
+    constructor(title, blog, topic,listQuestion) {
         this.title = title;
         this.blog = blog;
         this.topic = topic;
