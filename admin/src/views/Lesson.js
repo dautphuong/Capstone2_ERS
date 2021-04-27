@@ -14,16 +14,25 @@ import {
 import Select from 'react-select';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { data, event } from "jquery";
+
 class Lesson extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectValue: ""
+      selectValue: "",
+      contentCKEditor: ""
     }
     //this.handleDropdownChange = this.handleDropdownChange.bind(this);
+    this.handCkeditorState = this.handCkeditorState.bind(this);
   }
   handleDropdownChange(e) {
     this.setState({ selectValue: e.target.value })
+  }
+  handCkeditorState = (event, editor) => {
+      const data = editor.getData();
+      this.setState({contentCKEditor : data})
+      console.log(this.state.contentCKEditor)
   }
 
   render() {
@@ -34,6 +43,9 @@ class Lesson extends React.Component {
       { value: 'strawberry', label: 'Strawberry' },
       { value: 'vanilla', label: 'Vanilla' }
     ]
+    const editorConfiguration = {
+      toolbar: ['bold', 'italic']
+    };
     return (
       <>
         <Container fluid>
@@ -41,34 +53,31 @@ class Lesson extends React.Component {
             <Col md="12">
               <Card>
                 <Card.Header>
-                  <Card.Title as="h4">Light Bootstrap Table Heading</Card.Title>
-                  <p className="card-category">
+                  <Card.Title as="h4" style = {{width:'50%', float:'left'}}>Light Bootstrap Table Heading</Card.Title>
+                  <button type="button" class="btn btn-primary btn-lg" style = {{width:'18%', float:'right'}} >Import</button>
+                  <p className="card-category" style={{width:'50%' }}>
                     Created using Montserrat Font Family
                 </p>
                 </Card.Header>
                 <Card.Body>
-                  <div id = "area-select">
+                  <div id="area-select">
                     <Select options={options} onChange={e => this.handleDropdownChange(e)}  ></Select>
                   </div>
                   <form>
                     <CKEditor
                       editor={ClassicEditor}
-
+                      //config={ editorConfiguration }
                       onReady={editor => {
                         // You can store the "editor" and use when it is needed.
                         console.log('Editor is ready to use!', editor);
                       }}
-                      onChange={(event, editor) => {
-                        const data = editor.getData();
-                        console.log({ event, editor, data });
-                      }}
+                      onChange={this.handCkeditorState}
                       onBlur={(event, editor) => {
                         console.log('Blur.', editor);
                       }}
                       onFocus={(event, editor) => {
                         console.log('Focus.', editor);
                       }}
-                      style={Style.CKEditor}
                     />
                     <input type="submit" value="Submit" />
                   </form>

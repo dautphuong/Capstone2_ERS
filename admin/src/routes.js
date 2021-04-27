@@ -20,7 +20,8 @@ import UserProfile from "views/UserProfile.js";
 import TableList from "views/TableList.js";
 import Lesson from "views/Lesson";
 import Icons from "views/Icons.js";
-import Maps from "views/Maps.js";
+//import Maps from "views/Maps.js";
+import Exam from "views/Exam.js"
 import Notifications from "views/Notifications.js";
 import Upgrade from "views/Upgrade.js";
 
@@ -69,10 +70,10 @@ const dashboardRoutes = [
     layout: "/admin",
   },
   {
-    path: "/maps",
+    path: "/exam",
     name: "Exam",
     icon: "nc-icon nc-pin-3",
-    component: Maps,
+    component: Exam,
     layout: "/admin",
   },
   {
