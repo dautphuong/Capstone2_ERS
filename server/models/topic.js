@@ -24,6 +24,7 @@ module.exports = class Topic {
         firebase.database().ref("topics/").once("value").then(function(snapshot) {
             callback(snapArray.snap_array(snapshot));
         })
+        
     }
 
     delete(id, callback) {

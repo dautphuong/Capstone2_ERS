@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const Topic = require('../models/topic');
-
+const snapArray = require('../util/snapshot_to_array')
 /**
  * @swagger
  * components:
@@ -80,6 +80,8 @@ router.get('/findAll', function(req, res) {
     const topic = new Topic();
     topic.findAll(function(data) {
         res.send(data)
+        console.log(data);
+
     })
 });
 
