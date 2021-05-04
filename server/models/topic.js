@@ -39,7 +39,6 @@ module.exports = class Topic {
                         snapArray.snap_array(snapshot).filter(value => value.idTopic == id).forEach(function(item){
                             const question = new Question();
     question.delete(item.id, function(data) {
-        res.send(data);
     })
                         });
                     } 
@@ -50,7 +49,6 @@ module.exports = class Topic {
                         snapArray.snap_array(snapshot).filter(value => value.idTopic == id).forEach(function(item){
                             const lesson = new Lesson();
                             lesson.delete(item.id, function(data) {
-                                res.send(data);
                             })
                         });
                     } 
