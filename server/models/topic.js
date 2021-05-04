@@ -1,5 +1,8 @@
 const firebase = require('../util/firebase_connect');
-const snapArray = require('../util/snapshot_to_array')
+const snapArray = require('../util/snapshot_to_array');
+const Lesson = require('../models/lesson');
+const Question = require('../models/question');
+
 module.exports = class Topic {
     name; //String
 
@@ -24,17 +27,41 @@ module.exports = class Topic {
         firebase.database().ref("topics/").once("value").then(function(snapshot) {
             callback(snapArray.snap_array(snapshot));
         })
-        
     }
 
     delete(id, callback) {
         firebase.database().ref("topics/").once("value").then(function(snapshot) {
             if (snapArray.snap_array(snapshot).some(value => value.id == id)) {
+
+                //delete question by topic
+                firebase.database().ref("questions/").once("value").then(function(snapshot) {
+                    if (snapshot.exists()) {
+                        snapArray.snap_array(snapshot).filter(value => value.idTopic == id).forEach(function(item){
+                            const question = new Question();
+    question.delete(item.id, function(data) {
+        res.send(data);
+    })
+                        });
+                    } 
+                });
+                //delete lesson by topic
+                firebase.database().ref("lessons/").once("value").then(function(snapshot) {
+                    if (snapshot.exists()) {
+                        snapArray.snap_array(snapshot).filter(value => value.idTopic == id).forEach(function(item){
+                            const lesson = new Lesson();
+                            lesson.delete(item.id, function(data) {
+                                res.send(data);
+                            })
+                        });
+                    } 
+                });
+                //delete topic
                 firebase.database().ref("topics/" + id).remove();
-                callback("successfull");
+                callback("Successfully");
             } else {
                 callback("Data does not exist");
             }
+            
         });
     }
 }

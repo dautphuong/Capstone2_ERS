@@ -11,26 +11,31 @@ const {verifyToken}=require('../util/authorization')
  *       required:
  *         - id
  *         - title
- *         - blog
- *         - topic
+ *         - content
+ *         - listQuestion
+ *         - idTopic
  *       properties:
  *         id:
  *           type: string
  *           description: The id create is random
+ *         listQuestion:
+ *           type: array
+ *           description: array question
  *         title:
  *           type: string
  *           description: The lesson title
- *         blog:
+ *         content:
  *           type: longblog
  *           description: The lesson content
- *         topic:
+ *         idTopic:
  *           type: string
- *           description: The  topic lesson
+ *           description: The  idTopic lesson
  *       example:
  *         id: L0123
  *         title: danh từ số ít
- *         blog: abc ....
- *         topic: danh từ
+ *         content: abc ....
+ *         listQuestion: [Q1,Q2,Q3]
+ *         idTopic: danh từ
  */
 
 /**
@@ -65,8 +70,9 @@ const {verifyToken}=require('../util/authorization')
 router.post('/save', (req, res) => {
     const lesson = new Lesson(
         req.body.title,
-        req.body.blog,
-        req.body.topic,
+        req.body.content,
+        req.body.idTopic,
+        req.body.listQuestion
     );
     try {
         lesson.save(lesson, function(data) {
@@ -81,7 +87,7 @@ router.post('/save', (req, res) => {
  * @swagger
  * /lesson/findByTopic/{idTopic}:
  *   get:
- *     summary: danh sách lesson theo topic
+ *     summary: danh sách lesson theo idTopic
  *     tags: [Lesson]
  *     parameters:
  *       - in: path
@@ -100,9 +106,9 @@ router.post('/save', (req, res) => {
  *       404:
  *         description: The user was not found
  */
-router.get('/findByTopic/:topic', function(req, res) {
+router.get('/findByTopic/:idTopic', function(req, res) {
     const lesson = new Lesson();
-    lesson.findAllByTopic(req.params.topic, function(data) {
+    lesson.findAllByTopic(req.params.idTopic, function(data) {
         res.send(data)
     })
 });
@@ -111,7 +117,7 @@ router.get('/findByTopic/:topic', function(req, res) {
  * @swagger
  * /lesson/findById/{id}:
  *   get:
- *     summary: danh sách lesson theo topic
+ *     summary: danh sách lesson theo idTopic
  *     tags: [Lesson]
  *     parameters: 
  *       - in: path
@@ -198,3 +204,4 @@ router.delete("/delete/:id", function(req, res) {
 });
 
 module.exports = router;
+//ok

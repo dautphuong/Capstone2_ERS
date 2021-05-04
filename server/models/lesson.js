@@ -2,38 +2,56 @@ const firebase = require('../util/firebase_connect');
 const snapArray = require('../util/snapshot_to_array')
 
 module.exports = class Lesson {
-    title; //String
-    blog; //String
-    topic; //id Topic
-    constructor(title, blog, topic,listQuestion) {
+
+    constructor(title, content, idTopic,listQuestion) {
         this.title = title;
-        this.blog = blog;
-        this.topic = topic;
+        this.content = content;
+        this.idTopic = idTopic;
+        this.listQuestion=listQuestion;
     }
 
     save(req, callback) {
-        firebase.database().ref("topics/").once("value").then(function(snapshot) {
-            if (snapArray.snap_array(snapshot).some(value => value.name == req.topic)) {
-                let topic = snapArray.snap_array(snapshot).find(value => value.name == req.topic).id;
-                firebase.database().ref("lessons/").push().set({
-                    title: req.title,
-                    blog: req.blog,
-                    topic: topic
-                });
-                callback("successfull");
+        
+
+        firebase.database().ref("topics/"+req.idTopic).once("value").then(function(snapshot) {
+            if (snapshot.exists()) {
+                // firebase.database().ref("lessons/").push().set({
+                //     title: req.title,
+                //     content: req.content,
+                //     idTopic: req.idTopic,
+                //     createOnUTC: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
+                // });
+                
+                var reference = firebase.database().ref('lessons/').push();
+        var uniqueKey = reference.key
+        reference.set({
+            title: req.title,
+                    content: req.content,
+                    idTopic: req.idTopic,
+                    createOnUTC: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
+        });
+
+        req.listQuestion.forEach(function(item){
+            firebase.database().ref("lesson-question/").push().set({
+                idLesson: uniqueKey,
+                idQuestion: item
+            });
+        });
+        
+
+        callback("successfull");
             } else {
                 callback("Topic does not exist")
-                    // chưa xử lý tự động thêm topic dc
             }
         });
     }
 
-    findAllByTopic(topic, callback) {
-        firebase.database().ref("topics/" + topic).once("value").then(function(snapshot) {
+    findAllByTopic(idTopic, callback) {
+        firebase.database().ref("topics/" + idTopic).once("value").then(function(snapshot) {
             if (snapshot.exists()) {
                 firebase.database().ref("lessons/").once("value").then(function(snapshot) {
                     if (snapshot.exists()) {
-                        callback(snapArray.snap_array(snapshot).filter(value => value.topic == topic));
+                        callback(snapArray.snap_array(snapshot).filter(value => value.idTopic == idTopic));
                     } else {
                         callback("Data does not exist");
                     }
@@ -60,19 +78,16 @@ module.exports = class Lesson {
     update(req, callback) {
         firebase.database().ref("lessons/" + req.id).once("value").then(function(snapshot) {
             if (snapshot.exists()) {
-                firebase.database().ref("topics/").once("value").then(function(snapshot) {
-                    if (snapArray.snap_array(snapshot).some(value => value.name == req.topic)) {
-                        let topic = snapArray.snap_array(snapshot).find(value => value.name == req.topic).id;
+                firebase.database().ref("topics/"+req.idTopic).once("value").then(function(snapshot) {
+                    if (snapshot.exists()) {
                         firebase.database().ref("lessons/" + req.id).update({
                             title: req.title,
-                            blog: req.blog,
-                            topic: topic,
-                            // chưa kiểm tra list question tồn tại không ?
+                            content: req.content,
+                            idTopic: req.idTopic,
                         });
                         callback("successfull");
                     } else {
                         callback("Topic does not exist");
-                        // chưa xử lý tự động thêm topic dc
                     }
                 });
 

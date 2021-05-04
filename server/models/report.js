@@ -2,7 +2,6 @@ const firebase = require('../util/firebase_connect');
 const snapArray = require('../util/snapshot_to_array')
 
 module.exports=class Report{
-    id;//String auto
     content;//String
     idQuestion;// id by question
 

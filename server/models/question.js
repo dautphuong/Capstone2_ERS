@@ -6,30 +6,27 @@ module.exports = class Quetion {
     answerChooses; //array
     answerRight; //String
     note; //String
-    topic; //Topic
-    lesson// id lesson
+    idTopic; //Topic
 
-    constructor(title, answerChooses, answerRight, note, topic,lesson) {
+    constructor(title, answerChooses, answerRight, note, idTopic) {
         this.title = title;
         this.answerChooses = answerChooses;
         this.answerRight = answerRight;
         this.note = note;
-        this.topic = topic;
-        this.lesson=lesson;
+        this.idTopic = idTopic;
     }
 
 
 
     save(req, callback) {
-        firebase.database().ref("topics/"+req.topic).once("value").then(function(snapshot) {
+        firebase.database().ref("topics/"+req.idTopic).once("value").then(function(snapshot) {
             if (snapshot.exists()) {
                 firebase.database().ref("questions/").push().set({
                     title: req.title,
                     answerChooses: req.answerChooses,
                     answerRight: req.answerRight,
-                    topic: req.topic,
+                    idTopic: req.idTopic,
                     note: req.note,
-                    lesson: req.lesson
                 });
                 callback("successfull");
             } else {
@@ -38,12 +35,12 @@ module.exports = class Quetion {
         });
     }
 
-    findAllByTopic(topic, callback) {
-        firebase.database().ref("topics/" + topic).once("value").then(function(snapshot) {
+    findAllByTopic(idTopic, callback) {
+        firebase.database().ref("topics/" + idTopic).once("value").then(function(snapshot) {
             if (snapshot.exists()) {
                 firebase.database().ref("questions/").once("value").then(function(snapshot) {
                     if (snapshot.exists()) {
-                        callback(snapArray.snap_array(snapshot).filter(value => value.topic == topic));
+                        callback(snapArray.snap_array(snapshot).filter(value => value.idTopic == idTopic));
                     } else {
                         callback("Data does not exist");
                     }
@@ -54,21 +51,21 @@ module.exports = class Quetion {
         });
     }
 
-    findAllByLesson(lesson, callback) {
-        firebase.database().ref("lessons/" + lesson).once("value").then(function(snapshot) {
-            if (snapshot.exists()) {
-                firebase.database().ref("questions/").once("value").then(function(snapshot) {
-                    if (snapshot.exists()) {
-                        callback(snapArray.snap_array(snapshot).filter(value => value.lesson == lesson));
-                    } else {
-                        callback("Data does not exist");
-                    }
-                });
-            }else{
-                callback("Data does not exist");
-            }
-        });
+    findAllByIdExam(idExam, callback) {
+        firebase.database().ref("exam-question").orderByChild("idExam").equalTo(idExam).once('value')
+        .then(function (snapshot) {
+          callback(snapArray.snap_array(snapshot));
+        });                 
     }
+
+    findAllByIdLesson(idLesson, callback) {
+        firebase.database().ref("lesson-question").orderByChild("idLesson").equalTo(idLesson).once('value')
+        .then(function (snapshot) {
+          callback(snapArray.snap_array(snapshot));
+        });                 
+    }
+
+
 
     findById(req, callback) {
         firebase.database().ref("questions/" + req).once("value").then(function(snapshot) {
@@ -86,23 +83,20 @@ module.exports = class Quetion {
     update(req, callback) {
         firebase.database().ref("questions/" + req.id).once("value").then(function(snapshot) {
             if (snapshot.exists()) {
-                firebase.database().ref("topics/").once("value").then(function(snapshot) {
-                    if (snapArray.snap_array(snapshot).some(value => value.name == req.topic)) {
-                        let topic = snapArray.snap_array(snapshot).find(value => value.name == req.topic).id;
+                firebase.database().ref("topics/"+req.idTopic).once("value").then(function(snapshot) {
+                    if (snapshot.exists()) {
                         firebase.database().ref("questions/" + req.id).update({
                             title: req.title,
                             answerChooses: req.answerChooses,
                             answerRight: req.answerRight,
-                            topic: topic,
+                            idTopic: req.idTopic,
                             note: req.note,
-                            lesson:lesson
                         });
                         callback("successfull");
                     } else {
                         callback("Topic does not exist");
                     }
                 });
-
             } else {
                 callback("Data does not exist");
             }
@@ -112,11 +106,29 @@ module.exports = class Quetion {
     delete(id, callback) {
         firebase.database().ref("questions/" + id).once("value").then(function(snapshot) {
             if (snapshot.exists()) {
+                //delete exam question
+        firebase.database().ref("exam-question/").once("value").then(function(snapshot) {
+            if (snapshot.exists()) {
+                snapArray.snap_array(snapshot).filter(value => value.idQuestion == id).forEach(function(item){
+                    firebase.database().ref("exam-question/" + item.id).remove();
+                });
+            } 
+        });
+           //delete lesson question
+           firebase.database().ref("lesson-question/").once("value").then(function(snapshot) {
+            if (snapshot.exists()) {
+                snapArray.snap_array(snapshot).filter(value => value.idQuestion == id).forEach(function(item){
+                    firebase.database().ref("lesson-question/" + item.id).remove();
+                });
+            } 
+        });
+
                 firebase.database().ref("questions/" + id).remove();
                 callback("successfull");
             } else {
                 callback("Data does not exist");
             }
         });
+        
     }
 }

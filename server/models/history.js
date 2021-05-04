@@ -15,19 +15,30 @@ module.exports=class History{
     }
 
     save(req, callback) {
-        console.log(req);
-        firebase.database().ref("history/").push().set({
+        firebase.database().ref("exams/" + req.idExam).once("value").then(function(snapshot) {
+            if (snapshot.exists()) {
+                firebase.database().ref("learners/" + req.idUser).once("value").then(function(snapshot) {
+                    if (snapshot.exists()) {
+        firebase.database().ref("historys/").push().set({
             idUser: req.idUser,
             idExam: req.idExam,
             answer: req.answer,
             result: req.result,
+            createOnUTC: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
         });
         callback("successfull");
-        // chưa kiểm tra tồn tại id user,exam
+    }else{
+        callback("Data user does not exist");
+    }
+});
+        }else{
+            callback("Data exam does not exist");
+        }
+        });
     }
 
     findByUser(idUser, callback) {
-        firebase.database().ref("history/").once("value").then(function(snapshot) {
+        firebase.database().ref("historys/").once("value").then(function(snapshot) {
             if (snapshot.exists()) {
                 callback(snapArray.snap_array(snapshot).filter(value => value.idUser == idUser));
             } else {
@@ -37,7 +48,7 @@ module.exports=class History{
     }
 
     findByExam(idExam, callback) {
-        firebase.database().ref("history/").once("value").then(function(snapshot) {
+        firebase.database().ref("historys/").once("value").then(function(snapshot) {
             if (snapshot.exists()) {
                 callback(snapArray.snap_array(snapshot).filter(value => value.idExam == idExam));
             } else {
@@ -47,9 +58,9 @@ module.exports=class History{
     }
 
     delete(id, callback) {
-        firebase.database().ref("history/" + id).once("value").then(function(snapshot) {
+        firebase.database().ref("historys/" + id).once("value").then(function(snapshot) {
             if (snapshot.exists()) {
-                firebase.database().ref("history/" + id).remove();
+                firebase.database().ref("historys/" + id).remove();
                 callback("successfull");
             } else {
                 callback("Data does not exist");
