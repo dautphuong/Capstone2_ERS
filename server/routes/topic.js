@@ -80,8 +80,6 @@ router.get('/findAll', function(req, res) {
     const topic = new Topic();
     topic.findAll(function(data) {
         res.send(data)
-        console.log(data);
-
     })
 });
 
@@ -109,6 +107,8 @@ router.delete("/delete/:id", function(req, res) {
     topic.delete(req.params.id, function(data) {
         res.send(data);
     })
+    
 });
 
 module.exports = router;
+//ok

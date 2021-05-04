@@ -118,10 +118,9 @@ router.post('/save', (req, res) => {
         req.body.username,
         req.body.password,
         req.body.email,
-        req.body.role,
     );
     try {
-        if (user.role == 'learner') {
+        if (req.body.role == 'learner') {
             user.register(user, function(data) {
                 res.send(data)
             });
@@ -267,7 +266,7 @@ router.put('/update', function(req, res) {
  *       404:
  *         description: The user was not found
  */
-router.delete("/delete/:topic/:id", function(req, res) {
+router.delete("/delete/:id", function(req, res) {
     const user = new User();
     user.deleteById(req.params.id, function(data) {
         res.send(data);
@@ -276,3 +275,4 @@ router.delete("/delete/:topic/:id", function(req, res) {
 
 
 module.exports = router;
+//ok

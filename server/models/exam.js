@@ -4,24 +4,35 @@ module.exports = class Exam {
     title; //String
     type; //Bài tập - Thực hành - Thi
     timeSet; //number(s)
-    listQuestion; //list id question 
+    listQuestion;
 
-    constructor(title, type, timeSet, listQuestion) {
+    constructor(title, type, timeSet,listQuestion) {
         this.title = title;
         this.type = type;
         this.timeSet = timeSet;
-        this.listQuestion = listQuestion;
+        this.listQuestion=listQuestion;
     }
 
     save(req, callback) {
-        firebase.database().ref("exams/").push().set({
+        var reference = firebase.database().ref('exams/').push();
+        var uniqueKey = reference.key
+        reference.set({
             title: req.title,
             type: req.type,
             timeSet: req.timeSet,
-            listQuestion: req.listQuestion
-                // chưa kiểm tra list question tồn tại không ?
+            createOnUTC: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
         });
+
+        req.listQuestion.forEach(function(item){
+            firebase.database().ref("exam-question/").push().set({
+                idExam: uniqueKey,
+                idQuestion: item
+            });
+        });
+        
+
         callback("successfull");
+
     }
 
     findAllByType(type, callback) {
@@ -54,9 +65,7 @@ module.exports = class Exam {
                 firebase.database().ref("exams/" + req.id).update({
                     title: req.title,
                     type: req.type,
-                    timeSet: req.timeSet,
-                    listQuestion: req.listQuestion,
-                    // chưa kiểm tra list question tồn tại không ?
+                    timeSet: req.timeSet, 
                 });
                 callback("successfull");
             } else {
@@ -68,6 +77,23 @@ module.exports = class Exam {
     delete(id, callback) {
         firebase.database().ref("exams/" + id).once("value").then(function(snapshot) {
             if (snapshot.exists()) {
+                //delete contest by exam
+                firebase.database().ref("contests/").once("value").then(function(snapshot) {
+                    if (snapshot.exists()) {
+                        snapArray.snap_array(snapshot).filter(value => value.idExam == id).forEach(function(item){
+                            firebase.database().ref("contests/" + item.id).remove();
+                        });
+                    } 
+                });
+                //delete history by exam
+                firebase.database().ref("historys/").once("value").then(function(snapshot) {
+                    if (snapshot.exists()) {
+                        snapArray.snap_array(snapshot).filter(value => value.idExam == id).forEach(function(item){
+                            firebase.database().ref("historys/" + item.id).remove();
+                        });
+                    } 
+                });
+                //delete exam
                 firebase.database().ref("exams/" + id).remove();
                 callback("successfull");
             } else {
