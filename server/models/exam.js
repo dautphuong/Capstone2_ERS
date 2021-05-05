@@ -22,6 +22,7 @@ module.exports = class Exam {
             timeSet: req.timeSet,
             createOnUTC: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
         });
+        if(req.listQuestion!=null){
 
         req.listQuestion.forEach(function(item){
             firebase.database().ref("exam-question/").push().set({
@@ -29,8 +30,7 @@ module.exports = class Exam {
                 idQuestion: item
             });
         });
-        
-
+        }
         callback("successfull");
 
     }

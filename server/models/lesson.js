@@ -30,14 +30,14 @@ module.exports = class Lesson {
                     idTopic: req.idTopic,
                     createOnUTC: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
         });
-
+        if(req.listQuestion!=null){
         req.listQuestion.forEach(function(item){
             firebase.database().ref("lesson-question/").push().set({
                 idLesson: uniqueKey,
                 idQuestion: item
             });
         });
-        
+    }
 
         callback("successfull");
             } else {
