@@ -128,7 +128,22 @@ module.exports = class Quetion {
             } else {
                 callback("Data does not exist");
             }
+        });       
+    }
+    deleteConnect(id,callback){
+        firebase.database().ref("exam-question/" + id).once("value").then(function(snapshot) {
+            if (snapshot.exists()) {
+                firebase.database().ref("exam-question/" + item.id).remove();
+                callback("successfull");
+            } else {
+                firebase.database().ref("lesson-question/" + id).once("value").then(function(snapshot) {
+                    if (snapshot.exists()) {
+                        firebase.database().ref("lesson-question/" + item.id).remove();
+                    }else{
+                        callback("Data does not exist");
+                    }
+                });   
+            }
         });
-        
     }
 }

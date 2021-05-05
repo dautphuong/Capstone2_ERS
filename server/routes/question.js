@@ -267,4 +267,30 @@ router.delete("/delete/:id", function(req, res) {
         res.send(data);
     })
 });
+
+/**
+ * @swagger
+ * /question/deleteConnect/{id}:
+ *   delete:
+ *     summary: Xóa question kết nối với exam or lesson
+ *     tags: [Question]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The id question
+ *     responses:
+ *       200:
+ *         description: The question was deleted
+ *       404:
+ *         description: The question was not found
+ */
+ router.delete("/deleteConnect/:id", function(req, res) {
+    const question = new Question();
+    question.deleteConnect(req.params.id, function(data) {
+        res.send(data);
+    })
+});
 module.exports = router;
