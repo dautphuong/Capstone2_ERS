@@ -85,6 +85,14 @@ module.exports = class Lesson {
                             content: req.content,
                             idTopic: req.idTopic,
                         });
+                        if(req.listQuestion!=null){
+                            req.listQuestion.forEach(function(item){
+                                firebase.database().ref("lesson-question/").push().set({
+                                    idLesson: req.id,
+                                    idQuestion: item
+                                });
+                            });
+                        }
                         callback("successfull");
                     } else {
                         callback("Topic does not exist");

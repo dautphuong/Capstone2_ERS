@@ -67,6 +67,15 @@ module.exports = class Exam {
                     type: req.type,
                     timeSet: req.timeSet, 
                 });
+                if(req.listQuestion!=null){
+
+                    req.listQuestion.forEach(function(item){
+                        firebase.database().ref("exam-question/").push().set({
+                            idExam: req.id,
+                            idQuestion: item
+                        });
+                    });
+                    }
                 callback("successfull");
             } else {
                 callback("Data does not exist");
