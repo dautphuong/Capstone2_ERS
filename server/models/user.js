@@ -1,6 +1,8 @@
 const firebase = require('../util/firebase_connect');
 const md5 = require('md5');
 const snapArray = require('../util/snapshot_to_array')
+const bcrypt = require('bcrypt');
+const myPlaintextPassword = 's0/\/\P4$$w0rD';
 
 module.exports = class User {
     username; //String
@@ -20,7 +22,10 @@ module.exports = class User {
     };
 
     register(req, callback) {
-
+        bcrypt.hash(req.password, 10, function (err, hash){
+            req.password = hash;
+          })
+          
         firebase.database().ref("learners/").once("value").then(function(snapshot) {
             if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
                 callback("Account already exists");
@@ -31,7 +36,7 @@ module.exports = class User {
                     } else {
                         firebase.database().ref("learners/").push().set({
                             username: req.username,
-                            password: md5(req.password),
+                            password: req.password,
                             email: req.email,
                             avatar: "https://firebasestorage.googleapis.com/v0/b/er-system-2b346.appspot.com/o/avatar.jpg?alt=media&token=0ebb592a-5e15-42d1-8f0f-04998873d251",
                             createOnUTC: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
@@ -168,15 +173,21 @@ module.exports = class User {
         });
     }
     
-    //chưa check login
     checkLogin(req, callback) {
-
+        
         firebase.database().ref("learners/" ).once("value").then(function(snapshot) {
             if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
                 var item = snapArray.snap_array(snapshot).filter(value => value.username == req.username)[0]
-                callback(item);
+
+                bcrypt.compare(req.password, item.password, function(err, result) {
+                    if(result){
+                        callback(item);
+                    }else{
+                        callback('password wrong');
+                    }
+                });
             }else{
-                callback(null);
+                callback('username wrong');
             }
         });
     }

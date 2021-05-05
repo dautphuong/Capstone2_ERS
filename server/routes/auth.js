@@ -147,7 +147,7 @@ validate.validateRegisterUser(),
 router.post('/login',(req,res)=>{
     const user =new User();
     user.checkLogin(req.body,function(data){
-        if(data!=null){
+        if(data!='username wrong' && data !='password wrong'){
         jwt.sign({data}, 'secretkey', { expiresIn: '2 days' }, (err, token) => {
             const id=data.id
             res.send({
@@ -156,7 +156,7 @@ router.post('/login',(req,res)=>{
             });
           });
         }else{
-            res.status(400).send("Data does not exist")
+            res.status(400).send(data)
         }
     })
     
