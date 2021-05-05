@@ -51,6 +51,9 @@ module.exports = class User {
     }
 
     createAdmin(req, callback) {
+        bcrypt.hash(req.password, 10, function (err, hash){
+            req.password = hash;
+          })
         firebase.database().ref("learners/").once("value").then(function(snapshot) {
             if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
                 callback("Account already exists");
@@ -61,7 +64,7 @@ module.exports = class User {
                     } else {
                         firebase.database().ref("admin/").push().set({
                             username: req.username,
-                            password: md5(req.password),
+                            password: req.password,
                         });
 
                         callback("Successlly");
