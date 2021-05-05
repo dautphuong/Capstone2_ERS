@@ -20,6 +20,7 @@ module.exports = class User {
     };
 
     register(req, callback) {
+
         firebase.database().ref("learners/").once("value").then(function(snapshot) {
             if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
                 callback("Account already exists");
@@ -36,6 +37,7 @@ module.exports = class User {
                             createOnUTC: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
                             lastLogin: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
                         });
+
                         callback("Successlly");
                     }
                 })
@@ -56,6 +58,7 @@ module.exports = class User {
                             username: req.username,
                             password: md5(req.password),
                         });
+
                         callback("Successlly");
                     }
                 })
@@ -79,14 +82,15 @@ module.exports = class User {
             if (snapshot.exists()) {
                 var item = snapshot.val();
                 item.id = snapshot.key;
-                var arr=[item];
+                var arr = [item];
                 callback(arr);
             } else {
+
                 firebase.database().ref("admin/" + id).once("value").then(function(snapshot) {
                     if (snapshot.exists()) {
                         var item = snapshot.val();
                         item.id = snapshot.key;
-                        var arr=[item]
+                        var arr = [item]
                         callback(arr);
                     } else {
                         callback("Data does not exist");
@@ -123,6 +127,7 @@ module.exports = class User {
 
 
     deleteById(id, callback) {
+
         firebase.database().ref("learners/" + id).once("value").then(function(snapshot) {
             if (snapshot.exists()) {
             //delete history by user
@@ -137,6 +142,7 @@ module.exports = class User {
 
                 firebase.database().ref("learners/" + id).remove();
             } else {
+
                 firebase.database().ref("admin/" + id).once("value").then(function(snapshot) {
                     if (snapshot.exists()) {
                         firebase.database().ref("admin/" + id).remove();
@@ -164,6 +170,7 @@ module.exports = class User {
     
     //chưa check login
     checkLogin(req, callback) {
+
         firebase.database().ref("learners/" ).once("value").then(function(snapshot) {
             if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
                 var item = snapArray.snap_array(snapshot).filter(value => value.username == req.username)[0]
