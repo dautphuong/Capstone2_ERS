@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const Topic = require('../models/topic');
-
+const snapArray = require('../util/snapshot_to_array')
 /**
  * @swagger
  * components:
@@ -107,6 +107,8 @@ router.delete("/delete/:id", function(req, res) {
     topic.delete(req.params.id, function(data) {
         res.send(data);
     })
+    
 });
 
 module.exports = router;
+//ok

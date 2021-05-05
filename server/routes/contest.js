@@ -9,15 +9,15 @@ const Contest = require('../models/contest');
  *       type: object
  *       required:
  *         - id
- *         - name
+ *         - title
  *         - timeStart
  *         - timeEnd
- *         - exam
+ *         - idExam
  *       properties:
  *         id:
  *           type: string
  *           description: the id Contest is random
- *         name:
+ *         title:
  *           type: string
  *           description: the name Contest
  *         timeStart:
@@ -26,15 +26,15 @@ const Contest = require('../models/contest');
  *         timeEnd:
  *           type: string
  *           description: time end do exam 
- *         exam:
+ *         idExam:
  *           type: string
  *           description: exam id
  *       example:
  *         id: random
- *         name: Cuộc thi abc
+ *         title: Cuộc thi abc
  *         timeStart: 2021-04-08 15:00:00
  *         timeEnd: 2021-04-08 17:00:00
- *         exam: E01
+ *         idExam: idexam
  */
 
 /**
@@ -68,10 +68,10 @@ const Contest = require('../models/contest');
  */
 router.post('/save', (req, res) => {
     const contest = new Contest(
-        req.body.name,
+        req.body.title,
         req.body.timeStart,
         req.body.timeEnd,
-        req.body.exam
+        req.body.idExam
     );
     try {
         contest.save(contest, function(data) {
@@ -195,3 +195,4 @@ router.delete("/delete/:id", function(req, res) {
     })
 });
 module.exports = router;
+//ok

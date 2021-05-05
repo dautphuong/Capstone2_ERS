@@ -11,8 +11,8 @@ const Exam = require('../models/exam');
  *         - id
  *         - title
  *         - type
- *         - timeSet
  *         - listQuestion
+ *         - timeSet
  *       properties:
  *         id:
  *           type: string
@@ -23,18 +23,18 @@ const Exam = require('../models/exam');
  *         type:
  *           type: string
  *           description: exam - practice
+ *         listQuestion:
+ *           type: array
+ *           description: array question
  *         timeSet:
  *           type: int
  *           description: time the exam 
- *         listQuestion:
- *           type: array
- *           description: array list id question
  *       example:
  *         id: random
  *         title: Đề ABC
  *         type: practice
- *         timeSet: 900000
  *         listQuestion: [Q1,Q2,Q3]
+ *         timeSet: 900000
  */
 
 /**
@@ -202,3 +202,4 @@ router.delete("/delete/:id", function(req, res) {
     })
 });
 module.exports = router;
+//ok

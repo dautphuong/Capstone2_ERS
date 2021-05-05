@@ -2,26 +2,33 @@ const firebase = require('../util/firebase_connect');
 const snapArray = require('../util/snapshot_to_array')
 module.exports = class Contest {
     id;
-    name;
+    title;
     timeStart;
     timeEnd;
-    exam; //id by exam
+    idExam; //id by exam
 
-    constructor(name, timeStart, timeEnd, exam) {
-        this.name = name;
+    constructor(title, timeStart, timeEnd, idExam) {
+        this.title = title;
         this.timeStart = timeStart;
         this.timeEnd = timeEnd;
-        this.exam = exam;
+        this.idExam = idExam;
     }
 
     save(req, callback) {
-        firebase.database().ref("contests/").push().set({
-            name: req.name,
-            timeStart: req.timeStart,
-            timeEnd: req.timeEnd,
-            exam: req.exam
+        firebase.database().ref("exams/" + req.idExam).once("value").then(function(snapshot) {
+            if (snapshot.exists()) {
+            firebase.database().ref("contests/").push().set({
+                title: req.title,
+                timeStart: req.timeStart,
+                timeEnd: req.timeEnd,
+                idExam: req.idExam,
+                createOnUTC: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
+                });
+                callback("successfull");
+            }else{
+                callback("Data exam does not exist");
+            }
         });
-        callback("successfull");
     }
 
     findAll(callback) {
@@ -44,19 +51,26 @@ module.exports = class Contest {
     }
 
     update(req, callback) {
+        firebase.database().ref("exams/" + req.idExam).once("value").then(function(snapshot) {
+            if (snapshot.exists()) {
+
         firebase.database().ref("contests/" + req.id).once("value").then(function(snapshot) {
             if (snapshot.exists()) {
                 firebase.database().ref("contests/" + req.id).update({
-                    name: req.name,
+                    title: req.title,
                     timeStart: req.timeStart,
                     timeEnd: req.timeEnd,
-                    exam: req.exam,
+                    idExam: req.idExam,
                 });
                 callback("successfull");
             } else {
                 callback("Data does not exist");
             }
         });
+            }else{
+        callback("Data exam does not exist");
+        }
+    });
     }
 
     delete(id, callback) {
