@@ -102,6 +102,14 @@ module.exports = class Exam {
                         });
                     } 
                 });
+                        //delete exam question
+        firebase.database().ref("exam-question/").once("value").then(function(snapshot) {
+            if (snapshot.exists()) {
+                snapArray.snap_array(snapshot).filter(value => value.idExam == id).forEach(function(item){
+                    firebase.database().ref("exam-question/" + item.id).remove();
+                });
+            } 
+        });
                 //delete exam
                 firebase.database().ref("exams/" + id).remove();
                 callback("successfull");

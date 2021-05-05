@@ -109,6 +109,14 @@ module.exports = class Lesson {
         firebase.database().ref("lessons/" + id).once("value").then(function(snapshot) {
             if (snapshot.exists()) {
                 firebase.database().ref("lessons/" + id).remove();
+                //delete lesson question
+           firebase.database().ref("lesson-question/").once("value").then(function(snapshot) {
+            if (snapshot.exists()) {
+                snapArray.snap_array(snapshot).filter(value => value.idLesson == id).forEach(function(item){
+                    firebase.database().ref("lesson-question/" + item.id).remove();
+                });
+            } 
+        })
                 callback("successfull");
             } else {
                 callback("Data does not exist");
