@@ -99,7 +99,7 @@ router.post('/login',(req,res)=>{
             });
           });
         }else{
-            res.send("Data does not exist")
+            res.status(400).send("Data does not exist")
         }
     })
     
