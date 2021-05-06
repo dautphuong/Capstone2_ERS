@@ -11,6 +11,7 @@ import Navigator from './Navigator';
 import CalendarExam from './Components/CalendarExam';
 import LessonContent from './Components/LessonContent'
 import {name as appName} from './app.json';
+import Profile from './Components/Profile';
 
  AppRegistry.registerComponent(appName, () => Navigator);
 
