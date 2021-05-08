@@ -24,12 +24,17 @@ module.exports = class Exam {
         });
         if(req.listQuestion!=null){
 
-        req.listQuestion.forEach(function(item){
-            firebase.database().ref("exam-question/").push().set({
-                idExam: uniqueKey,
-                idQuestion: item
-            });
+            req.listQuestion.forEach(function(item){
+                firebase.database().ref("questions/" + item).once("value").then(function(snapshot) {
+                    if (snapshot.exists()) {
+        
+                firebase.database().ref("exam-question/").push().set({
+                    idLesson: uniqueKey,
+                    idQuestion: item
+                });
+            }
         });
+            });
         }
         callback("successfull");
 
@@ -102,12 +107,36 @@ module.exports = class Exam {
                         });
                     } 
                 });
+                        //delete exam question
+        firebase.database().ref("exam-question/").once("value").then(function(snapshot) {
+            if (snapshot.exists()) {
+                snapArray.snap_array(snapshot).filter(value => value.idExam == id).forEach(function(item){
+                    firebase.database().ref("exam-question/" + item.id).remove();
+                });
+            } 
+        });
                 //delete exam
                 firebase.database().ref("exams/" + id).remove();
                 callback("successfull");
             } else {
                 callback("Data does not exist");
             }
+        });
+    }
+
+    updateListQuestion(req, callback){
+        firebase.database().ref("exams/" + req.id).once("value").then(function(snapshot) {
+            if (snapshot.exists()) {
+                req.listQuestion.forEach(function(item){
+                    
+                            firebase.database().ref("exam-question/").push().set({
+                                idExam: req.id,
+                                idQuestion: item
+                            });
+
+                });
+            }
+            callback("ok")
         });
     }
 }

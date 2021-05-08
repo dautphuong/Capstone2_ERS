@@ -12,7 +12,8 @@ import CalendarExam from './Components/CalendarExam';
 import LessonContent from './Components/LessonContent'
 import Quiz from './Components/Quiz';
 import Result from './Components/Result'
-import { name as appName } from './app.json';
+import Profile from './Components/Profile';
+
 
 AppRegistry.registerComponent(appName, () => Navigator);
 

@@ -15,6 +15,8 @@ import CalendarExam from './Components/CalendarExam';
 import ReadyContest from './Components/ReadyContest';
 import Quiz from './Components/Quiz';
 import Result from './Components/Result';
+import ReadyContest from './Components/ReadyContest';
+import Profile from './Components/Profile';
 const Stack = createStackNavigator();
 const TabNavigator = createBottomTabNavigator();
 function AppNavigator() {
@@ -41,6 +43,19 @@ function AppNavigator() {
           component={ListTopic}
           options={{
             headerTitle: 'Chủ Đề',
+            headerStyle: {
+              backgroundColor: '#78C8E8',
+            },
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+
+        />
+        <Stack.Screen name="Profile"
+          component={Profile}
+          options={{
+            headerTitle: 'Trang cá nhân',
             headerStyle: {
               backgroundColor: '#78C8E8',
             },

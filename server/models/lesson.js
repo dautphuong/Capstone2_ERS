@@ -14,14 +14,7 @@ module.exports = class Lesson {
         
 
         firebase.database().ref("topics/"+req.idTopic).once("value").then(function(snapshot) {
-            if (snapshot.exists()) {
-                // firebase.database().ref("lessons/").push().set({
-                //     title: req.title,
-                //     content: req.content,
-                //     idTopic: req.idTopic,
-                //     createOnUTC: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
-                // });
-                
+            if (snapshot.exists()) {          
                 var reference = firebase.database().ref('lessons/').push();
         var uniqueKey = reference.key
         reference.set({
@@ -32,10 +25,15 @@ module.exports = class Lesson {
         });
         if(req.listQuestion!=null){
         req.listQuestion.forEach(function(item){
+            firebase.database().ref("questions/" + item).once("value").then(function(snapshot) {
+                if (snapshot.exists()) {
+    
             firebase.database().ref("lesson-question/").push().set({
                 idLesson: uniqueKey,
                 idQuestion: item
             });
+        }
+    });
         });
     }
 
@@ -109,10 +107,34 @@ module.exports = class Lesson {
         firebase.database().ref("lessons/" + id).once("value").then(function(snapshot) {
             if (snapshot.exists()) {
                 firebase.database().ref("lessons/" + id).remove();
+                //delete lesson question
+           firebase.database().ref("lesson-question/").once("value").then(function(snapshot) {
+            if (snapshot.exists()) {
+                snapArray.snap_array(snapshot).filter(value => value.idLesson == id).forEach(function(item){
+                    firebase.database().ref("lesson-question/" + item.id).remove();
+                });
+            } 
+        })
                 callback("successfull");
             } else {
                 callback("Data does not exist");
             }
+        });
+    }
+
+    updateListQuestion(req, callback){
+        firebase.database().ref("exams/" + req.id).once("value").then(function(snapshot) {
+            if (snapshot.exists()) {
+                req.listQuestion.forEach(function(item){
+                    
+                    firebase.database().ref("lesson-question/").push().set({
+                        idExam: req.id,
+                        idQuestion: item
+                    });
+
+        });
+            }
+            callback("ok")
         });
     }
 }

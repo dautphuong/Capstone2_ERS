@@ -19,7 +19,9 @@ export default class Login extends React.Component {
                     <Icon name={'account-circle'}
                         size={50}
                         color={'rgba(255,255,255,0.7)'}
-                        style={styles.accountCircle} />
+                        style={styles.accountCircle}
+                        onPress={() => navigation.navigate('Profile')}
+                        />
                 </View>
                 <View style={styles.header}>
                     <Text style={styles.welcome}>
