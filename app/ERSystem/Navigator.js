@@ -12,155 +12,170 @@ import LessonContent from './Components/LessonContent';
 import Translate from './Components/Translate';
 import History from './Components/History';
 import CalendarExam from './Components/CalendarExam';
-import  ReadyContest from './Components/ReadyContest';
-const Stack = createStackNavigator(); 
+import ReadyContest from './Components/ReadyContest';
+import Quiz from './Components/Quiz';
+import Result from './Components/Result';
+const Stack = createStackNavigator();
 const TabNavigator = createBottomTabNavigator();
- function AppNavigator() {
-    return (
-      <NavigationContainer>
-        <Stack.Navigator >
-          <Stack.Screen name="Login"
-          component={Login} 
+function AppNavigator() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator >
+        <Stack.Screen name="Login"
+          component={Login}
           options={{
             headerShown: false
           }}
-          />
-          <Stack.Screen name="Register" 
-          component={Register} 
+        />
+        <Stack.Screen name="Register"
+          component={Register}
           options={{
             headerTitle: false,
             headerStyle: {
-                backgroundColor: '#78C8E8',
+              backgroundColor: '#78C8E8',
             }
           }}
-          />
-          <Stack.Screen name="Home" 
-          component={TabScreen} 
-          options={{
-            headerShown: false,
-            headerTitle: false,
-            headerStyle: {
-                backgroundColor: '#78C8E8',
-                
-            }
-          }}
-          />
-          <Stack.Screen name="ListTopic" 
-          component={ListTopic} 
+        />
+
+        <Stack.Screen name="ListTopic"
+          component={ListTopic}
           options={{
             headerTitle: 'Chủ Đề',
             headerStyle: {
-                backgroundColor: '#78C8E8',
+              backgroundColor: '#78C8E8',
             },
             headerTitleStyle: {
               fontWeight: 'bold',
             },
           }}
-          />
-          <Stack.Screen name="ListLesson" 
-          component={ListLesson}  
-            options={({ route }) => 
-           ({ 
-              id: route.params.id,
-              title: route.params.Topics,
-              headerStyle: {
+        />
+        <Stack.Screen name="ListLesson"
+          component={ListLesson}
+          options={({ route }) =>
+          ({
+            id: route.params.id,
+            title: route.params.Topics,
+            headerStyle: {
               backgroundColor: '#78C8E8',
-             },
-             headerTitleStyle: {
+            },
+            headerTitleStyle: {
               fontWeight: 'bold',
               fontSize: 15,
               right: 25
-             },
-            })
+            },
+          })
           }
-          />
-          <Stack.Screen name="LessonContent" 
-          component={LessonContent}  
-            options={({ route }) => 
-           ({ 
-              id: route.params.idLesson,
-              title: route.params.name,
-              headerStyle: {
+        />
+        <Stack.Screen name="LessonContent"
+          component={LessonContent}
+          options={({ route }) =>
+          ({
+            id: route.params.idLesson,
+            title: route.params.name,
+            headerStyle: {
               backgroundColor: '#78C8E8',
-             },
-             headerTitleStyle: {
+            },
+            headerTitleStyle: {
               fontWeight: 'bold',
               fontSize: 15,
               right: 25
-             },
-            })
+            },
+          })
           }
-          />
-          <Stack.Screen name="CalendarExam" 
-          component={CalendarExam} 
+        />
+        <Stack.Screen name="CalendarExam"
+          component={CalendarExam}
           options={{
             headerTitle: 'Danh Sách Cuộc Thi',
             headerStyle: {
-                backgroundColor: '#78C8E8',
-                
+              backgroundColor: '#78C8E8',
+
             },
             headerTitleStyle: {
               fontWeight: 'bold',
               fontSize: 20,
               right: 25
-             },
+            },
           }}
-          />
-          <Stack.Screen name="ReadyContest" 
-          component={ReadyContest} 
-          options={({ route }) => 
-           ({ 
-              id: route.params.id,
-              title: route.params.Contest,
-              headerStyle: {
+        />
+        <Stack.Screen name="ReadyContest"
+          component={ReadyContest}
+          options={({ route }) =>
+          ({
+            id: route.params.id,
+            title: route.params.Contest,
+            headerStyle: {
               backgroundColor: '#78C8E8',
-             },
-             headerTitleStyle: {
+            },
+            headerTitleStyle: {
               fontWeight: 'bold',
               fontSize: 15,
               right: 25
-             },
-            })
+            },
+          })
           }
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    );
-  }
+        />
+        <Stack.Screen name="Home"
+          component={TabScreen}
+          options={{
+            headerShown: false,
+            headerTitle: false,
+            headerStyle: {
+              backgroundColor: '#78C8E8',
 
-  function TabScreen(){
-    return (
-        <TabNavigator.Navigator 
-          tabBarOptions={{
-          initialRouteName:"Home",
-          activeTintColor: '#e91e63',
-        }}>
-          <TabNavigator.Screen
-            name="Home"
-            component={Home}
-            options={{
-              tabBarIcon: ({ color, size }) => (
-                <MaterialCommunityIcons name="home" color={color} size={size} />
-              ),
-            }}
-          />
-          <TabNavigator.Screen
-            name="Translate"
-            component={Translate}
-            options={{
-              tabBarIcon: ({ color, size }) => (
-                <MaterialCommunityIcons name="google-translate" color={color} size={size} />
-              ),
-            }} />
-          <TabNavigator.Screen name="History" component={History}
-            options={{
-              tabBarIcon: ({ color, size }) => (
-                <MaterialCommunityIcons name="history" color={color} size={size} />
-              ),
-            }}
-          />
-        </TabNavigator.Navigator>
+            }
+          }}
+        />
+        <Stack.Screen name="Quiz"
+          component={Quiz}
+          options={{
+            headerShown: false
+          }}
+        />
+        <Stack.Screen name="Result"
+          component={Result}
+          options={{
+            headerShown: false
+          }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
 
-    )
-  }
+function TabScreen() {
+  return (
+    <TabNavigator.Navigator
+      tabBarOptions={{
+        initialRouteName: "Home",
+        activeTintColor: '#e91e63',
+      }}>
+      <TabNavigator.Screen
+        name="Home"
+        component={Home}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="home" color={color} size={size} />
+          ),
+        }}
+      />
+      <TabNavigator.Screen
+        name="Translate"
+        component={Translate}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="google-translate" color={color} size={size} />
+          ),
+        }} />
+      <TabNavigator.Screen name="History" component={History}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="history" color={color} size={size} />
+          ),
+        }}
+      />
+    </TabNavigator.Navigator>
+
+  )
+}
 export default AppNavigator;
