@@ -9,7 +9,7 @@ import Learn from '../image/startlearn.jpg';
 
 export default class Login extends React.Component {
     render() {
-        const {navigation} =this.props;
+        const { navigation } = this.props;
         return (
             <ImageBackground
                 source={bgImage}
@@ -35,13 +35,13 @@ export default class Login extends React.Component {
                             Chúng ta bắt đầu nào.
                         </Text>
                         <Text >
-                            
+
                         </Text>
                     </Text>
                     <View style={styles.box}>
-                        <TouchableOpacity 
-                        style={styles.content}
-                        onPress={() => navigation.navigate('ListTopic')}>
+                        <TouchableOpacity
+                            style={styles.content}
+                            onPress={() => navigation.navigate('ListTopic')}>
                             <Image
                                 source={Learn}
                                 style={styles.image}
@@ -50,7 +50,9 @@ export default class Login extends React.Component {
                                 Bắt đầu học
                                 </Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.content}>
+                        <TouchableOpacity style={styles.content}
+                            onPress={() => navigation.navigate('Quiz')}
+                        >
                             <Image
                                 source={Pra}
                                 style={styles.image}
@@ -59,9 +61,9 @@ export default class Login extends React.Component {
                                 Luyện Tập
                                 </Text>
                         </TouchableOpacity>
-                        <TouchableOpacity 
-                        style={styles.content}
-                        onPress={() => navigation.navigate('CalendarExam')}>
+                        <TouchableOpacity
+                            style={styles.content}
+                            onPress={() => navigation.navigate('CalendarExam')}>
                             <Image
                                 source={Exam}
                                 style={styles.image} />

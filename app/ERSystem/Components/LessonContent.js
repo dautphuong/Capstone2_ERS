@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import  AsyncStorage  from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {
     StyleSheet,
@@ -19,44 +19,46 @@ export default class LessonContent extends Component {
         }
     }
     async componentDidMount() {
-        const {idLesson} = this.props.route.params;
+        const { idLesson } = this.props.route.params;
         console.log(this.props.route);
         try {
-            axios.get(`/lesson/findById/${idLesson}`,{
+            axios.get(`/lesson/findById/${idLesson}`, {
                 headers: {
                     'Authorization': 'Bearer ' + AsyncStorage.getItem("token")
-                  }
+                }
             })
-            .then(res => {
-                this.setState({
-                    lessons: res.data
+                .then(res => {
+                    this.setState({
+                        lessons: res.data
+                    })
                 })
-            })
-        }catch(error){
+        } catch (error) {
             console.error(error);
         }
     }
     render() {
         const { lessons } = this.state;
         console.log(lessons)
+        const b = (props) => <Text style={{ fontWeight: 'bold' }}>{props.content}</Text>
         return (
             <ImageBackground source={bgImage} style={styles.imageBackgroundContainer}>
                 <FlatList
                     data={lessons}
                     keyExtractor={(item, index) => {
                         return item.id;
-                      }}
-                    renderItem={({item}) =>(
-                <View style={styles.container}>
-                    <Text style={styles.title}>{item.title}</Text>
-                    <Text style={styles.content}>{item.blog}</Text>
-                    <TouchableOpacity 
-                    style={styles.btnPractice}
-                    >
-                     <Text style={styles.Text}>Làm Bài Tập</Text>
-                    </TouchableOpacity>
-                </View>
-                )}  
+                    }}
+                    renderItem={({ item }) => (
+                        <View style={styles.container}>
+                            <Text style={styles.title}>{item.title}</Text>
+                            <Text style={styles.content}>{item.content}</Text>
+
+                            <TouchableOpacity
+                                style={styles.btnPractice}
+                            >
+                                <Text style={styles.Text}>Làm Bài Tập</Text>
+                            </TouchableOpacity>
+                        </View>
+                    )}
                 />
             </ImageBackground>
         )
@@ -65,17 +67,17 @@ export default class LessonContent extends Component {
 };
 const styles = StyleSheet.create({
     bookImage: {
-        width: 70 ,
+        width: 70,
         height: 70
     },
-    imageBackgroundContainer:{
+    imageBackgroundContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'stretch',
         backgroundColor: '#fff',
         paddingTop: 12,
         paddingLeft: 16,
-        paddingRight:16,
+        paddingRight: 16,
     },
     container: {
         alignItems: 'center',
@@ -94,19 +96,19 @@ const styles = StyleSheet.create({
         marginBottom: 8,
         fontWeight: 'bold',
     },
-    content:{
+    content: {
         marginBottom: 8,
         fontWeight: '200',
     },
-    btnPractice:{
+    btnPractice: {
         width: 100,
         height: 50,
         margin: 10,
-        borderRadius:10,
-        backgroundColor:'#3399CC',
-        justifyContent:'center',
+        borderRadius: 10,
+        backgroundColor: '#3399CC',
+        justifyContent: 'center',
     },
-    Text:{
+    Text: {
         textAlign: 'center',
         fontSize: 15,
         color: '#F8F8FF'

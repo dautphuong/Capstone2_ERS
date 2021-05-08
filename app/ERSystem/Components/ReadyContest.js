@@ -9,7 +9,7 @@ import Learn from '../image/startlearn.jpg';
 
 export default class ReadyContest extends React.Component {
     render() {
-        const {navigation} =this.props;
+        const { navigation } = this.props;
         return (
             <ImageBackground
                 source={bgImage}
@@ -22,9 +22,9 @@ export default class ReadyContest extends React.Component {
                         Yay, Ready to do test!
                     </Text>
                     <View style={styles.box}>
-                        <TouchableOpacity 
-                        style={styles.content}
-                        onPress={() => navigation.navigate('ListTopic')}>
+                        <TouchableOpacity
+                            style={styles.content}
+                            onPress={() => navigation.navigate('ListTopic')}>
                             <Image
                                 source={Learn}
                                 style={styles.image}
