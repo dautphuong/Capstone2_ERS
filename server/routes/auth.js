@@ -159,7 +159,45 @@ router.post('/login',(req,res)=>{
             res.status(400).send(data)
         }
     })
-    
+})
+
+/**
+ * @swagger
+ * /user/loginAdmin:
+ *   post:
+ *     summary: login Admin
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/AuthLogin'
+ *     responses:
+ *       200:
+ *         description: login
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AuthLogin'
+ *       500:
+ *         description: Some server error
+ */
+ router.post('/loginAdmin',(req,res)=>{
+    const user =new User();
+    user.checkLoginAdmin(req.body,function(data){
+        if(data!='username wrong' && data !='password wrong'){
+        jwt.sign({data}, 'secretkey', { expiresIn: '2 days' }, (err, token) => {
+            const id=data.id
+            res.send({
+                id,
+                token
+            });
+          });
+        }else{
+            res.status(400).send(data)
+        }
+    })
 })
 
 /**
