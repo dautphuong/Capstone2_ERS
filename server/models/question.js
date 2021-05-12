@@ -1,5 +1,6 @@
 const firebase = require('../util/firebase_connect');
 const snapArray = require('../util/snapshot_to_array')
+const questionArr = require('../util/arrayQuestion')
 
 module.exports = class Quetion {
     title; //String
@@ -54,8 +55,18 @@ module.exports = class Quetion {
     findAllByIdExam(idExam, callback) {
         firebase.database().ref("exam-question").orderByChild("idExam").equalTo(idExam).once('value')
         .then(function (snapshot) {
-          callback(snapArray.snap_array(snapshot));
-        });                 
+            questionArr.question_array(snapArray.snap_array(snapshot))
+            callback(snapArray.snap_array(snapshot));
+
+            // var resultArr=[];
+            // snapArray.snap_array(snapshot).forEach(function(item){
+            //     questionValue.question_value(item.idQuestion, function(data) {
+            //         resultArr.push(data);
+            //     })
+            // });
+            // callback(resultArr);
+        });
+             
     }
 
     findAllByIdLesson(idLesson, callback) {
