@@ -157,4 +157,10 @@ module.exports = class Quetion {
             }
         });
     }
+
+    findAll(callback) {
+        firebase.database().ref("questions").once("value").then(function(snapshot) {
+            callback(snapArray.snap_array(snapshot));
+        })
+    }
 }
