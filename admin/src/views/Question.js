@@ -2,9 +2,25 @@
 import React from "react";
 import { DataGrid } from '@material-ui/data-grid';
 import Grid from '@material-ui/core/Grid';
+import API from '../api';
 // react-bootstrap components
 
 class Question extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      dataQuestion:[]
+    }
+
+  }
+  componentDidMount() {
+    API.get(`question/findAll`)
+    .then(res => {
+      const dataQuestion = res.data;
+      this.setState({ dataQuestion });
+      console.log(this.state.dataQuestion);
+    })
+  }
   render() {
     const columns = [
       { field: 'id', headerName: 'ID', width: 50 },
