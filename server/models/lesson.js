@@ -140,7 +140,7 @@ module.exports = class Lesson {
 
     findAll(callback) {
         firebase.database().ref("lessons").once("value").then(function(snapshot) {
-            callback(snapArray.snap_array(snapshot));
+            callback(snapArray.snap_arr(snapshot));
         })
     }
 }
