@@ -137,4 +137,10 @@ module.exports = class Lesson {
             callback("ok")
         });
     }
+
+    findAll(callback) {
+        firebase.database().ref("lessons").once("value").then(function(snapshot) {
+            callback(snapArray.snap_array(snapshot));
+        })
+    }
 }
