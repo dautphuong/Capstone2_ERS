@@ -20,39 +20,39 @@ export default class ListLesson extends Component {
         }
     }
     async componentDidMount() {
-        const {id} = this.props.route.params;
+        const { id } = this.props.route.params;
         console.log(this.props.route);
         try {
             axios.get(`/lesson/findByTopic/${id}`)
-            .then(res => {
-                this.setState({
-                    lessons: res.data
+                .then(res => {
+                    this.setState({
+                        lessons: res.data
+                    })
                 })
-            })
-        }catch(error){
+        } catch (error) {
             console.error(error);
         }
     }
     render() {
         const { lessons } = this.state;
-        const {navigation} =this.props;
+        const { navigation } = this.props;
         return (
             <ImageBackground source={bgImage} style={styles.imageBackgroundContainer}>
                 <FlatList
                     data={lessons}
-                    renderItem={({item}) =>(
-                <TouchableOpacity activeOpacity={0.6}
-                onPress={() => navigation.navigate('LessonContent',{
-                    name: item.title,
-                    idLesson: item.id,
-                })}
-                >
-                <View style={styles.container}>
-                    <Text style={styles.title}>{item.title}</Text>
-                    <Image style={styles.bookImage} source={dumbbell}></Image>
-                </View>
-                </TouchableOpacity>
-                )}
+                    renderItem={({ item }) => (
+                        <TouchableOpacity activeOpacity={0.6}
+                            onPress={() => navigation.navigate('LessonContent', {
+                                name: item.title,
+                                idLesson: item.id,
+                            })}
+                        >
+                            <View style={styles.container}>
+                                <Text style={styles.title}>{item.title}</Text>
+                                <Image style={styles.bookImage} source={dumbbell}></Image>
+                            </View>
+                        </TouchableOpacity>
+                    )}
                 />
             </ImageBackground>
         )
@@ -61,17 +61,17 @@ export default class ListLesson extends Component {
 };
 const styles = StyleSheet.create({
     bookImage: {
-        width: 70 ,
+        width: 70,
         height: 70
     },
-    imageBackgroundContainer:{
+    imageBackgroundContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'stretch',
         backgroundColor: '#fff',
         paddingTop: 12,
         paddingLeft: 16,
-        paddingRight:16,
+        paddingRight: 16,
     },
     container: {
         alignItems: 'center',
@@ -90,5 +90,5 @@ const styles = StyleSheet.create({
         marginBottom: 8,
         fontWeight: '700',
     },
-    
+
 })

@@ -16,22 +16,23 @@
 
 */
 import Dashboard from "views/Dashboard.js";
-import UserProfile from "views/UserProfile.js";
+import Question from "views/Question.js";
 import TableList from "views/TableList.js";
 import Lesson from "views/Lesson";
 import Icons from "views/Icons.js";
 //import Maps from "views/Maps.js";
 import Exam from "views/Exam.js"
 import Notifications from "views/Notifications.js";
+import Login from "views/Login"
 import Upgrade from "views/Upgrade.js";
 
 const dashboardRoutes = [
   // {
   //   upgrade: true,
-  //   path: "/upgrade",
+  //   path: "/login",
   //   name: "Upgrade to PRO",
   //   icon: "nc-icon nc-alien-33",
-  //   component: Upgrade,
+  //   component: Login,
   //   layout: "/admin",
   // },
   {
@@ -49,10 +50,17 @@ const dashboardRoutes = [
   //   layout: "/admin",
   // },
   {
-    path: "/table",
+    path: "/managerUser",
     name: "Manager User",
     icon: "nc-icon nc-circle-09",
     component: TableList,
+    layout: "/admin",
+  },
+  {
+    path: "/question",
+    name: "Question",
+    icon: "nc-icon nc-circle-09",
+    component: Question,
     layout: "/admin",
   },
   {

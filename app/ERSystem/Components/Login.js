@@ -1,10 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
 
 import React, { Component } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -78,7 +71,6 @@ export default class Login extends Component {
                     messageSuccess: ''
                 }))
         }
-
     }
     showPass = () => {
         if (this.state.press == false) {

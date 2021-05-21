@@ -39,6 +39,7 @@ export default class LessonContent extends Component {
     render() {
         const { lessons } = this.state;
         console.log(lessons)
+        const b = (props) => <Text style={{ fontWeight: 'bold' }}>{props.content}</Text>
         return (
             <ImageBackground source={bgImage} style={styles.imageBackgroundContainer}>
                 <FlatList
@@ -49,7 +50,8 @@ export default class LessonContent extends Component {
                     renderItem={({ item }) => (
                         <View style={styles.container}>
                             <Text style={styles.title}>{item.title}</Text>
-                            <Text style={styles.content}>{item.blog}</Text>
+                            <Text style={styles.content}>{item.content}</Text>
+
                             <TouchableOpacity
                                 style={styles.btnPractice}
                             >

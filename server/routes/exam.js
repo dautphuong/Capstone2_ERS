@@ -201,5 +201,62 @@ router.delete("/delete/:id", function(req, res) {
         res.send(data);
     })
 });
+
+/**
+ * @swagger
+ * /exam/updateLQ:
+ *   put:
+ *     summary: update list question exam
+ *     tags: [Exam]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Exam'
+ *     responses:
+ *       200:
+ *         description: The exam was successfully updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Exam'
+ *       500:
+ *         description: Some server error
+ */
+ router.put('/updateLQ', function(req, res) {
+    const exam = new Exam();
+    try {
+        exam.updateListQuestion(req.body, function(data) {
+            res.send(data)
+        });
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+/**
+ * @swagger
+ * /exam/findAll:
+ *   get:
+ *     summary: Danh sách exam
+ *     tags: [Exam]
+ *     responses:
+ *       200:
+ *         description: The list of the exam
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Exam'
+ */
+ router.get('/findAll', function(req, res) {
+    const exam = new Exam();
+    exam.findAll(function(data) {
+        res.send(data)
+    })
+});
+
 module.exports = router;
 //ok

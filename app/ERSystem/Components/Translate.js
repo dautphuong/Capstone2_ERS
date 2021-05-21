@@ -1,4 +1,4 @@
-import React,  {Component}from 'react';
+import React, { Component } from 'react';
 import { StyleSheet, View, Text, Image, ImageBackground, TouchableOpacity, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import bgImage from '../image/logins.jpg';

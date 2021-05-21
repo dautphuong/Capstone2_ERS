@@ -137,7 +137,9 @@ router.get('/findByTopic/:idTopic', function(req, res) {
  *       404:
  *         description: The user was not found
  */
-router.get('/findByid/:id',verifyToken, function(req, res) {
+// router.get('/findByid/:id',verifyToken, function(req, res) {
+router.get('/findByid/:id', function(req, res) {
+
     const lesson = new Lesson();
     lesson.findById(req.params.id, function(data) {
         res.send(data)
@@ -200,6 +202,62 @@ router.delete("/delete/:id", function(req, res) {
     const lesson = new Lesson();
     lesson.delete(req.params.id, function(data) {
         res.send(data);
+    })
+});
+
+/**
+ * @swagger
+ * /lesson/updateLQ:
+ *   put:
+ *     summary: update list question lesson
+ *     tags: [Lesson]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Lesson'
+ *     responses:
+ *       200:
+ *         description: The lesson was successfully updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Lesson'
+ *       500:
+ *         description: Some server error
+ */
+ router.put('/updateLQ', function(req, res) {
+    const lesson = new Lesson();
+    try {
+        lesson.updateListQuestion(req.body, function(data) {
+            res.send(data)
+        });
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+/**
+ * @swagger
+ * /lesson/findAll:
+ *   get:
+ *     summary: Danh sách lesson
+ *     tags: [Lesson]
+ *     responses:
+ *       200:
+ *         description: The list of the lesson
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Lesson'
+ */
+ router.get('/findAll', function(req, res) {
+    const lesson = new Lesson();
+    lesson.findAll(function(data) {
+        res.send(data)
     })
 });
 
