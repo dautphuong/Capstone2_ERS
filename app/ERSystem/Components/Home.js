@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { StyleSheet, View, Text, Image, ImageBackground, TouchableOpacity, FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -56,48 +57,48 @@ export default class Home extends React.Component {
                     <Text style={styles.welcome}>
                         Yay, you're here!
                     </Text>
-                    <Text style={styles.welcomeHere}>
-                        <Text >
-                            Rất hân hạnh được giúp bạn học Tiếng Anh.
+                                <Text style={styles.welcomeHere}>
+                                    <Text >
+                                        Rất hân hạnh được giúp bạn học Tiếng Anh.
                             {"\n"}
-                            {"\n"}
+                                        {"\n"}
                             Chúng ta bắt đầu nào.
                         </Text>
-                        <Text >
+                                    <Text >
 
-                        </Text>
-                    </Text>
-                    <View style={styles.box}>
-                        <TouchableOpacity
-                            style={styles.content}
-                            onPress={() => navigation.navigate('ListTopic')}>
-                            <Image
-                                source={Learn}
-                                style={styles.image}
-                            />
-                            <Text style={styles.Text}>
-                                Bắt đầu học
+                                    </Text>
                                 </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.content}
-                            onPress={() => navigation.navigate('Quiz')}
-                        >
-                            <Image
-                                source={Pra}
-                                style={styles.image}
-                            />
-                            <Text style={styles.Text}>
-                                Luyện Tập
+                                <View style={styles.box}>
+                                    <TouchableOpacity
+                                        style={styles.content}
+                                        onPress={() => navigation.navigate('ListTopic')}>
+                                        <Image
+                                            source={Learn}
+                                            style={styles.image}
+                                        />
+                                        <Text style={styles.Text}>
+                                            Bắt đầu học
                                 </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={styles.content}
-                            onPress={() => navigation.navigate('CalendarExam')}>
-                            <Image
-                                source={Exam}
-                                style={styles.image} />
-                            <Text style={styles.Text}>
-                                Thi
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={styles.content}
+                                        onPress={() => navigation.navigate('PracticeList')}
+                                    >
+                                        <Image
+                                            source={Pra}
+                                            style={styles.image}
+                                        />
+                                        <Text style={styles.Text}>
+                                            Luyện Tập
+                                </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={styles.content}
+                                        onPress={() => navigation.navigate('CalendarExam')}>
+                                        <Image
+                                            source={Exam}
+                                            style={styles.image} />
+                                        <Text style={styles.Text}>
+                                            Thi
                                 </Text>
                         </TouchableOpacity>
                     </View>
@@ -105,7 +106,6 @@ export default class Home extends React.Component {
                     </View>
                     )}
             />
-                
             </ImageBackground>
         );
     }

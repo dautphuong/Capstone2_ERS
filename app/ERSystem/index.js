@@ -15,5 +15,5 @@ import Result from './Components/Result'
 import Profile from './Components/Profile';
 
 
-AppRegistry.registerComponent(appName, () => Navigator);
+AppRegistry.registerComponent("Capstone2", () => Navigator);
 

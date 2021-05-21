@@ -13,7 +13,10 @@ import Translate from './Components/Translate';
 import History from './Components/History';
 import CalendarExam from './Components/CalendarExam';
 import ReadyContest from './Components/ReadyContest';
+import Quiz from './Components/Quiz';
+import Result from './Components/Result';
 import Profile from './Components/Profile';
+import PracticeList from './Components/PracticeList';
 const Stack = createStackNavigator();
 const TabNavigator = createBottomTabNavigator();
 function AppNavigator() {
@@ -143,6 +146,51 @@ function AppNavigator() {
             },
           })
           }
+        />
+        <Stack.Screen name="Home"
+          component={TabScreen}
+          options={({ route }) =>
+          ({
+            headerStyle: {
+              backgroundColor: '#78C8E8',
+            },
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 15,
+              right: 25
+            },
+          })
+          }
+        />
+        <Stack.Screen name="Quiz"
+          component={Quiz}
+          options={({ route }) =>
+          ({
+            id: route.params.id,
+            title: route.params.name,
+            headerStyle: {
+              backgroundColor: '#78C8E8',
+            },
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 15,
+              right: 25
+            },
+          })
+          }
+        />
+        <Stack.Screen name="PracticeList"
+          component={PracticeList}
+          options={{
+            headerTitle: 'Danh sách bài tập',
+            headerStyle: {
+              backgroundColor: '#78C8E8',
+            },
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+
         />
       </Stack.Navigator>
     </NavigationContainer>
