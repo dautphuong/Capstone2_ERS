@@ -13,9 +13,6 @@ import Translate from './Components/Translate';
 import History from './Components/History';
 import CalendarExam from './Components/CalendarExam';
 import ReadyContest from './Components/ReadyContest';
-import Quiz from './Components/Quiz';
-import Result from './Components/Result';
-import ReadyContest from './Components/ReadyContest';
 import Profile from './Components/Profile';
 const Stack = createStackNavigator();
 const TabNavigator = createBottomTabNavigator();
@@ -38,7 +35,21 @@ function AppNavigator() {
             }
           }}
         />
-
+        <Stack.Screen name="Home"
+          component={TabScreen}
+          options={({ route }) =>
+          ({
+            headerStyle: {
+              backgroundColor: '#78C8E8',
+            },
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 15,
+              right: 25
+            },
+          })
+          }
+        />
         <Stack.Screen name="ListTopic"
           component={ListTopic}
           options={{
@@ -50,19 +61,22 @@ function AppNavigator() {
               fontWeight: 'bold',
             },
           }}
-
         />
         <Stack.Screen name="Profile"
           component={Profile}
-          options={{
+          options={({ route }) =>
+          ({
             headerTitle: 'Trang cá nhân',
             headerStyle: {
               backgroundColor: '#78C8E8',
             },
             headerTitleStyle: {
               fontWeight: 'bold',
+              fontSize: 15,
+              right: 25
             },
-          }}
+          })
+          }
         />
         <Stack.Screen name="ListLesson"
           component={ListLesson}
@@ -129,29 +143,6 @@ function AppNavigator() {
             },
           })
           }
-        />
-        <Stack.Screen name="Home"
-          component={TabScreen}
-          options={{
-            headerShown: false,
-            headerTitle: false,
-            headerStyle: {
-              backgroundColor: '#78C8E8',
-
-            }
-          }}
-        />
-        <Stack.Screen name="Quiz"
-          component={Quiz}
-          options={{
-            headerShown: false
-          }}
-        />
-        <Stack.Screen name="Result"
-          component={Result}
-          options={{
-            headerShown: false
-          }}
         />
       </Stack.Navigator>
     </NavigationContainer>

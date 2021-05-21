@@ -31,12 +31,12 @@ export default class Login extends Component {
             password: '',
             messageSuccess: '',
             messageError: '',
-            loading: false
+            loading: false,
         }
     }
 
     checkLogin() {
-        const { navigation } = this.props;
+        const { navigate } = this.props.navigation;
         const { username, password } = this.state;
         if (username !== '' && password) {
             const req = {
@@ -47,37 +47,24 @@ export default class Login extends Component {
                 loading: true,
             })
             axios.post("/user/login", req)
-
                 .then(
                     res => {
-                        console.log(req.username)
+
                         Alert.alert('Bạn đã đăng nhập thành công',
                             this.setState({
+                                loading: false,
                                 "messageSuccess": this.state.messageSuccess,
-                                messageError: ''
+                                messageError: '',
                             }))
-                        console.log(res.data.token)
-                        AsyncStorage.setItem("token", res.data.token)
-                            .then(
-                                res => {
-                                    navigation.navigate('Home');
-                                }
-                            );
 
+
+                        AsyncStorage.setItem("token", res.data.token)
+                        AsyncStorage.setItem("id", res.data.id)
+                        navigate('Home');
                     },
                 )
-                .catch(err => {
-                    console.log(err)
-                    Alert.alert('Error', 'Tài khoản/ Mật khẩu không đúng',
-                        this.setState({
-                            loading: false,
-                            messageError: this.state.messageError,
-                            messageSuccess: ''
-                        }))
-
-                })
         } else {
-            Alert.alert('Error', 'Vui lòng Tên tài khoản và Mật khẩu',
+            Alert.alert('Tài khoản/ Mật khẩu không đúng',
                 this.setState({
                     loading: false,
                     messageError: this.state.messageError,
@@ -138,7 +125,6 @@ export default class Login extends Component {
                             secureTextEntry={this.state.showPass}
                             placeholderTextColor={'rgba(68, 248, 161, 0.7)'}
                             underlineColorAndroid='transparent'
-                            value={password}
                             onChangeText={(text) => this.setState({ password: text })}
                         />
                         <TouchableOpacity style={styles.btnEye}
