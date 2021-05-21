@@ -38,7 +38,21 @@ function AppNavigator() {
             }
           }}
         />
-
+        <Stack.Screen name="Home"
+          component={TabScreen}
+          options={({ route }) =>
+          ({
+            headerStyle: {
+              backgroundColor: '#78C8E8',
+            },
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 15,
+              right: 25
+            },
+          })
+          }
+        />
         <Stack.Screen name="ListTopic"
           component={ListTopic}
           options={{
@@ -50,13 +64,12 @@ function AppNavigator() {
               fontWeight: 'bold',
             },
           }}
-
         />
         <Stack.Screen name="Profile"
           component={Profile}
           options={({ route }) =>
           ({
-            id: route.params.id,
+            headerTitle: 'Trang cá nhân',
             headerStyle: {
               backgroundColor: '#78C8E8',
             },

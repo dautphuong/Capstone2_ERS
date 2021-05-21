@@ -235,5 +235,28 @@ router.delete("/delete/:id", function(req, res) {
     }
 });
 
+/**
+ * @swagger
+ * /exam/findAll:
+ *   get:
+ *     summary: Danh sách exam
+ *     tags: [Exam]
+ *     responses:
+ *       200:
+ *         description: The list of the exam
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Exam'
+ */
+ router.get('/findAll', function(req, res) {
+    const exam = new Exam();
+    exam.findAll(function(data) {
+        res.send(data)
+    })
+});
+
 module.exports = router;
 //ok

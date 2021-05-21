@@ -238,5 +238,28 @@ router.delete("/delete/:id", function(req, res) {
     }
 });
 
+/**
+ * @swagger
+ * /lesson/findAll:
+ *   get:
+ *     summary: Danh sách lesson
+ *     tags: [Lesson]
+ *     responses:
+ *       200:
+ *         description: The list of the lesson
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Lesson'
+ */
+ router.get('/findAll', function(req, res) {
+    const lesson = new Lesson();
+    lesson.findAll(function(data) {
+        res.send(data)
+    })
+});
+
 module.exports = router;
 //ok

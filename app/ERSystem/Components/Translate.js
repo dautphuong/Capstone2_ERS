@@ -10,8 +10,15 @@ import Learn from '../image/startlearn.jpg';
 export default class Translate extends Component {
     render() {
         return (
-
-            <Text>Translate</Text>
+            <ImageBackground source={bgImage} style={styles.ImageBackground}>
+                
+            </ImageBackground>
         )
     }
 }
+const styles = StyleSheet.create({
+    ImageBackground:{
+        width: '100%',
+        height: '100%',
+    },
+})

@@ -31,7 +31,7 @@ export default class Login extends Component {
             password: '',
             messageSuccess: '',
             messageError: '',
-            loading: false
+            loading: false,
         }
     }
     checkLogin() {
@@ -57,7 +57,7 @@ export default class Login extends Component {
                         const item = res.data
                         console.log(res.data.id),
                         AsyncStorage.setItem("token", res.data.token)
-                        AsyncStorage.setItem("idUser", res.data.id)
+                        AsyncStorage.setItem("id", res.data.id)
                             
 
                     },
@@ -139,7 +139,6 @@ export default class Login extends Component {
                             secureTextEntry={this.state.showPass}
                             placeholderTextColor={'rgba(68, 248, 161, 0.7)'}
                             underlineColorAndroid='transparent'
-                            value={password}
                             onChangeText={(text) => this.setState({ password: text })}
                         />
                         <TouchableOpacity style={styles.btnEye}

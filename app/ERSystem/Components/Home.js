@@ -1,13 +1,7 @@
 import React from 'react';
-import {
-    StyleSheet,
-    View,
-    Text,
-    Image,
-    ImageBackground,
-    TouchableOpacity,
-    FlatList,
-} from 'react-native';
+
+import { StyleSheet, View, Text, Image, ImageBackground, TouchableOpacity, FlatList } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import bgImage from '../image/logins.jpg';
@@ -16,49 +10,52 @@ import Pra from '../image/Pra.jpg';
 import Exam from '../image/Exam.jpg';
 import Learn from '../image/startlearn.jpg';
 
-export default class Login extends React.Component {
-    constructor(props) {
+export default class Home extends React.Component {
+    constructor(props){
         super(props);
-        this.state = {
-            home: []
+        this.state ={
+            home: [],
         }
     }
-    componentDidMount() {
-        axios.get('/user/findAllUser')
-            .then(res => {
-                this.setState({
-                    home: res.data
+    async componentDidMount() {
+        try {
+            axios.get(`/user/findAllUser`, {
+                headers: {
+                    'Authorization': 'Bearer ' + AsyncStorage.getItem("token")
+                }
+            })
+                .then(res => {
+                    this.setState({
+                        home: res.data
+                    })
                 })
-            })
-            .catch(error => {
-                console.error(error)
-            })
+        } catch (error) {
+            console.error(error);
+        }
     }
     render() {
-        const { navigation } = this.props;
-        const { home } = this.state;
+        const {navigation} =this.props;
+        const {home} = this.state
         return (
             <ImageBackground
                 source={bgImage}
                 style={{ width: "100%", height: "100%" }}>
-                <FlatList
-                    data={home}
-                    renderItem={({ item }) => (
-                        <View>
-                            <View style={styles.menu}>
-                                <Image source={Logo} style={styles.logo} />
-                                <Icon name={'account-circle'}
-                                    size={50}
-                                    color={'rgba(255,255,255,0.7)'}
-                                    style={styles.accountCircle}
-                                    onPress={() => navigation.navigate('Profile', {
-                                        id: item.id
-                                    })}
-                                />
-                            </View>
-                            <View style={styles.header}>
-                                <Text style={styles.welcome}>
-                                    Yay, you're here!
+            <FlatList
+                data={home}
+                renderItem={({item}) =>(
+                    <View>
+                    <View style={styles.menu}>
+                    <Image source={Logo} style={styles.logo} />
+                    <Icon name={'account-circle'}
+                        size={50}
+                        color={'rgba(255,255,255,0.7)'}
+                        style={styles.accountCircle}
+                        onPress={() => navigation.navigate('Profile')}
+                        />
+                </View>
+                <View style={styles.header}>
+                    <Text style={styles.welcome}>
+                        Yay, you're here!
                     </Text>
                                 <Text style={styles.welcomeHere}>
                                     <Text >
@@ -103,13 +100,12 @@ export default class Login extends React.Component {
                                         <Text style={styles.Text}>
                                             Thi
                                 </Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        </View>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                    </View>
                     )}
-                />
-
+            />
             </ImageBackground>
         );
     }

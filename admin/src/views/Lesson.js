@@ -16,8 +16,14 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { data, event } from "jquery";
 import { Button, ButtonToolbar } from 'react-bootstrap'
-import  PopupLesson  from './PopupLesson';
-
+import PopupLesson from './PopupLesson';
+import CreateTypeLesson from './CreateTypeLesson'
+import IconButton from "@material-ui/core/IconButton";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import IntlMessages from "../util/IntlMessages";
+import Pagination from "@material-ui/lab/Pagination";
+import API from '../api';
 class Lesson extends React.Component {
   constructor(props) {
     super(props);
@@ -25,33 +31,27 @@ class Lesson extends React.Component {
       selectValue: "",
       contentCKEditor: "",
       addModalShow: false,
+      addModalTypeLesson: false,
+      menuState: false,
+      anchorEl: "",
       data: []
     }
     //this.handleDropdownChange = this.handleDropdownChange.bind(this);
     this.handCkeditorState = this.handCkeditorState.bind(this);
   }
   componentDidMount() {
-    const dataSet = [
-      {
-        Name: "Cuộc thi năm 2021",
-        Topic: "Danh Từ",
-        NumberOfQuestion: 60,
-        Time: 45
-      },
-      {
-        Name: "Cuộc thi năm 2022",
-        Topic: "Tính Từ",
-        NumberOfQuestion: 60,
-        Time: 45
-      },
-      {
-        Name: "Cuộc thi năm 2023",
-        Topic: "Động Từ",
-        NumberOfQuestion: 60,
-        Time: 45
-      },
-    ];
-    this.setState({ data: dataSet })
+    API.get(`lesson/findAll`)
+    .then(res => {
+      const data = res.data;
+      this.setState({ data });
+      console.log(this.state.data);
+    })
+  }
+  handleClick = (event) => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+  handleClose = () => {
+    this.setState({ anchorEl: null });
   }
   handleDropdownChange(e) {
     this.setState({ selectValue: e.target.value })
@@ -68,15 +68,30 @@ class Lesson extends React.Component {
       this.setState({ data: dataLesson });
     }
   }
+  onContactOptionSelect = (event) => {
+    console.log("Select menu")
+    // setMenuState(true);
+    // setAnchorEl(event.currentTarget);
+    this.setState({ menuState: true })
+  };
+  handleRequestClose = () => {
+    this.setState({ menuState: false })
+  };
   render() {
     //alert(this.state.selectValue)
+    const onContactOptionSelect = (event) => {
+      // setMenuState(true);
+      // setAnchorEl(event.currentTarget);
+      this.setState({ menuState: true, anchorEl: event.currentTarget })
+    };
+    let options = [
+      { name: "Edit", icon: "zmdi-edit" },
+      { name: "Delete", icon: "zmdi-delete" },
+    ];
+
     console.log(this.state.selectValue)
     let addModalClose = () => this.setState({ addModalShow: false })
-    const options = [
-      { value: 'chocolate', label: 'Chocolate' },
-      { value: 'strawberry', label: 'Strawberry' },
-      { value: 'vanilla', label: 'Vanilla' }
-    ]
+    let addModalTypeLessonClose = () => this.setState({ addModalTypeLesson: false })
     const editorConfiguration = {
       toolbar: ['bold', 'italic']
     };
@@ -84,17 +99,44 @@ class Lesson extends React.Component {
     let ViewDataTable = this.state.data.map((data, i) => {
       return (
         <tr>
-          <td>{data.Name}</td>
-          <td>{data.Topic}</td>
-          <td>{data.NumberOfQuestion}</td>
-          <td>{data.Time}</td>
+          <td>{data.title}</td>
+          <td>{data.idTopic}</td>
+          <td>{data.createOnUTC}</td>
           <td>
-            <div>
-              <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-            </div>
-            <div>
-              <a onClick={() => this.DeleteLesson(i)}><i class="fa fa-trash" aria-hidden="true" ></i></a>
-            </div>
+            <IconButton onClick={this.handleClick}>
+              <i className="zmdi zmdi-menu" />
+            </IconButton>
+            <Menu
+              id="long-menu"
+              anchorEl={this.state.anchorEl}
+              open={Boolean(this.state.anchorEl)}
+              onClose={this.handleClose}
+              style={{
+              }}
+            >
+              {options.map((option, index) => (
+                <MenuItem
+                  key={index}
+                  onClick={this.handleClose}
+                // onClick={() => {
+                //   switch (option.name) {
+                //     case "Edit":
+                //       history.push(
+                //         "/bookingOrderAdmin/app/settings/edit-template"
+                //       );
+                //     case "Delete":
+                //       break;
+                //   }
+                // }}
+                >
+                  <i
+                    className={`zmdi ${option.icon}`}
+                    style={{ width: "10%", marginRight: "10px" }}
+                  />
+                  {/* <IntlMessages id={option.name} /> */}
+                </MenuItem>
+              ))}
+            </Menu>
           </td>
         </tr>
       )
@@ -107,17 +149,23 @@ class Lesson extends React.Component {
             <Col md="12">
               <Card>
                 <Card.Header>
-                  <Card.Title as="h4" style={{ width: '50%', float: 'left' }}>Light Bootstrap Table Heading</Card.Title>
-                  <ButtonToolbar>
-                    <Button 
-                    variant="primary"
-                    onClick = {()=>this.setState({addModalShow : true})}
+                  <Card.Title as="h4" style={{ width: '35%', float: 'left' }}>Light Bootstrap Table Heading</Card.Title>
+                  <a onClick={() => this.setState({ addModalTypeLesson: true })}>List of  Topic</a>
+                  {/* <CreateTypeLesson
+                  show = {this.state.addModalTypeLesson}
+                  onHide={addModalTypeLessonClose}
+                  /> */}
+                  <ButtonToolbar style={{ paddingLeft: '29%' }}>
+                    <Button
+                      variant="primary"
+                      onClick={() => this.setState({ addModalShow: true })}
+
                     >
-                        Import
+                      Create Lesson
                     </Button>
                     <PopupLesson
-                    show={this.state.addModalShow}
-                    onHide = {addModalClose}
+                      show={this.state.addModalShow}
+                      onHide={addModalClose}
                     />
 
                   </ButtonToolbar>
@@ -138,7 +186,6 @@ class Lesson extends React.Component {
                         <th className="border-0">Name</th>
                         <th className="border-0">Topic</th>
                         <th className="border-0">Number of question</th>
-                        <th className="border-0">Time</th>
                         <th className="border-0"></th>
                       </tr>
                     </thead>
@@ -151,6 +198,7 @@ class Lesson extends React.Component {
               </Card>
             </Col>
           </Row>
+          <Pagination defaultPage={1} count={3} style={{ padding: "10px 0" }} />
         </Container>
       </>
     )

@@ -1,55 +1,41 @@
 import React, { Component } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {
-    View,
-    ScrollView,
-    TouchableOpacity,
-    Image,
-    Text,
-    StyleSheet,
-    FlatList,
-    ImageBackground
-} from 'react-native';
+import { View, ScrollView,FlatList, TouchableOpacity, Text, StyleSheet, ImageBackground } from 'react-native';
 import axios from 'axios';
+import  AsyncStorage  from '@react-native-async-storage/async-storage';
+import UserAvatar from 'react-native-user-avatar';
 export default class Profile extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
-            Profile: []
+            learners:[]
         }
     }
-    componentDidMount() {
-        const { id } = this.props.route.params;
+
+    async componentDidMount() {
+        let idUser = await AsyncStorage.getItem('id');
         try {
-            console.log(AsyncStorage.getItem("idUser"))
-            console.log('`/user/findById/`' + AsyncStorage.getItem("idUser")),
-                axios.get(`/user/findById/` + AsyncStorage.getItem("idUser"), {
-                    headers: {
-                        'Authorization': 'Bearer ' + AsyncStorage.getItem("token")
-                    }
-                })
-                    .then(res => {
-                        this.setState({
-                            Profile: res.data
-                        })
+            axios.get(`/user/findById/${idUser}`)
+                .then(res => {
+                    this.setState({
+                        learners: res.data
                     })
+                })
         } catch (error) {
             console.error(error);
         }
     }
     render() {
-        const { navigation } = this.props;
-        const { Profile } = this.state;
+        const {learners} = this.state;
         return (
             <ImageBackground source={require('../image/logins.jpg')} style={styles.ImageBackground} >
                 <FlatList
-                    data={Profile}
-                    renderItem={({ item }) => (
+                    data={learners}
+                    renderItem={({item}) => (
                         <View>
                             <View style={styles.Header}></View>
-                            {/* <View style={styles.avatar}>
+                            <View style={styles.avatar}>
                                 <UserAvatar name="Avishay Bar" style={styles.Image2} />
-                            </View> */}
+                            </View>
                             <View style={styles.email}>
                                 <Text style={styles.user}>Tên đăng nhập</Text>
                                 <Text>{item.username}</Text>
@@ -71,7 +57,7 @@ export default class Profile extends Component {
                     )}
                 />
             </ImageBackground>
-        );
+        )
     }
 };
 const styles = StyleSheet.create({
@@ -152,5 +138,17 @@ const styles = StyleSheet.create({
     user: {
         fontWeight: "bold",
         fontSize: 15,
-    }
+    },
+    container: {
+        alignItems: 'center',
+        padding: 16,
+        borderRadius: 5,
+        backgroundColor: '#F5FBEF',
+        shadowColor: '#000',
+        elevation: 3,
+        shadowOpacity: 0.5,
+        shadowRadius: 20,
+        shadowOffset: { width: 0, height: 0 },
+        marginBottom: 16
+    },
 });

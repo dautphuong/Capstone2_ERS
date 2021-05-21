@@ -293,4 +293,28 @@ router.delete("/delete/:id", function(req, res) {
         res.send(data);
     })
 });
+
+/**
+ * @swagger
+ * /question/findAll:
+ *   get:
+ *     summary: Danh sách question
+ *     tags: [Question]
+ *     responses:
+ *       200:
+ *         description: The list of the question
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Question'
+ */
+ router.get('/findAll', function(req, res) {
+    const question = new Question();
+    question.findAll(function(data) {
+        res.send(data)
+    })
+});
+
 module.exports = router;
