@@ -37,6 +37,7 @@ export default class LessonContent extends Component {
         }
     }
     render() {
+        const { navigation } = this.props;
         const { lessons } = this.state;
         console.log(lessons)
         const b = (props) => <Text style={{ fontWeight: 'bold' }}>{props.content}</Text>
@@ -54,6 +55,9 @@ export default class LessonContent extends Component {
 
                             <TouchableOpacity
                                 style={styles.btnPractice}
+                                onPress={() => navigation.navigate('Quiz', {
+                                    idLesson: item.id,
+                                })}
                             >
                                 <Text style={styles.Text}>Làm Bài Tập</Text>
                             </TouchableOpacity>

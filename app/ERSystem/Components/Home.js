@@ -1,5 +1,14 @@
 import React from 'react';
-import { StyleSheet, View, Text, Image, ImageBackground, TouchableOpacity, TextInput } from 'react-native';
+import {
+    StyleSheet,
+    View,
+    Text,
+    Image,
+    ImageBackground,
+    TouchableOpacity,
+    FlatList,
+} from 'react-native';
+import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import bgImage from '../image/logins.jpg';
 import Logo from '../image/English_REVIEW.png';
@@ -8,71 +17,99 @@ import Exam from '../image/Exam.jpg';
 import Learn from '../image/startlearn.jpg';
 
 export default class Login extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            home: []
+        }
+    }
+    componentDidMount() {
+        axios.get('/user/findAllUser')
+            .then(res => {
+                this.setState({
+                    home: res.data
+                })
+            })
+            .catch(error => {
+                console.error(error)
+            })
+    }
     render() {
         const { navigation } = this.props;
+        const { home } = this.state;
         return (
             <ImageBackground
                 source={bgImage}
                 style={{ width: "100%", height: "100%" }}>
-                <View style={styles.menu}>
-                    <Image source={Logo} style={styles.logo} />
-                    <Icon name={'account-circle'}
-                        size={50}
-                        color={'rgba(255,255,255,0.7)'}
-                        style={styles.accountCircle}
-                        onPress={() => navigation.navigate('Profile')}
-                        />
-                </View>
-                <View style={styles.header}>
-                    <Text style={styles.welcome}>
-                        Yay, you're here!
+                <FlatList
+                    data={home}
+                    renderItem={({ item }) => (
+                        <View>
+                            <View style={styles.menu}>
+                                <Image source={Logo} style={styles.logo} />
+                                <Icon name={'account-circle'}
+                                    size={50}
+                                    color={'rgba(255,255,255,0.7)'}
+                                    style={styles.accountCircle}
+                                    onPress={() => navigation.navigate('Profile', {
+                                        id: item.id
+                                    })}
+                                />
+                            </View>
+                            <View style={styles.header}>
+                                <Text style={styles.welcome}>
+                                    Yay, you're here!
                     </Text>
-                    <Text style={styles.welcomeHere}>
-                        <Text >
-                            Rất hân hạnh được giúp bạn học Tiếng Anh.
+                                <Text style={styles.welcomeHere}>
+                                    <Text >
+                                        Rất hân hạnh được giúp bạn học Tiếng Anh.
                             {"\n"}
-                            {"\n"}
+                                        {"\n"}
                             Chúng ta bắt đầu nào.
                         </Text>
-                        <Text >
+                                    <Text >
 
-                        </Text>
-                    </Text>
-                    <View style={styles.box}>
-                        <TouchableOpacity
-                            style={styles.content}
-                            onPress={() => navigation.navigate('ListTopic')}>
-                            <Image
-                                source={Learn}
-                                style={styles.image}
-                            />
-                            <Text style={styles.Text}>
-                                Bắt đầu học
+                                    </Text>
                                 </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.content}
-                            onPress={() => navigation.navigate('Quiz')}
-                        >
-                            <Image
-                                source={Pra}
-                                style={styles.image}
-                            />
-                            <Text style={styles.Text}>
-                                Luyện Tập
+                                <View style={styles.box}>
+                                    <TouchableOpacity
+                                        style={styles.content}
+                                        onPress={() => navigation.navigate('ListTopic')}>
+                                        <Image
+                                            source={Learn}
+                                            style={styles.image}
+                                        />
+                                        <Text style={styles.Text}>
+                                            Bắt đầu học
                                 </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={styles.content}
-                            onPress={() => navigation.navigate('CalendarExam')}>
-                            <Image
-                                source={Exam}
-                                style={styles.image} />
-                            <Text style={styles.Text}>
-                                Thi
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={styles.content}
+                                        onPress={() => navigation.navigate('PracticeList')}
+                                    >
+                                        <Image
+                                            source={Pra}
+                                            style={styles.image}
+                                        />
+                                        <Text style={styles.Text}>
+                                            Luyện Tập
                                 </Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={styles.content}
+                                        onPress={() => navigation.navigate('CalendarExam')}>
+                                        <Image
+                                            source={Exam}
+                                            style={styles.image} />
+                                        <Text style={styles.Text}>
+                                            Thi
+                                </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </View>
+                    )}
+                />
+
             </ImageBackground>
         );
     }

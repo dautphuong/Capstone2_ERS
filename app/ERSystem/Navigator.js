@@ -15,8 +15,8 @@ import CalendarExam from './Components/CalendarExam';
 import ReadyContest from './Components/ReadyContest';
 import Quiz from './Components/Quiz';
 import Result from './Components/Result';
-import ReadyContest from './Components/ReadyContest';
 import Profile from './Components/Profile';
+import PracticeList from './Components/PracticeList';
 const Stack = createStackNavigator();
 const TabNavigator = createBottomTabNavigator();
 function AppNavigator() {
@@ -54,15 +54,19 @@ function AppNavigator() {
         />
         <Stack.Screen name="Profile"
           component={Profile}
-          options={{
-            headerTitle: 'Trang cá nhân',
+          options={({ route }) =>
+          ({
+            id: route.params.id,
             headerStyle: {
               backgroundColor: '#78C8E8',
             },
             headerTitleStyle: {
               fontWeight: 'bold',
+              fontSize: 15,
+              right: 25
             },
-          }}
+          })
+          }
         />
         <Stack.Screen name="ListLesson"
           component={ListLesson}
@@ -132,26 +136,48 @@ function AppNavigator() {
         />
         <Stack.Screen name="Home"
           component={TabScreen}
-          options={{
-            headerShown: false,
-            headerTitle: false,
+          options={({ route }) =>
+          ({
             headerStyle: {
               backgroundColor: '#78C8E8',
-
-            }
-          }}
+            },
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 15,
+              right: 25
+            },
+          })
+          }
         />
         <Stack.Screen name="Quiz"
           component={Quiz}
-          options={{
-            headerShown: false
-          }}
+          options={({ route }) =>
+          ({
+            id: route.params.id,
+            title: route.params.name,
+            headerStyle: {
+              backgroundColor: '#78C8E8',
+            },
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 15,
+              right: 25
+            },
+          })
+          }
         />
-        <Stack.Screen name="Result"
-          component={Result}
+        <Stack.Screen name="PracticeList"
+          component={PracticeList}
           options={{
-            headerShown: false
+            headerTitle: 'Danh sách bài tập',
+            headerStyle: {
+              backgroundColor: '#78C8E8',
+            },
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
           }}
+
         />
       </Stack.Navigator>
     </NavigationContainer>
