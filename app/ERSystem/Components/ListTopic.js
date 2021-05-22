@@ -11,8 +11,7 @@ import {
 } from 'react-native';
 import bgImage from '../image/logins.jpg';
 import book from '../image/book.png';
-
-axios.defaults.baseURL = 'https://d4f87031c583.ngrok.io';
+axios.defaults.baseURL = 'https://69aefae46d28.ngrok.io';
 export default class ListTopic extends Component {
     constructor(props) {
         super(props);

@@ -189,8 +189,26 @@ module.exports = class User {
                         callback('password wrong');
                     }
                 });
-            }else{
-                callback('username wrong');
+            }else{               
+                   callback('username wrong');
+            }
+        });
+    }
+
+    checkLoginAdmin(req, callback) {
+        firebase.database().ref("admin/" ).once("value").then(function(snapshot) {
+            if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
+                var item = snapArray.snap_array(snapshot).filter(value => value.username == req.username)[0]
+
+                bcrypt.compare(req.password, item.password, function(err, result) {
+                    if(result){
+                        callback(item);
+                    }else{
+                        callback('password wrong');
+                    }
+                });
+            }else{               
+                   callback('username wrong');
             }
         });
     }

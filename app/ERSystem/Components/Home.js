@@ -1,13 +1,7 @@
 import React from 'react';
-import {
-    StyleSheet,
-    View,
-    Text,
-    Image,
-    ImageBackground,
-    TouchableOpacity,
-    FlatList,
-} from 'react-native';
+
+import { StyleSheet, View, Text, Image, ImageBackground, TouchableOpacity, FlatList } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import bgImage from '../image/logins.jpg';
@@ -16,27 +10,32 @@ import Pra from '../image/Pra.jpg';
 import Exam from '../image/Exam.jpg';
 import Learn from '../image/startlearn.jpg';
 
-export default class Login extends React.Component {
+export default class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            home: []
+            home: [],
         }
     }
-    componentDidMount() {
-        axios.get('/user/findAllUser')
-            .then(res => {
-                this.setState({
-                    home: res.data
+    async componentDidMount() {
+        try {
+            axios.get(`/user/findAllUser`, {
+                headers: {
+                    'Authorization': 'Bearer ' + AsyncStorage.getItem("token")
+                }
+            })
+                .then(res => {
+                    this.setState({
+                        home: res.data
+                    })
                 })
-            })
-            .catch(error => {
-                console.error(error)
-            })
+        } catch (error) {
+            console.error(error);
+        }
     }
     render() {
         const { navigation } = this.props;
-        const { home } = this.state;
+        const { home } = this.state
         return (
             <ImageBackground
                 source={bgImage}
@@ -51,9 +50,7 @@ export default class Login extends React.Component {
                                     size={50}
                                     color={'rgba(255,255,255,0.7)'}
                                     style={styles.accountCircle}
-                                    onPress={() => navigation.navigate('Profile', {
-                                        id: item.id
-                                    })}
+                                    onPress={() => navigation.navigate('Profile')}
                                 />
                             </View>
                             <View style={styles.header}>
@@ -109,7 +106,6 @@ export default class Login extends React.Component {
                         </View>
                     )}
                 />
-
             </ImageBackground>
         );
     }

@@ -36,8 +36,10 @@
     "react-native-screens": "^3.0.0",
     "react-native-simple-radio-button": "^2.7.4",
     "react-native-simple-radio-button-input": "^1.0.4",
+    "react-native-user-avatar": "^1.0.7",
     "react-native-vector-icons": "^8.1.0",
     "react-native-weekly-calendar": "^0.2.0",
+    "react-navigation-drawer": "^2.7.1",
     "react-navigation-tabs": "^2.11.0"
   },
   "devDependencies": {

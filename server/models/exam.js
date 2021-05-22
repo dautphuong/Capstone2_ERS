@@ -139,4 +139,10 @@ module.exports = class Exam {
             callback("ok")
         });
     }
+
+    findAll(callback) {
+        firebase.database().ref("exams").once("value").then(function(snapshot) {
+            callback(snapArray.snap_array(snapshot));
+        })
+    }
 }
