@@ -31,10 +31,9 @@ export default class Login extends Component {
             password: '',
             messageSuccess: '',
             messageError: '',
-            loading: false
+            loading: false,
         }
     }
-
     checkLogin() {
         const { navigation } = this.props;
         const { username, password } = this.state;
@@ -47,7 +46,6 @@ export default class Login extends Component {
                 loading: true,
             })
             axios.post("/user/login", req)
-
                 .then(
                     res => {
                         console.log(req.username)
@@ -56,16 +54,19 @@ export default class Login extends Component {
                                 "messageSuccess": this.state.messageSuccess,
                                 messageError: ''
                             }))
-                        console.log(res.data.token)
+                        const item = res.data
+                        console.log(res.data.id),
                         AsyncStorage.setItem("token", res.data.token)
-                            .then(
-                                res => {
-                                    navigation.navigate('Home');
-                                }
-                            );
+                        AsyncStorage.setItem("id", res.data.id)
+                            
 
                     },
-                )
+                    
+            ).then(
+                res => {
+                    navigation.navigate('Home')
+                }
+            )
                 .catch(err => {
                     console.log(err)
                     Alert.alert('Error', 'Tài khoản/ Mật khẩu không đúng',
@@ -138,7 +139,6 @@ export default class Login extends Component {
                             secureTextEntry={this.state.showPass}
                             placeholderTextColor={'rgba(68, 248, 161, 0.7)'}
                             underlineColorAndroid='transparent'
-                            value={password}
                             onChangeText={(text) => this.setState({ password: text })}
                         />
                         <TouchableOpacity style={styles.btnEye}
