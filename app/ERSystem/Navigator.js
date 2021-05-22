@@ -147,21 +147,6 @@ function AppNavigator() {
           })
           }
         />
-        <Stack.Screen name="Home"
-          component={TabScreen}
-          options={({ route }) =>
-          ({
-            headerStyle: {
-              backgroundColor: '#78C8E8',
-            },
-            headerTitleStyle: {
-              fontWeight: 'bold',
-              fontSize: 15,
-              right: 25
-            },
-          })
-          }
-        />
         <Stack.Screen name="Quiz"
           component={Quiz}
           options={({ route }) =>
@@ -192,8 +177,9 @@ function AppNavigator() {
           }}
 
         />
+
       </Stack.Navigator>
-    </NavigationContainer>
+    </NavigationContainer >
   );
 }
 

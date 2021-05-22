@@ -14,7 +14,6 @@ import {
     Dimensions,
 } from "react-native";
 import DialogInput from "react-native-dialog-input";
-import Modal from "react-native-modal"
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import RadioForm from 'react-native-simple-radio-button';
 import bgImage from '../image/logins.jpg';

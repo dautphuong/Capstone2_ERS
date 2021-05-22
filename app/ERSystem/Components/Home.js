@@ -11,9 +11,9 @@ import Exam from '../image/Exam.jpg';
 import Learn from '../image/startlearn.jpg';
 
 export default class Home extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
-        this.state ={
+        this.state = {
             home: [],
         }
     }
@@ -34,28 +34,29 @@ export default class Home extends React.Component {
         }
     }
     render() {
-        const {navigation} =this.props;
-        const {home} = this.state
+        const { navigation } = this.props;
+        const { home } = this.state
         return (
             <ImageBackground
                 source={bgImage}
                 style={{ width: "100%", height: "100%" }}>
-            <FlatList
-                data={home}
-                renderItem={({item}) =>(
-                    <View>
-                    <View style={styles.menu}>
-                    <Image source={Logo} style={styles.logo} />
-                    <Icon name={'account-circle'}
-                        size={50}
-                        color={'rgba(255,255,255,0.7)'}
-                        style={styles.accountCircle}
-                        onPress={() => navigation.navigate('Profile')}
-                        />
-                </View>
-                <View style={styles.header}>
-                    <Text style={styles.welcome}>
-                        Yay, you're here!
+
+                <FlatList
+                    data={home}
+                    renderItem={({ item }) => (
+                        <View>
+                            <View style={styles.menu}>
+                                <Image source={Logo} style={styles.logo} />
+                                <Icon name={'account-circle'}
+                                    size={50}
+                                    color={'rgba(255,255,255,0.7)'}
+                                    style={styles.accountCircle}
+                                    onPress={() => navigation.navigate('Profile')}
+                                />
+                            </View>
+                            <View style={styles.header}>
+                                <Text style={styles.welcome}>
+                                    Yay, you're here!
                     </Text>
                                 <Text style={styles.welcomeHere}>
                                     <Text >
@@ -100,12 +101,13 @@ export default class Home extends React.Component {
                                         <Text style={styles.Text}>
                                             Thi
                                 </Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-                    </View>
+
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </View>
                     )}
-            />
+                />
             </ImageBackground>
         );
     }

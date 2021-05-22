@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
