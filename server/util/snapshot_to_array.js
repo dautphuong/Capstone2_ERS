@@ -13,7 +13,6 @@ module.exports = {
         return returnArr;
     },
     snap_arr: function (snapshot) {
-
         snapshot.forEach(function (childSnapshot) {
             firebase.database().ref("topics/" + childSnapshot.val().idTopic).once("value").then(function (snapshot) {
                 if (snapshot.exists()) {
@@ -26,6 +25,10 @@ module.exports = {
 
         return returnArr2;
     },
+
+    resetArr:function(){
+        returnArr2=[];
+    }
 }
 
 var getNameTopic = (item, nameTopic) => {
