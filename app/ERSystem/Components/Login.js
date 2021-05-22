@@ -55,17 +55,17 @@ export default class Login extends Component {
                             }))
                         const item = res.data
                         console.log(res.data.id),
-                            AsyncStorage.setItem("token", res.data.token)
+                        AsyncStorage.setItem("token", res.data.token)
                         AsyncStorage.setItem("id", res.data.id)
-
+                            
 
                     },
-
-                ).then(
-                    res => {
-                        navigation.navigate('Home')
-                    }
-                )
+                    
+            ).then(
+                res => {
+                    navigation.navigate('Home')
+                }
+            )
                 .catch(err => {
                     console.log(err)
                     Alert.alert('Error', 'Tài khoản/ Mật khẩu không đúng',

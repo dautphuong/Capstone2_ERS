@@ -40,6 +40,7 @@ export default class Home extends React.Component {
             <ImageBackground
                 source={bgImage}
                 style={{ width: "100%", height: "100%" }}>
+
                 <FlatList
                     data={home}
                     renderItem={({ item }) => (
@@ -100,6 +101,7 @@ export default class Home extends React.Component {
                                         <Text style={styles.Text}>
                                             Thi
                                 </Text>
+
                                     </TouchableOpacity>
                                 </View>
                             </View>

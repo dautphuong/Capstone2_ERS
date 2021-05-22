@@ -14,6 +14,7 @@ import History from './Components/History';
 import CalendarExam from './Components/CalendarExam';
 import ReadyContest from './Components/ReadyContest';
 import Quiz from './Components/Quiz';
+import Result from './Components/Result';
 import Profile from './Components/Profile';
 import PracticeList from './Components/PracticeList';
 const Stack = createStackNavigator();
@@ -68,7 +69,6 @@ function AppNavigator() {
           component={Profile}
           options={({ route }) =>
           ({
-
             headerTitle: 'Trang cá nhân',
             headerStyle: {
               backgroundColor: '#78C8E8',

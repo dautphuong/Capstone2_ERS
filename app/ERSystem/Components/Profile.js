@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, ScrollView, FlatList, TouchableOpacity, Text, StyleSheet, ImageBackground } from 'react-native';
+
+import { View, FlatList, TouchableOpacity, Text, StyleSheet, ImageBackground } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import UserAvatar from 'react-native-user-avatar';
