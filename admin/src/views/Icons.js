@@ -1,6 +1,6 @@
 import { extend } from "chartist";
 import React from "react";
-
+import API from '../api';
 // react-bootstrap components
 import {
   Badge,
@@ -15,7 +15,23 @@ import {
 } from "react-bootstrap";
 
 class Icons extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      dataContest: []
+    }
+
+  }
+  componentDidMount() {
+    API.get(`contest/findAll`)
+      .then(res => {
+        const dataContest = res.data;
+        this.setState({ dataContest });
+        console.log(this.state.dataContest)
+      })
+  }
   render() {
+    
     const data = [
       {
         Name: "Cuộc thi năm 2021",
