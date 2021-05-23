@@ -22,7 +22,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import IntlMessages from "../util/IntlMessages";
-import Pagination from "@material-ui/lab/Pagination";
+import TablePagination from "@material-ui/core/TablePagination";
 import API from '../api';
 class Lesson extends React.Component {
   constructor(props) {
@@ -34,18 +34,20 @@ class Lesson extends React.Component {
       addModalTypeLesson: false,
       menuState: false,
       anchorEl: "",
-      data: []
+      data: [],
+      page: 0,
+      dataTopic: []
     }
     //this.handleDropdownChange = this.handleDropdownChange.bind(this);
     this.handCkeditorState = this.handCkeditorState.bind(this);
   }
   componentDidMount() {
     API.get(`lesson/findAll`)
-    .then(res => {
-      const data = res.data;
-      this.setState({ data });
-      console.log(this.state.data);
-    })
+      .then(res => {
+        const data = res.data;
+        this.setState({ data: data });
+        console.log(this.state.data);
+      })
   }
   handleClick = (event) => {
     this.setState({ anchorEl: event.currentTarget });
@@ -61,11 +63,17 @@ class Lesson extends React.Component {
     this.setState({ contentCKEditor: data })
     console.log(this.state.contentCKEditor)
   }
-  DeleteLesson = (index) => {
+  DeleteLesson(id) {
+    console.log(id);
     const dataLesson = [...this.state.data]
-    if (window.confirm('Do you want to delete ' + dataLesson[index].Name + ' ?')) {
-      dataLesson.splice(index, 1);
-      this.setState({ data: dataLesson });
+    if (window.confirm('Do you want to delete ' + dataLesson.find(x => x.id === id).title + ' ?')) {
+      API.delete(`lesson/delete/${id}`)
+        .then(res => {
+          console.log(res.data)
+          this.setState({ addModalShow: false })
+        })
+      // dataLesson.splice(index, 1);
+      // this.setState({ data: dataLesson });
     }
   }
   onContactOptionSelect = (event) => {
@@ -77,6 +85,9 @@ class Lesson extends React.Component {
   handleRequestClose = () => {
     this.setState({ menuState: false })
   };
+  handleChangePage = () => {
+
+  }
   render() {
     //alert(this.state.selectValue)
     const onContactOptionSelect = (event) => {
@@ -89,21 +100,27 @@ class Lesson extends React.Component {
       { name: "Delete", icon: "zmdi-delete" },
     ];
 
-    console.log(this.state.selectValue)
     let addModalClose = () => this.setState({ addModalShow: false })
     let addModalTypeLessonClose = () => this.setState({ addModalTypeLesson: false })
     const editorConfiguration = {
       toolbar: ['bold', 'italic']
     };
-
     let ViewDataTable = this.state.data.map((data, i) => {
       return (
         <tr>
           <td>{data.title}</td>
-          <td>{data.idTopic}</td>
+          <td>{data.nameTopic}</td>
           <td>{data.createOnUTC}</td>
           <td>
-            <IconButton onClick={this.handleClick}>
+            <i
+              className="zmdi zmdi-edit"
+              style={{ width: "10%", marginRight: "10px" }}
+            />
+            <i
+              className="zmdi zmdi-delete" onClick={this.DeleteLesson.bind(this, data.id)}
+              style={{ width: "10%", marginRight: "10px" }}
+            />
+            {/* <IconButton onClick={this.handleClick}>
               <i className="zmdi zmdi-menu" />
             </IconButton>
             <Menu
@@ -117,26 +134,22 @@ class Lesson extends React.Component {
               {options.map((option, index) => (
                 <MenuItem
                   key={index}
-                  onClick={this.handleClose}
-                // onClick={() => {
-                //   switch (option.name) {
-                //     case "Edit":
-                //       history.push(
-                //         "/bookingOrderAdmin/app/settings/edit-template"
-                //       );
-                //     case "Delete":
-                //       break;
-                //   }
-                // }}
+                  onClick={() => {
+                    switch (option.name) {
+                      case "Edit":break;
+                        
+                      case "Delete":
+                        {this.DeleteLesson(this,data.id)};
+                    }
+                  }}
                 >
                   <i
                     className={`zmdi ${option.icon}`}
                     style={{ width: "10%", marginRight: "10px" }}
                   />
-                  {/* <IntlMessages id={option.name} /> */}
                 </MenuItem>
               ))}
-            </Menu>
+            </Menu> */}
           </td>
         </tr>
       )
@@ -169,12 +182,6 @@ class Lesson extends React.Component {
                     />
 
                   </ButtonToolbar>
-                  {/* <main>
-                    <button type="button" class="btn btn-primary btn-lg" style={{ width: '18%', float: 'right' }} onClick={() => this.setState({ buttonPopup: true })} >Import</button>
-                  </main> */}
-                  {/* <PopupLesson trigger={this.state.buttonPopup}>
-                    <h3>My lesson</h3>
-                  </PopupLesson> */}
                   <p className="card-category" style={{ width: '50%' }}>
                     Created using Montserrat Font Family
                 </p>
@@ -198,7 +205,14 @@ class Lesson extends React.Component {
               </Card>
             </Col>
           </Row>
-          <Pagination defaultPage={1} count={3} style={{ padding: "10px 0" }} />
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 100]}
+            rowsPerPage={10}
+            count={this.state.data.length}
+            page={this.state.page}
+
+            style={{ padding: "10px 0" }}
+          />
         </Container>
       </>
     )

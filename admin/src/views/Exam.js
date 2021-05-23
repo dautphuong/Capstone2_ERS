@@ -1,9 +1,14 @@
 import React from "react";
-
+import {
+  BrowserRouter as Router,
+  Switch,
+  Link,
+  useRouteMatch,
+  useParams
+} from "react-router-dom";
 // react-bootstrap components
 import {
   Badge,
-  Button,
   Card,
   Navbar,
   Nav,
@@ -12,36 +17,34 @@ import {
   Row,
   Col,
 } from "react-bootstrap";
-
+import API from '../api';
+import Button from '@material-ui/core/Button';
+import { Route } from "react-router";
+import CreateExam from './Exam/CreateExam'
 class Exam extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      dataExam: []
+    }
+
+  }
+  componentDidMount() {
+    API.get(`exam/findAll`)
+      .then(res => {
+        const dataExam = res.data;
+        this.setState({ dataExam });
+        console.log(this.state.dataExam)
+      })
+  }
   render() {
-    const data = [
-      {
-        Name: "Cuộc thi năm 2021",
-        Topic: "Danh Từ",
-        NumberOfQuestion: 60,
-        Time: 45
-      },
-      {
-        Name: "Cuộc thi năm 2022",
-        Topic: "Tính Từ",
-        NumberOfQuestion: 60,
-        Time: 45
-      },
-      {
-        Name: "Cuộc thi năm 2023",
-        Topic: "Động Từ",
-        NumberOfQuestion: 60,
-        Time: 45
-      },
-    ]
-    const ViewDataTable = data.map((data, i) => {
+    const ViewDataTable = this.state.dataExam.map((data, i) => {
       return (
         <tr>
-          <td>{data.Name}</td>
-          <td>{data.Topic}</td>
-          <td>{data.NumberOfQuestion}</td>
-          <td>{data.Time}</td>
+          <td>{data.title}</td>
+          <td>{data.type}</td>
+          <td>{data.timeSet}</td>
+          <td>{data.createOnUTC}</td>
           <td>sdfjkhsjhgkehk ksdjfl</td>
         </tr>
       )
@@ -54,18 +57,25 @@ class Exam extends React.Component {
               <Card id="selectedColumn" className="strpied-tabled-with-hover">
                 <Card.Header>
                   <Card.Title as="h4">List of exam questions</Card.Title>
-                  <p className="card-category">
-                    Here is a subtitle for this table
-                </p>
+                  <Link to='/admin/Exam/createExam'>
+                    <Button variant="contained"
+                      color="primary"
+                      disableElevation style={{ float: 'right', height: '57px', marginRight: '110px' }}
+                      to='/admin/Exam/createExam'
+                    >
+                      Create Exam
+                </Button>
+                  </Link>
+
                 </Card.Header>
                 <Card.Body className="table-full-width table-responsive px-0">
-                  <Table  className="table-hover table-striped">
+                  <Table className="table-hover table-striped">
                     <thead>
                       <tr>
                         <th className="border-0">Name</th>
-                        <th className="border-0">Topic</th>
-                        <th className="border-0">Number of question</th>
+                        <th className="border-0">Type</th>
                         <th className="border-0">Time</th>
+                        <th className="border-0">CreateOnUTC</th>
                         <th className="border-0"></th>
                       </tr>
                     </thead>
@@ -78,6 +88,9 @@ class Exam extends React.Component {
             </Col>
           </Row>
         </Container>
+        <Route path='/admin/Exam/createExam'>
+          <CreateExam></CreateExam>
+        </Route>
       </>
     );
   }

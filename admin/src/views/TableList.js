@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useReducer, useRef } from "react";
 
 // react-bootstrap components
 import {
@@ -12,9 +12,88 @@ import {
   Row,
   Col,
 } from "react-bootstrap";
-
+import API from '../api';
+import IconButton from "@material-ui/core/IconButton";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 class TableList extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      dataUser: [],
+      anchorEl: "",
+    }
+  }
+  componentDidMount() {
+    API.get(`user/findAllUser`)
+      .then(res => {
+        const dataUser = res.data;
+        this.setState({ dataUser });
+        console.log(this.state.dataUser)
+      })
+  }
+  handleClick = (event) => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+  handleClose = () => {
+    this.setState({ anchorEl: null });
+  }
+  DeleteLesson  (id) {
+    console.log(id);
+    //const dataUser = [...this.state.dataUser]
+    // if (window.confirm('Do you want to delete ' + dataUser[index].id + ' ?')) {
+    //   dataUser.splice(index, 1);
+    //   this.setState({ dataUser });
+    // }
+  }
   render() {
+    let options = [
+      { name: "Edit", icon: "zmdi-edit" },
+      { name: "Delete", icon: "zmdi-delete" },
+    ];
+    let ViewUser = this.state.dataUser.map((user, i) => {
+      return (
+        <tr>
+          <td>{i + 1}</td>
+          <td><img src={user.avatar} style={{ width: '70px', height: '40px' }}></img></td>
+          <td>{user.email}</td>
+          <td>{user.username}</td>
+          <td>
+            <IconButton onClick={this.handleClick}>
+              <i className="zmdi zmdi-menu" />
+            </IconButton>
+            <Menu
+              id="long-menu"
+              anchorEl={this.state.anchorEl}
+              open={Boolean(this.state.anchorEl)}
+              onClose={this.handleClose}
+            >
+              {console.log(user.id)}
+              {options.map((option, index) => (
+                <MenuItem
+                  key={index}
+                  //onClick={this.handleClose}
+                  onClick={() => {console.log(user.id)
+                    // switch (option.name) {
+                    //   case "Edit": break;
+
+                    //   case "Delete":
+                    //     {this.DeleteLesson(user.id) };
+                    // }
+                  }}
+                >
+                  <i
+                    className={`zmdi ${option.icon}`}
+                    style={{ width: "10%", marginRight: "10px" }}
+                  />
+                  {/* <IntlMessages id={option.name} /> */}
+                </MenuItem>
+              ))}
+            </Menu>
+          </td>
+        </tr>
+      )
+    })
     return (
       <>
         <Container fluid>
@@ -29,55 +108,14 @@ class TableList extends React.Component {
                     <thead>
                       <tr>
                         <th className="border-0">ID</th>
-                        <th className="border-0">Name</th>
-                        <th className="border-0">Salary</th>
-                        <th className="border-0">Country</th>
-                        <th className="border-0">City</th>
+                        <th className="border-0"></th>
+                        <th className="border-0">Email</th>
+                        <th className="border-0">User</th>
+                        <th className="border-0"></th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>1</td>
-                        <td>Dakota Rice</td>
-                        <td>$36,738</td>
-                        <td>Niger</td>
-                        <td>Oud-Turnhout</td>
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        <td>Minerva Hooper</td>
-                        <td>$23,789</td>
-                        <td>Curaçao</td>
-                        <td>Sinaai-Waas</td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>Sage Rodriguez</td>
-                        <td>$56,142</td>
-                        <td>Netherlands</td>
-                        <td>Baileux</td>
-                      </tr>
-                      <tr>
-                        <td>4</td>
-                        <td>Philip Chaney</td>
-                        <td>$38,735</td>
-                        <td>Korea, South</td>
-                        <td>Overland Park</td>
-                      </tr>
-                      <tr>
-                        <td>5</td>
-                        <td>Doris Greene</td>
-                        <td>$63,542</td>
-                        <td>Malawi</td>
-                        <td>Feldkirchen in Kärnten</td>
-                      </tr>
-                      <tr>
-                        <td>6</td>
-                        <td>Mason Porter</td>
-                        <td>$78,615</td>
-                        <td>Chile</td>
-                        <td>Gloucester</td>
-                      </tr>
+                      {ViewUser}
                     </tbody>
                   </Table>
                 </Card.Body>

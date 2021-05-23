@@ -5,13 +5,25 @@ class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            userName:"",
+            password:""
         }
+        this.handleUserName = this.handlePassword.bind(this)
     }
     Login = (e) => {
         e.preventDefault();
+
         setTimeout(() => {
             window.location = "/admin/dashboard";
         }, 150)
+    }
+    handleUserName = (e) =>{
+        this.setState({userName:e.target.value})
+        console.log(this.state.userName)
+    }
+    handlePassword = (e) =>{
+        this.setState({password:e.target.value})
+        console.log(this.state.password)
     }
     render() {
         return (
@@ -26,12 +38,13 @@ class Login extends React.Component {
                                     </h3>
                                 </div>
                                 <MDBInput
-                                    label="Your email"
+                                    label="Your username"
                                     group
                                     type="email"
                                     validate
                                     error="wrong"
                                     success="right"
+                                    onChange={this.handleUserName}
                                 />
                                 <MDBInput
                                     label="Your password"
@@ -39,6 +52,7 @@ class Login extends React.Component {
                                     type="password"
                                     validate
                                     containerClass="mb-0"
+                                    onChange={this.handlePassword}
                                 />
                                 <p className="font-small blue-text d-flex justify-content-end pb-3">
                                     Forgot

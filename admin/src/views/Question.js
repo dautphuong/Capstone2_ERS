@@ -3,65 +3,98 @@ import React from "react";
 import { DataGrid } from '@material-ui/data-grid';
 import Grid from '@material-ui/core/Grid';
 import API from '../api';
+import ModalQuestion from './Question/ModalQuestion';
+
+import {
+  Badge,
+  Card,
+  Navbar,
+  Nav,
+  Table,
+  Container,
+  Row,
+  Col,
+} from "react-bootstrap";
+import Pagination from "@material-ui/lab/Pagination";
+import Button from '@material-ui/core/Button';
 // react-bootstrap components
 
 class Question extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      dataQuestion:[]
+      dataQuestion: [],
+      addModalShow:false,
     }
 
   }
   componentDidMount() {
     API.get(`question/findAll`)
-    .then(res => {
-      const dataQuestion = res.data;
-      this.setState({ dataQuestion });
-      console.log(this.state.dataQuestion);
-    })
+      .then(res => {
+        const dataQuestion = res.data;
+        this.setState({ dataQuestion });
+        console.log(this.state.dataQuestion)
+      })
   }
   render() {
-    const columns = [
-      { field: 'id', headerName: 'ID', width: 50 },
-      { field: 'firstName', headerName: 'First name', width: 200 },
-      { field: 'lastName', headerName: 'Last name', width: 200 },
-      {
-        field: 'age',
-        headerName: 'Age',
-        type: 'number',
-        width: 150,
-      },
-      {
-        field: 'fullName',
-        headerName: 'Full name',
-        description: 'This column has a value getter and is not sortable.',
-        sortable: false,
-        width: 200,
-        valueGetter: (params) =>
-          `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
-      },
-    ];
-
-    const rows = [
-      { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-      { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-      { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-      { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-      { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-      { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-      { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-      { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-      { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-    ];
-
+    let addModalClose = () => this.setState({ addModalShow: false })
+    let ViewDataTable = this.state.dataQuestion.map((data, i) => {
+      let ViewAnswerChooses = data.answerChooses.map((answer) => {
+        return (<li style={{ "list-style-type": "none" }}>{answer}</li>)
+      })
+      return (
+        <tr>
+          <td style={{ "width": "35%" }}>{data.title}</td>
+          <td style={{ "width": "20%" }}>{ViewAnswerChooses}</td>
+          <td style={{ "width": "10%" }}>{data.answerRight}</td>
+          <td style={{ "width": "35%" }}>{data.note} </td>
+        </tr>
+      )
+    })
     return (
-      <Grid>
-        <div style={{ height: 400, width: '100%' }}>
-          <DataGrid rows={rows} columns={columns} pageSize={10} checkboxSelection />
-        </div>
-      </Grid>
-
+      <Container fluid>
+        <Row>
+          <Col md="12">
+            <Card className="strpied-tabled-with-hover">
+              <Card.Header>
+                <Card.Title as="h4">List of question</Card.Title>
+                <Button variant="contained"
+                  color="primary"
+                  disableElevation style={{ float: 'right', height: '57px', marginRight: '110px' }}
+                  onClick={() => this.setState({ addModalShow: true })}
+                  >
+                  Create question
+                </Button>
+                < ModalQuestion
+                show={this.state.addModalShow}
+                onHide={addModalClose}
+               />
+              </Card.Header>
+              <Card.Body className="table-full-width table-responsive px-0">
+                {/* <Grid>
+                    <div style={{ height: 400, width: '100%' }}>
+                      <DataGrid rows={rows} columns={columns} pageSize={10} checkboxSelection style={{ height: "300px" }} />
+                    </div>
+                  </Grid> */}
+                <Table className="table-hover table-striped">
+                  <thead>
+                    <tr>
+                      <th className="border-0" style={{ "width": "35%" }}>Question</th>
+                      <th className="border-0" style={{ "width": "20%" }}>Answer</th>
+                      <th className="border-0" style={{ "width": "10%" }}>Answer Right </th>
+                      <th className="border-0" style={{ "width": "35%" }}>Explain</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {ViewDataTable}
+                  </tbody>
+                </Table>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+        <Pagination defaultPage={1} count={3} style={{ padding: "10px 0" }} />
+      </Container>
     )
   }
 }
