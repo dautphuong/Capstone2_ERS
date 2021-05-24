@@ -38,13 +38,18 @@ class TableList extends React.Component {
   handleClose = () => {
     this.setState({ anchorEl: null });
   }
-  DeleteLesson  (id) {
+  DeleteUser(id) {
     console.log(id);
-    //const dataUser = [...this.state.dataUser]
-    // if (window.confirm('Do you want to delete ' + dataUser[index].id + ' ?')) {
-    //   dataUser.splice(index, 1);
-    //   this.setState({ dataUser });
-    // }
+    const dataUser = [...this.state.dataUser]
+    if (window.confirm('Do you want to delete ' + dataUser.find(x => x.id === id).username + ' ?')) {
+      API.delete(`lesson/delete/${id}`)
+        .then(res => {
+          console.log(res.data)
+     
+        })
+      // dataLesson.splice(index, 1);
+      // this.setState({ data: dataLesson });
+    }
   }
   render() {
     let options = [
@@ -59,7 +64,11 @@ class TableList extends React.Component {
           <td>{user.email}</td>
           <td>{user.username}</td>
           <td>
-            <IconButton onClick={this.handleClick}>
+            <i
+              className="zmdi zmdi-delete" onClick={this.DeleteUser.bind(this, user.id)}
+              style={{ width: "10%", marginRight: "10px" }}
+            />
+            {/* <IconButton onClick={this.handleClick}>
               <i className="zmdi zmdi-menu" />
             </IconButton>
             <Menu
@@ -86,10 +95,10 @@ class TableList extends React.Component {
                     className={`zmdi ${option.icon}`}
                     style={{ width: "10%", marginRight: "10px" }}
                   />
-                  {/* <IntlMessages id={option.name} /> */}
+
                 </MenuItem>
               ))}
-            </Menu>
+            </Menu> */}
           </td>
         </tr>
       )

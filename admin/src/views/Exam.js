@@ -57,11 +57,11 @@ class Exam extends React.Component {
               <Card id="selectedColumn" className="strpied-tabled-with-hover">
                 <Card.Header>
                   <Card.Title as="h4">List of exam questions</Card.Title>
-                  <Link to='/admin/Exam/createExam'>
+                  <Link to='/admin/exam/createExam'>
                     <Button variant="contained"
                       color="primary"
                       disableElevation style={{ float: 'right', height: '57px', marginRight: '110px' }}
-                      to='/admin/Exam/createExam'
+                      to='/admin/exam/createExam'
                     >
                       Create Exam
                 </Button>
@@ -88,7 +88,7 @@ class Exam extends React.Component {
             </Col>
           </Row>
         </Container>
-        <Route path='/admin/Exam/createExam'>
+        <Route path='/admin/exam/createExam'>
           <CreateExam></CreateExam>
         </Route>
       </>
