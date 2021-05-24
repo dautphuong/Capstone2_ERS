@@ -9,12 +9,13 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import API from '../../api';
-class ModalQuestion extends  React.Component{
+class ModalQuestion extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            dataTopic:[],
-            dataCKE:''
+            dataTopic: [],
+            dataCKE: '',
+            selectedFile: ''
         }
     }
     componentDidMount() {
@@ -25,8 +26,11 @@ class ModalQuestion extends  React.Component{
                 console.log(this.state.dataTopic);
             })
     }
-    render(){
-        
+    changeHandler = (event) => {
+        this.setState({ selectedFile: event.target.files[0] })
+    };
+    render() {
+
         const useStyles = makeStyles((theme) => ({
             formControl: {
                 margin: theme.spacing(1),
@@ -41,7 +45,7 @@ class ModalQuestion extends  React.Component{
                 <MenuItem value={data.id}>{data.name}</MenuItem>
             )
         })
-        return(
+        return (
             <Modal
                 {...this.props}
                 size="lg"
@@ -65,16 +69,6 @@ class ModalQuestion extends  React.Component{
                             {viewTopic}
                         </Select>
                     </FormControl>
-                    <TextField
-                        id="standard-textarea"
-                        label="Title"
-                        placeholder="Title"
-                        style={{ marginTop: '15px' }}
-                        onChange={this.handleTitle}
-                        fullWidth
-                        multiline
-                        on
-                    />
                     <CKEditor
                         editor={ClassicEditor}
                         onReady={editor => {
@@ -93,6 +87,7 @@ class ModalQuestion extends  React.Component{
                             console.log('Focus.', editor);
                         }}
                     />
+                    <input type="file" name="file" onChange={this.changeHandler} />
                 </Modal.Body>
                 <Modal.Footer>
                     <Button style={{ marginLeft: '26%' }} onClick={this.buttonCreate}>Create</Button>

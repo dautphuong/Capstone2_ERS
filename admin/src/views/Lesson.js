@@ -70,7 +70,7 @@ class Lesson extends React.Component {
       API.delete(`lesson/delete/${id}`)
         .then(res => {
           console.log(res.data)
-          this.setState({ addModalShow: false })
+     
         })
       // dataLesson.splice(index, 1);
       // this.setState({ data: dataLesson });
@@ -164,10 +164,10 @@ class Lesson extends React.Component {
                 <Card.Header>
                   <Card.Title as="h4" style={{ width: '35%', float: 'left' }}>Light Bootstrap Table Heading</Card.Title>
                   <a onClick={() => this.setState({ addModalTypeLesson: true })}>List of  Topic</a>
-                  {/* <CreateTypeLesson
+                  <CreateTypeLesson
                   show = {this.state.addModalTypeLesson}
                   onHide={addModalTypeLessonClose}
-                  /> */}
+                  />
                   <ButtonToolbar style={{ paddingLeft: '29%' }}>
                     <Button
                       variant="primary"
@@ -182,9 +182,9 @@ class Lesson extends React.Component {
                     />
 
                   </ButtonToolbar>
-                  <p className="card-category" style={{ width: '50%' }}>
+                  {/* <p className="card-category" style={{ width: '50%' }}>
                     Created using Montserrat Font Family
-                </p>
+                </p> */}
                 </Card.Header>
                 <Card.Body>
                   <Table className="table-hover table-striped">
