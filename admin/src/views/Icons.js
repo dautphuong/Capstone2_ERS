@@ -4,7 +4,6 @@ import API from '../api';
 // react-bootstrap components
 import {
   Badge,
-  Button,
   Card,
   Navbar,
   Nav,
@@ -13,12 +12,16 @@ import {
   Col,
   Table,
 } from "react-bootstrap";
-
+import Button from '@material-ui/core/Button';
+import ModalContest from './Contest/ModalContest'
 class Icons extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      dataContest: []
+      dataContest: [],
+      addModalShow: false,
+      addModalTypeLesson: false,
+
     }
 
   }
@@ -30,36 +33,38 @@ class Icons extends React.Component {
         console.log(this.state.dataContest)
       })
   }
+  DeleteContest(id) {
+    console.log(id);
+    const dataContest = [...this.state.dataContest]
+    if (window.confirm('Do you want to delete ' + dataContest.find(x => x.id === id).title + ' ?')) {
+      API.delete(`contest/delete/${id}`)
+        .then(res => {
+          console.log(res.data)
+          this.componentDidMount();
+        })
+    }
+  }
   render() {
-    
-    const data = [
-      {
-        Name: "Cuộc thi năm 2021",
-        Topic: "Danh Từ",
-        NumberOfQuestion: 60,
-        Time: 45
-      },
-      {
-        Name: "Cuộc thi năm 2022",
-        Topic: "Tính Từ",
-        NumberOfQuestion: 60,
-        Time: 45
-      },
-      {
-        Name: "Cuộc thi năm 2023",
-        Topic: "Động Từ",
-        NumberOfQuestion: 60,
-        Time: 45
-      },
-    ]
-    const ViewDataTable = data.map((data, i) => {
+    let addModalClose = () => this.setState({ addModalShow: false })
+    let addModalTypeLessonClose = () => this.setState({ addModalTypeLesson: false })
+
+    const ViewDataTable = this.state.dataContest.map((data, i) => {
       return (
         <tr>
-          <td>{data.Name}</td>
-          <td>{data.Topic}</td>
-          <td>{data.NumberOfQuestion}</td>
-          <td>{data.Time}</td>
-          <td>sdfjkhsjhgkehk ksdjfl</td>
+          <td>{data.title}</td>
+          <td>{data.timeStart}</td>
+          <td>{data.timeEnd}</td>
+          <td>
+            <i
+              className="zmdi zmdi-edit"
+              style={{ width: "10%", marginRight: "10px" }}
+            />
+            <i
+              className="zmdi zmdi-delete"
+              style={{ width: "10%", marginRight: "10px" }}
+              onClick={this.DeleteContest.bind(this, data.id)}
+            />
+          </td>
         </tr>
       )
     })
@@ -71,19 +76,25 @@ class Icons extends React.Component {
               <Card>
                 <Card.Header>
                   <Card.Title as="h4">Number of contest</Card.Title>
-                  <p className="card-category">
-                    Handcrafted by our friends from{" "}
-                    <a href="https://nucleoapp.com/?ref=1712">NucleoApp</a>
-                  </p>
+                  <Button variant="contained"
+                    color="primary"
+                    disableElevation style={{ float: 'right', height: '57px', marginRight: '110px' }}
+                    onClick={() => this.setState({ addModalShow: true })}
+                  >
+                    Create Contest
+                </Button>
+                  <ModalContest
+                    show={this.state.addModalShow}
+                    onHide={addModalClose}
+                  />
                 </Card.Header>
                 <Card.Body className="table-full-width table-responsive px-0">
                   <Table className="table-hover table-striped">
                     <thead>
                       <tr>
                         <th className="border-0">Name</th>
-                        <th className="border-0">Topic</th>
-                        <th className="border-0">Number of question</th>
-                        <th className="border-0">Time</th>
+                        <th className="border-0">Time Start</th>
+                        <th className="border-0">Time End</th>
                         <th className="border-0"></th>
                       </tr>
                     </thead>
