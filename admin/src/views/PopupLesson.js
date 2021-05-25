@@ -19,6 +19,7 @@ class PopupLesson extends React.Component {
             idTopic: "",
             dataCKE: "",
             dataTitle: "",
+            statusCreate: props.statusCreate
         }
         this.handleTopic = this.handleTopic.bind(this);
         this.buttonCreate = this.buttonCreate.bind(this);
@@ -59,9 +60,11 @@ class PopupLesson extends React.Component {
             .then(res => {
                 console.log(res);
                 console.log(res.data);
+                this.setState({ addModalShow: false })
             })
     }
     render() {
+        console.log("Status create : ", this.state.statusCreate)
         const useStyles = makeStyles((theme) => ({
             formControl: {
                 margin: theme.spacing(1),
@@ -77,6 +80,7 @@ class PopupLesson extends React.Component {
             )
         })
         return (
+
             <Modal
                 {...this.props}
                 size="lg"
@@ -84,9 +88,16 @@ class PopupLesson extends React.Component {
                 centered
             >
                 <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        Create Lesson
-                    </Modal.Title>
+                    {this.props.statusCreate ? (
+                        <Modal.Title id="contained-modal-title-vcenter">
+                            Create Lesson
+                        </Modal.Title>
+                    ) : (
+                        <Modal.Title id="contained-modal-title-vcenter">
+                            Update  Lesson
+                        </Modal.Title>
+                    )
+                    }
                 </Modal.Header>
                 <Modal.Body >
                     <FormControl className={useStyles.formControl} style={{ "width": "100%" }}>

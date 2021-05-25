@@ -36,7 +36,8 @@ class Lesson extends React.Component {
       anchorEl: "",
       data: [],
       page: 0,
-      dataTopic: []
+      dataTopic: [],
+      statusCreate: true
     }
     //this.handleDropdownChange = this.handleDropdownChange.bind(this);
     this.handCkeditorState = this.handCkeditorState.bind(this);
@@ -70,11 +71,15 @@ class Lesson extends React.Component {
       API.delete(`lesson/delete/${id}`)
         .then(res => {
           console.log(res.data)
-     
+          this.componentDidMount();
         })
       // dataLesson.splice(index, 1);
       // this.setState({ data: dataLesson });
     }
+  }
+  EditLesson(id) {
+    this.setState({statusCreate: false , addModalShow: true })
+    console.log(this.state.statusCreate)
   }
   onContactOptionSelect = (event) => {
     console.log("Select menu")
@@ -115,6 +120,7 @@ class Lesson extends React.Component {
             <i
               className="zmdi zmdi-edit"
               style={{ width: "10%", marginRight: "10px" }}
+              onClick={this.EditLesson.bind(this, data.id)}
             />
             <i
               className="zmdi zmdi-delete" onClick={this.DeleteLesson.bind(this, data.id)}
@@ -165,13 +171,13 @@ class Lesson extends React.Component {
                   <Card.Title as="h4" style={{ width: '35%', float: 'left' }}>Light Bootstrap Table Heading</Card.Title>
                   <a onClick={() => this.setState({ addModalTypeLesson: true })}>List of  Topic</a>
                   <CreateTypeLesson
-                  show = {this.state.addModalTypeLesson}
-                  onHide={addModalTypeLessonClose}
+                    show={this.state.addModalTypeLesson}
+                    onHide={addModalTypeLessonClose}
                   />
                   <ButtonToolbar style={{ paddingLeft: '29%' }}>
                     <Button
                       variant="primary"
-                      onClick={() => this.setState({ addModalShow: true })}
+                      onClick={() => this.setState({ addModalShow: true, statusCreate: true })}
 
                     >
                       Create Lesson
@@ -179,6 +185,7 @@ class Lesson extends React.Component {
                     <PopupLesson
                       show={this.state.addModalShow}
                       onHide={addModalClose}
+                      statusCreate={this.state.statusCreate}
                     />
 
                   </ButtonToolbar>

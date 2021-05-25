@@ -42,13 +42,11 @@ class TableList extends React.Component {
     console.log(id);
     const dataUser = [...this.state.dataUser]
     if (window.confirm('Do you want to delete ' + dataUser.find(x => x.id === id).username + ' ?')) {
-      API.delete(`lesson/delete/${id}`)
+      API.delete(`user/delete/${id}`)
         .then(res => {
           console.log(res.data)
-     
+          this.componentDidMount();
         })
-      // dataLesson.splice(index, 1);
-      // this.setState({ data: dataLesson });
     }
   }
   render() {

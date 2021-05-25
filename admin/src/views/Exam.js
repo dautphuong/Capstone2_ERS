@@ -27,7 +27,6 @@ class Exam extends React.Component {
     this.state = {
       dataExam: []
     }
-
   }
   componentDidMount() {
     API.get(`exam/findAll`)
@@ -37,7 +36,20 @@ class Exam extends React.Component {
         console.log(this.state.dataExam)
       })
   }
+ 
+  DeleteExam(id) {
+    console.log(id);
+    const dataExam = [...this.state.dataExam]
+    if (window.confirm('Do you want to delete ' + dataExam.find(x => x.id === id).title + ' ?')) {
+      API.delete(`exam/delete/${id}`)
+        .then(res => {
+          console.log(res.data)
+          this.componentDidMount();
+        })
+    }
+  }
   render() {
+    let { path, url } = useRouteMatch();
     const ViewDataTable = this.state.dataExam.map((data, i) => {
       return (
         <tr>
@@ -45,7 +57,17 @@ class Exam extends React.Component {
           <td>{data.type}</td>
           <td>{data.timeSet}</td>
           <td>{data.createOnUTC}</td>
-          <td>sdfjkhsjhgkehk ksdjfl</td>
+          <td>
+            <i
+              className="zmdi zmdi-edit"
+              style={{ width: "10%", marginRight: "10px" }}
+            />
+            <i
+              className="zmdi zmdi-delete"
+              style={{ width: "10%", marginRight: "10px" }}
+              onClick={this.DeleteExam.bind(this, data.id)}
+            />
+          </td>
         </tr>
       )
     })
@@ -88,9 +110,12 @@ class Exam extends React.Component {
             </Col>
           </Row>
         </Container>
-        <Route path='/admin/exam/createExam'>
-          <CreateExam></CreateExam>
-        </Route>
+        <Switch>
+      <Route path="/createExam"  render={(props) => <CreateExam {...props} />} />
+
+          {/* //   <CreateExam />
+          // </Route> */}
+        </Switch>
       </>
     );
   }

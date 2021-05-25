@@ -71,7 +71,7 @@ const dashboardRoutes = [
     layout: "/admin",
   },
   {
-    path: "/icons",
+    path: "/contest",
     name: "Contest",
     icon: "nc-icon nc-atom",
     component: Icons,
