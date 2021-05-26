@@ -23,7 +23,7 @@ class CreateExam extends React.Component {
               <tr>
                 <th className="border-0">Name</th>
                 <th className="border-0">Topic</th>
-                <th className="border-0">Number of question</th>
+                <th className="border-0">Number of question6879</th>
                 <th className="border-0">Time</th>
                 <th className="border-0"></th>
               </tr>
