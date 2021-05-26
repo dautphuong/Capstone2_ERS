@@ -1,7 +1,7 @@
 const firebase = require('../util/firebase_connect');
 const snapArray = require('../util/snapshot_to_array')
 const questionArr = require('../util/arrayQuestion')
-
+const docx=require('../util/docx');
 module.exports = class Quetion {
     title; //String
     answerChooses; //array
@@ -163,4 +163,8 @@ module.exports = class Quetion {
             callback(snapArray.snap_array(snapshot));
         })
     }
+
+    // addDataDocx(req,callback){
+    //     docx.docx(req);
+    // }
 }

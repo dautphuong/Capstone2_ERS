@@ -20,6 +20,9 @@
     "md5": "^2.3.0",
     "save": "^2.4.0",
     "swagger-jsdoc": "^6.1.0",
-    "swagger-ui-express": "^4.1.6"
+    "swagger-ui-express": "^4.1.6",
+    "any-text": "^1.2.0",
+    "mammoth": "^1.4.16",
+    "superagent": "^6.1.0"
   }
 }
