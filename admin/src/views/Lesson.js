@@ -37,18 +37,27 @@ class Lesson extends React.Component {
       data: [],
       page: 0,
       dataTopic: [],
-      statusCreate: true
+      statusCreate: true,
+      dataModal: {
+        idTopic: "",
+        title: "",
+        id: "",
+      },
+      content:""
     }
     //this.handleDropdownChange = this.handleDropdownChange.bind(this);
     this.handCkeditorState = this.handCkeditorState.bind(this);
   }
-  componentDidMount() {
+  getAllLesson() {
     API.get(`lesson/findAll`)
       .then(res => {
         const data = res.data;
         this.setState({ data: data });
         console.log(this.state.data);
       })
+  }
+  componentDidMount() {
+    this.getAllLesson();
   }
   handleClick = (event) => {
     this.setState({ anchorEl: event.currentTarget });
@@ -71,15 +80,19 @@ class Lesson extends React.Component {
       API.delete(`lesson/delete/${id}`)
         .then(res => {
           console.log(res.data)
-          this.componentDidMount();
+          this.getAllLesson();
         })
       // dataLesson.splice(index, 1);
       // this.setState({ data: dataLesson });
     }
   }
-  EditLesson(id) {
-    this.setState({statusCreate: false , addModalShow: true })
-    console.log(this.state.statusCreate)
+  EditLesson(data) {
+    // const dataLesson = [...this.state.data]
+    console.log(data)
+    this.setState({ dataModal: { ...this.state.dataModal, ...data } })
+    this.setState({ statusCreate: false, addModalShow: true, })
+
+    console.log(data)
   }
   onContactOptionSelect = (event) => {
     console.log("Select menu")
@@ -87,12 +100,66 @@ class Lesson extends React.Component {
     // setAnchorEl(event.currentTarget);
     this.setState({ menuState: true })
   };
-  handleRequestClose = () => {
+  handleRequestClose = (e) => {
     this.setState({ menuState: false })
   };
-  handleChangePage = () => {
-
+  handleInput = (e) => {
+    this.setState({
+      dataModal: {
+        ...this.state.dataModal,
+        [e.target.name]: e.target.value
+      }
+    })
   }
+  handleInputContent = (e) => {
+    this.setState({
+      content: e
+    })
+  }
+  buttonUpdate = (idLesson) => {
+    console.log(this.state.dataModal)
+    let data = {
+      id: this.state.dataModal.id,
+      content: this.state.dataModal.content,
+      createOnUTC: "2021-05-15 12:23:34",
+      idTopic: this.state.dataModal.idTopic,
+      title: this.state.dataModal.title,
+    }
+    console.log("data:", data)
+    API.put(`lesson/update`, data, {
+    })
+      .then(res => {
+        if (res && res.status === 200) {
+          alert("Update succseful")
+          this.setState({ addModalShow: false })
+          this.getAllLesson();
+        }
+        console.log(res);
+        console.log(res.data);
+      })
+  }
+  buttonCreate = () => {
+    console.log("hahahahah")
+    let data = {
+     // id: this.state.dataModal.id,
+      content: this.state.content,
+      createOnUTC: "2021-05-15 12:23:34",
+      idTopic: this.state.dataModal.idTopic,
+      title: this.state.dataModal.title,
+    }
+    console.log("dataCreate:" ,data)
+    API.post(`lesson/save`, data, {
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            "Access-Control-Allow-Origin": "*",
+        }
+    })
+        .then(res => {
+            console.log(res);
+            console.log(res.data);
+            this.setState({ addModalShow: false })
+        })
+}
   render() {
     //alert(this.state.selectValue)
     const onContactOptionSelect = (event) => {
@@ -120,7 +187,7 @@ class Lesson extends React.Component {
             <i
               className="zmdi zmdi-edit"
               style={{ width: "10%", marginRight: "10px" }}
-              onClick={this.EditLesson.bind(this, data.id)}
+              onClick={this.EditLesson.bind(this, data)}
             />
             <i
               className="zmdi zmdi-delete" onClick={this.DeleteLesson.bind(this, data.id)}
@@ -186,6 +253,12 @@ class Lesson extends React.Component {
                       show={this.state.addModalShow}
                       onHide={addModalClose}
                       statusCreate={this.state.statusCreate}
+                      data={this.state.dataModal}
+                      buttonUpdate={(data) => this.buttonUpdate(data)}
+                      buttonCreate={(data) =>this.buttonCreate(data)}
+                      handleInput={(e) => this.handleInput(e)}
+                      content={this.state.content}
+                      handleInputContent={(e) => this.handleInputContent(e)}
                     />
 
                   </ButtonToolbar>

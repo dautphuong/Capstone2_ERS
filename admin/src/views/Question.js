@@ -28,6 +28,7 @@ class Question extends React.Component {
     }
 
   }
+  // create : 
   componentDidMount() {
     API.get(`question/findAll`)
       .then(res => {

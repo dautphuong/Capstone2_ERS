@@ -69,7 +69,48 @@ class ModalQuestion extends React.Component {
                             {viewTopic}
                         </Select>
                     </FormControl>
-                    <CKEditor
+                    <TextField
+                        id="standard-password-input"
+                        label="title"
+                        autoComplete="current-password"
+                    />
+                    <br/>
+                    <TextField
+                        id="standard-password-input"
+                        label="A."
+                        autoComplete="current-password"
+                    />
+                      <br/>
+                    <TextField
+                        id="standard-password-input"
+                        label="B."
+                        autoComplete="current-password"
+                    />
+                      <br/>
+                     <TextField
+                        id="standard-password-input"
+                        label="C."
+                        autoComplete="current-password"
+                    />
+                      <br/>
+                     <TextField
+                        id="standard-password-input"
+                        label="D."
+                        autoComplete="current-password"
+                    />
+                      <br/>
+                         <TextField
+                        id="standard-password-input"
+                        label="Answer Right"
+                        autoComplete="current-password"
+                    />
+                      <br/>
+                     <TextField
+                        id="standard-password-input"
+                        label="Note"
+                        autoComplete="current-password"
+                    />
+                    {/* <CKEditor
                         editor={ClassicEditor}
                         onReady={editor => {
                             // You can store the "editor" and use when it is needed.
@@ -86,7 +127,8 @@ class ModalQuestion extends React.Component {
                         onFocus={(event, editor) => {
                             console.log('Focus.', editor);
                         }}
-                    />
+                    /> */}
+                    <br/>
                     <input type="file" name="file" onChange={this.changeHandler} />
                 </Modal.Body>
                 <Modal.Footer>
