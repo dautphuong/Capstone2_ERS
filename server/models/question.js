@@ -9,6 +9,14 @@ module.exports = class Quetion {
     note; //String
     idTopic; //Topic
 
+    prototype(){
+        this.title = null;
+        this.answerChooses = null;
+        this.answerRight = null;
+        this.note = null;
+        this.idTopic = null;
+    }
+
     constructor(title, answerChooses, answerRight, note, idTopic) {
         this.title = title;
         this.answerChooses = answerChooses;
@@ -57,14 +65,6 @@ module.exports = class Quetion {
         .then(function (snapshot) {
             questionArr.question_array(snapArray.snap_array(snapshot))
             callback(snapArray.snap_array(snapshot));
-
-            // var resultArr=[];
-            // snapArray.snap_array(snapshot).forEach(function(item){
-            //     questionValue.question_value(item.idQuestion, function(data) {
-            //         resultArr.push(data);
-            //     })
-            // });
-            // callback(resultArr);
         });
              
     }
@@ -164,7 +164,16 @@ module.exports = class Quetion {
         })
     }
 
-    // addDataDocx(req,callback){
-    //     docx.docx(req);
-    // }
+    saveListFile(req, callback) {
+        req.forEach(value=>{
+                    firebase.database().ref("questions/").push().set({
+                        title: value.title,
+                        answerChooses: value.answerChooses,
+                        answerRight: value.answerRight,
+                        idTopic: '-Man9lPOf8DMlCC0hAp0',
+                        note: value.note,
+                    });
+        })       
+        callback("successfull");
+    }
 }
