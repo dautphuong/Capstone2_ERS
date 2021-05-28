@@ -17,6 +17,7 @@
     "gulp": "4.0.2",
     "gulp-append-prepend": "1.0.8",
     "mdbreact": "^5.0.2",
+    "moment": "^2.29.1",
     "mui-datatables": "^3.7.7",
     "node-sass": "4.14.1",
     "react": "^17.0.1",
@@ -28,7 +29,8 @@
     "react-router": "5.2.0",
     "react-router-dom": "5.2.0",
     "react-scripts": "4.0.1",
-    "react-select": "^4.3.0"
+    "react-select": "^4.3.0",
+    "firebase": "^8.3.0"
   },
   "optionalDependencies": {
     "jquery": "3.5.1",

@@ -1,5 +1,5 @@
 import React from "react";
-import Style from '../assets/css/lesson.css'
+import Style from "../assets/css/lesson.css";
 // react-bootstrap components
 import {
   Badge,
@@ -11,19 +11,19 @@ import {
   Row,
   Col,
 } from "react-bootstrap";
-import Select from 'react-select';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import Select from "react-select";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { data, event } from "jquery";
-import { Button, ButtonToolbar } from 'react-bootstrap'
-import PopupLesson from './PopupLesson';
-import CreateTypeLesson from './CreateTypeLesson'
+import { Button, ButtonToolbar } from "react-bootstrap";
+import PopupLesson from "./PopupLesson";
+import CreateTypeLesson from "./CreateTypeLesson";
 import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import IntlMessages from "../util/IntlMessages";
 import TablePagination from "@material-ui/core/TablePagination";
-import API from '../api';
+import API from "../api";
 class Lesson extends React.Component {
   constructor(props) {
     super(props);
@@ -43,18 +43,16 @@ class Lesson extends React.Component {
         title: "",
         id: "",
       },
-      content:""
-    }
+      content: "",
+    };
     //this.handleDropdownChange = this.handleDropdownChange.bind(this);
     this.handCkeditorState = this.handCkeditorState.bind(this);
   }
   getAllLesson() {
-    API.get(`lesson/findAll`)
-      .then(res => {
-        const data = res.data;
-        this.setState({ data: data });
-        console.log(this.state.data);
-      })
+    API.get(`lesson/findAll`).then((res) => {
+      const data = res.data;
+      this.setState({ data: data });
+    });
   }
   componentDidMount() {
     this.getAllLesson();
@@ -64,118 +62,123 @@ class Lesson extends React.Component {
   };
   handleClose = () => {
     this.setState({ anchorEl: null });
-  }
+  };
   handleDropdownChange(e) {
-    this.setState({ selectValue: e.target.value })
+    this.setState({ selectValue: e.target.value });
   }
   handCkeditorState = (event, editor) => {
     const data = editor.getData();
-    this.setState({ contentCKEditor: data })
-    console.log(this.state.contentCKEditor)
-  }
+    this.setState({ contentCKEditor: data });
+  };
   DeleteLesson(id) {
-    console.log(id);
-    const dataLesson = [...this.state.data]
-    if (window.confirm('Do you want to delete ' + dataLesson.find(x => x.id === id).title + ' ?')) {
+    const dataLesson = [...this.state.data];
+    if (
+      window.confirm(
+        "Do you want to delete " +
+          dataLesson.find((x) => x.id === id).title +
+          " ?"
+      )
+    ) {
       API.delete(`lesson/delete/${id}`)
-        .then(res => {
-          console.log(res.data)
+        .then((res) => {
           this.getAllLesson();
         })
+        .then(() => this.getAllLesson());
       // dataLesson.splice(index, 1);
       // this.setState({ data: dataLesson });
     }
   }
   EditLesson(data) {
-    // const dataLesson = [...this.state.data]
-    console.log(data)
-    this.setState({ dataModal: { ...this.state.dataModal, ...data } })
-    this.setState({ statusCreate: false, addModalShow: true, })
-
-    console.log(data)
+    this.setState({
+      dataModal: { ...this.state.dataModal, ...data },
+      content: data.content,
+      statusCreate: false,
+      addModalShow: true,
+    });
+    // console.log(data);
   }
   onContactOptionSelect = (event) => {
-    console.log("Select menu")
     // setMenuState(true);
     // setAnchorEl(event.currentTarget);
-    this.setState({ menuState: true })
+    this.setState({ menuState: true });
   };
   handleRequestClose = (e) => {
-    this.setState({ menuState: false })
+    this.setState({ menuState: false });
   };
   handleInput = (e) => {
     this.setState({
       dataModal: {
         ...this.state.dataModal,
-        [e.target.name]: e.target.value
-      }
-    })
-  }
+        [e.target.name]: e.target.value,
+      },
+    });
+  };
   handleInputContent = (e) => {
     this.setState({
-      content: e
-    })
-  }
-  buttonUpdate = (idLesson) => {
-    console.log(this.state.dataModal)
+      content: e,
+    });
+  };
+  buttonUpdate = () => {
     let data = {
       id: this.state.dataModal.id,
-      content: this.state.dataModal.content,
-      createOnUTC: "2021-05-15 12:23:34",
-      idTopic: this.state.dataModal.idTopic,
-      title: this.state.dataModal.title,
-    }
-    console.log("data:", data)
-    API.put(`lesson/update`, data, {
-    })
-      .then(res => {
-        if (res && res.status === 200) {
-          alert("Update succseful")
-          this.setState({ addModalShow: false })
-          this.getAllLesson();
-        }
-        console.log(res);
-        console.log(res.data);
-      })
-  }
-  buttonCreate = () => {
-    console.log("hahahahah")
-    let data = {
-     // id: this.state.dataModal.id,
       content: this.state.content,
       createOnUTC: "2021-05-15 12:23:34",
       idTopic: this.state.dataModal.idTopic,
       title: this.state.dataModal.title,
-    }
-    console.log("dataCreate:" ,data)
-    API.post(`lesson/save`, data, {
-        headers: {
-            'Content-Type': 'application/json;charset=UTF-8',
-            "Access-Control-Allow-Origin": "*",
+    };
+    API.put(`lesson/update`, data, {})
+      .then((res) => {
+        if (res && res.status === 200) {
+          alert("Update succseful");
+          this.setState({
+            addModalShow: false,
+            dataModal: { idTopic: "", title: "", id: "" },
+            content: "",
+          });
         }
+      })
+      .then(() => this.getAllLesson());
+  };
+  buttonCreate = () => {
+    let data = {
+      // id: this.state.dataModal.id,
+      content: this.state.content,
+      createOnUTC: "2021-05-15 12:23:34",
+      idTopic: this.state.dataModal.idTopic,
+      title: this.state.dataModal.title,
+    };
+    API.post(`lesson/save`, data, {
+      headers: {
+        "Content-Type": "application/json;charset=UTF-8",
+        "Access-Control-Allow-Origin": "*",
+      },
     })
-        .then(res => {
-            console.log(res);
-            console.log(res.data);
-            this.setState({ addModalShow: false })
-        })
-}
+      .then((res) => {
+        this.setState({
+          addModalShow: false,
+          dataModal: { idTopic: "", title: "", id: "" },
+          content: "",
+        });
+      })
+      .then(() => this.getAllLesson());
+  };
   render() {
     //alert(this.state.selectValue)
     const onContactOptionSelect = (event) => {
       // setMenuState(true);
       // setAnchorEl(event.currentTarget);
-      this.setState({ menuState: true, anchorEl: event.currentTarget })
+      this.setState({ menuState: true, anchorEl: event.currentTarget });
     };
     let options = [
       { name: "Edit", icon: "zmdi-edit" },
       { name: "Delete", icon: "zmdi-delete" },
     ];
 
-    let addModalClose = () => this.setState({ addModalShow: false })
-    let addModalTypeLessonClose = () => this.setState({ addModalTypeLesson: false })
+    let addModalClose = () => this.setState({ addModalShow: false });
+    let addModalTypeLessonClose = () =>
+      this.setState({ addModalTypeLesson: false });
     const editorConfiguration = {
-      toolbar: ['bold', 'italic']
+      toolbar: ["bold", "italic"],
     };
     let ViewDataTable = this.state.data.map((data, i) => {
       return (
@@ -190,7 +193,8 @@ class Lesson extends React.Component {
               onClick={this.EditLesson.bind(this, data)}
             />
             <i
-              className="zmdi zmdi-delete" onClick={this.DeleteLesson.bind(this, data.id)}
+              className="zmdi zmdi-delete"
+              onClick={this.DeleteLesson.bind(this, data.id)}
               style={{ width: "10%", marginRight: "10px" }}
             />
             {/* <IconButton onClick={this.handleClick}>
@@ -225,8 +229,8 @@ class Lesson extends React.Component {
             </Menu> */}
           </td>
         </tr>
-      )
-    })
+      );
+    });
 
     return (
       <>
@@ -235,17 +239,29 @@ class Lesson extends React.Component {
             <Col md="12">
               <Card>
                 <Card.Header>
-                  <Card.Title as="h4" style={{ width: '35%', float: 'left' }}>Light Bootstrap Table Heading</Card.Title>
-                  <a onClick={() => this.setState({ addModalTypeLesson: true })}>List of  Topic</a>
+                  <Card.Title as="h4" style={{ width: "35%", float: "left" }}>
+                    Light Bootstrap Table Heading
+                  </Card.Title>
+                  <a
+                    onClick={() => this.setState({ addModalTypeLesson: true })}
+                  >
+                    List of Topic
+                  </a>
                   <CreateTypeLesson
                     show={this.state.addModalTypeLesson}
                     onHide={addModalTypeLessonClose}
                   />
-                  <ButtonToolbar style={{ paddingLeft: '29%' }}>
+                  <ButtonToolbar style={{ paddingLeft: "29%" }}>
                     <Button
                       variant="primary"
-                      onClick={() => this.setState({ addModalShow: true, statusCreate: true })}
-
+                      onClick={() =>
+                        this.setState({
+                          addModalShow: true,
+                          statusCreate: true,
+                          dataModal: { idTopic: "", title: "", id: "" },
+                          content: "",
+                        })
+                      }
                     >
                       Create Lesson
                     </Button>
@@ -255,12 +271,11 @@ class Lesson extends React.Component {
                       statusCreate={this.state.statusCreate}
                       data={this.state.dataModal}
                       buttonUpdate={(data) => this.buttonUpdate(data)}
-                      buttonCreate={(data) =>this.buttonCreate(data)}
+                      buttonCreate={(data) => this.buttonCreate(data)}
                       handleInput={(e) => this.handleInput(e)}
                       content={this.state.content}
                       handleInputContent={(e) => this.handleInputContent(e)}
                     />
-
                   </ButtonToolbar>
                   {/* <p className="card-category" style={{ width: '50%' }}>
                     Created using Montserrat Font Family
@@ -276,11 +291,8 @@ class Lesson extends React.Component {
                         <th className="border-0"></th>
                       </tr>
                     </thead>
-                    <tbody>
-                      {ViewDataTable}
-                    </tbody>
+                    <tbody>{ViewDataTable}</tbody>
                   </Table>
-
                 </Card.Body>
               </Card>
             </Col>
@@ -290,14 +302,12 @@ class Lesson extends React.Component {
             rowsPerPage={10}
             count={this.state.data.length}
             page={this.state.page}
-
             style={{ padding: "10px 0" }}
           />
         </Container>
       </>
-    )
+    );
   }
 }
-
 
 export default Lesson;

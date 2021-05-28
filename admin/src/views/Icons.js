@@ -14,7 +14,7 @@ import {
 } from "react-bootstrap";
 import Button from "@material-ui/core/Button";
 import ModalContest from "./Contest/ModalContest";
-
+import moment from 'moment';
 class Icons extends React.Component {
   constructor(props) {
     super(props);
@@ -31,6 +31,7 @@ class Icons extends React.Component {
     };
   }
   getAllContest() {
+    
     API.get(`contest/findAll`).then((res) => {
       const dataContest = res.data;
       this.setState({ dataContest });
@@ -41,7 +42,13 @@ class Icons extends React.Component {
     this.getAllContest();
   }
   createContest = () => {
-    API.post(`contest/save`, this.state.data, {
+    var dataCreate = {
+      title: this.state.data.title,
+      timeStart: moment(this.state.data.timeStart).format("YYYY-MM-DD HH:mm:ss"),
+      timeEnd:  moment(this.state.data.timeEnd).format("YYYY-MM-DD HH:mm:ss"),
+      idExam: this.state.data.idExam,
+    };
+    API.post(`contest/save`,dataCreate, {
       headers: {
         "Content-Type": "application/json;charset=UTF-8",
         "Access-Control-Allow-Origin": "*",
@@ -55,7 +62,14 @@ class Icons extends React.Component {
     //console.log(data)
   };
   updateContest = () => {
-    API.post(`contest/update`, this.state.data, {
+    var dataUpdate = {
+      id: this.state.data.id,
+      title: this.state.data.title,
+      timeStart: moment(this.state.data.timeStart).format("YYYY-MM-DD HH:mm:ss"),
+      timeEnd:  moment(this.state.data.timeEnd).format("YYYY-MM-DD HH:mm:ss"),
+      idExam: this.state.data.idExam,
+    };
+    API.put(`contest/update`, dataUpdate, {
       // Thay api update
       headers: {
         "Content-Type": "application/json;charset=UTF-8",
@@ -69,7 +83,6 @@ class Icons extends React.Component {
     });
   };
   DeleteContest(id) {
-    console.log(id);
     const dataContest = [...this.state.dataContest];
     if (
       window.confirm(
@@ -90,7 +103,7 @@ class Icons extends React.Component {
     this.setState({
       data: {
         ...this.state.data,
-       ... dataUpdate,
+        ...dataUpdate,
       },
     });
   }
