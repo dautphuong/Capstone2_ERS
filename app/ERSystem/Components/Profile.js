@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, ScrollView,FlatList, TouchableOpacity, Text, StyleSheet, ImageBackground } from 'react-native';
 import axios from 'axios';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import  AsyncStorage  from '@react-native-async-storage/async-storage';
 import UserAvatar from 'react-native-user-avatar';
 export default class Profile extends Component {
@@ -24,6 +25,10 @@ export default class Profile extends Component {
             console.error(error);
         }
     }
+    logout = async ()=>{
+        AsyncStorage.clear();
+        this.props.navigation.navigate("Login")
+    }
     render() {
         const {learners} = this.state;
         return (
@@ -41,16 +46,19 @@ export default class Profile extends Component {
                                 <Text>{item.username}</Text>
                             </View>
                             <View style={styles.pass}>
-                                <Text style={styles.user}>Email</Text>
+                                <Text style={styles.user}>
+                                <Text>Email</Text>
+                                </Text>
                                 <Text>{item.email}</Text>
                             </View>
                             <View style={styles.pass}>
                                 <Text style={styles.user}>Đổi mật khẩu</Text>
+                                
                             </View>
-                            <TouchableOpacity style={styles.button}>
-                                <Text style={styles.logout} >
-                                    Đăng xuất
-                            </Text>
+                            <TouchableOpacity style={styles.button}
+                                activeOpacity={0.6} 
+                                onPress={() => this.logout()}>
+                                <Text style={styles.logout}>Đăng xuất</Text>
                             </TouchableOpacity>
 
                         </View>

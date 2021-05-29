@@ -44,7 +44,7 @@ export default class Home extends React.Component {
                 renderItem={({item}) =>(
                     <View>
                     <View style={styles.menu}>
-                    <Image source={Logo} style={styles.logo} />
+                    <Image source={Logo} style={styles.logo}/>
                     <Icon name={'account-circle'}
                         size={50}
                         color={'rgba(255,255,255,0.7)'}
