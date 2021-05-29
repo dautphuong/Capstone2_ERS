@@ -45,7 +45,7 @@ class ModalQuestion extends React.Component {
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Create Question
+            Question
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -72,31 +72,32 @@ class ModalQuestion extends React.Component {
             value={this.props.data.title}
             onChange={(e) => this.props.handleChangeInput(e)}
           />
-          <br />
+          <br/>
           <TextField
             id="standard-password-input"
             label="A."
             value={this.props.answerA}
             onChange={(e) => this.props.setStateAnswerA(e)}
           />
-          <br />
           <TextField
             id="standard-password-input"
             label="B."
+            style={{    marginLeft: '80px'}}
             value={this.props.answerB}
             onChange={(e) => this.props.setStateAnswerB(e)}
           />
-          <br />
+          <br/>
           <TextField
             id="standard-password-input"
             label="C."
             value={this.props.answerC}
             onChange={(e) => this.props.setStateAnswerC(e)}
           />
-          <br />
+  
           <TextField
             id="standard-password-input"
             label="D."
+            style={{    marginLeft: '80px'}}
             value={this.props.answerD}
             onChange={(e) => this.props.setStateAnswerD(e)}
           />
@@ -108,16 +109,16 @@ class ModalQuestion extends React.Component {
             value={this.props.data.answerRight}
             onChange={(e) => this.props.handleChangeInput(e)}
           />
-          <br />
           <TextField
             id="standard-password-input"
             label="Note"
             name="note"
+            style={{    marginLeft: '80px'}}
             value={this.props.data.note}
             onChange={(e) => this.props.handleChangeInput(e)}
           />
           <br />
-          <input type="file" name="file" onChange={this.changeHandler} />
+          <input type="file" name="file" onChange={(e) => this.props.changeHandleFile(e)} />
         </Modal.Body>
         <Modal.Footer>
           {this.props.addModalTypeQuestion ? (

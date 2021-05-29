@@ -21,7 +21,10 @@ class CreateExam extends React.Component {
     this.state = {
       dataQuestion: [],
       checked: false,
-      arrQuestion: []
+      arrQuestion: [],
+      title:'',
+      type:'',
+      timeSet:''
     }
   }
   getAllQuestion() {
@@ -35,6 +38,30 @@ class CreateExam extends React.Component {
   componentDidMount() {
     this.getAllQuestion();
   }
+  handleInput=(e) =>{
+    this.setState({[e.target.name]: e.target.value})
+  }
+  buttonCreate = () => {
+    let data = {
+      type:this.state.type,
+      title: this.state.title,
+      listQuestion:this.state.arrQuestion,
+      timeSet : this.state.timeSet
+    };
+    console.log("data",data)
+    API.post(`exam/save`, data, {
+      headers: {
+        "Content-Type": "application/json;charset=UTF-8",
+        "Access-Control-Allow-Origin": "*",
+      },
+    })
+    .then((res) => {
+      alert(res.data);
+      setTimeout(() => {
+        window.location = "/admin/exam";
+    }, 150)
+    });
+  };
   handleChange = (e) => {
     this.setState({ checked: e.target.value })
     if (e.target.checked == true) {
@@ -85,7 +112,6 @@ class CreateExam extends React.Component {
           <Col md="12">
             <Card className="strpied-tabled-with-hover">
               <Card.Header>
-
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
               <TextField
@@ -94,18 +120,18 @@ class CreateExam extends React.Component {
                         label="Title"
                         placeholder="Title"
                         style={{ marginTop: '15px' }}
-                        //onChange={(e) => this.props.handleInput(e)}
+                        onChange={(e)=>this.handleInput(e)}
                         fullWidth
                         multiline
                         on
                     />
                       <TextField
                         id="standard-textarea"
-                        name="title"
+                        name="type"
                         label="Type"
-                        placeholder="Title"
+                        placeholder="Type"
                         style={{ marginTop: '15px' ,width: '80%' }}
-                        //onChange={(e) => this.props.handleInput(e)}
+                        onChange={(e)=>this.handleInput(e)}
                         fullWidth
                         multiline
                         on
@@ -114,9 +140,9 @@ class CreateExam extends React.Component {
                         id="standard-textarea"
                         name="timeSet"
                         label="TimeSet"
-                        placeholder="Title"
+                        placeholder="TimeSet"
                         style={{ marginTop: '15px' }}
-                        //onChange={}
+                        onChange={(e)=>this.handleInput(e)}
                         fullWidth
                         multiline
                         on
@@ -139,7 +165,12 @@ class CreateExam extends React.Component {
             </Card>
           </Col>
         </Row>
-        <Pagination defaultPage={1} count={3} style={{ padding: "10px 0" }} />
+        <Button
+              style={{ marginLeft: "26%" }}
+              onClick={this.buttonCreate}
+            >
+              Create
+            </Button>
       </Container>
     )
   }

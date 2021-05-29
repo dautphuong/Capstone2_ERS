@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ChartistGraph from "react-chartist";
 // react-bootstrap components
 import {
@@ -15,8 +15,19 @@ import {
   OverlayTrigger,
   Tooltip,
 } from "react-bootstrap";
-
+import API from "../api";
 function Dashboard() {
+  const [dashBoard, setDashBoard] = useState([]);
+  const getAllApi = () => {
+    API.get(`notification/getNotification`).then((res) => {
+      const dashBoard = res.data;
+      console.log(dashBoard)
+      setDashBoard(dashBoard);
+    });
+  };
+  useEffect(() => {
+    getAllApi();
+  }, []);
   return (
     <>
       <Container fluid>
@@ -32,8 +43,8 @@ function Dashboard() {
                   </Col>
                   <Col xs="7">
                     <div className="numbers">
-                      <p className="card-category">Number</p>
-                      <Card.Title as="h4">150GB</Card.Title>
+                      <p className="card-category">Lesson</p>
+                      <Card.Title as="h4">{dashBoard.numLesson}</Card.Title>
                     </div>
                   </Col>
                 </Row>
@@ -58,8 +69,8 @@ function Dashboard() {
                   </Col>
                   <Col xs="7">
                     <div className="numbers">
-                      <p className="card-category">Revenue</p>
-                      <Card.Title as="h4">$ 1,345</Card.Title>
+                      <p className="card-category">Question</p>
+                      <Card.Title as="h4">{dashBoard.numQuestion}</Card.Title>
                     </div>
                   </Col>
                 </Row>
@@ -84,8 +95,8 @@ function Dashboard() {
                   </Col>
                   <Col xs="7">
                     <div className="numbers">
-                      <p className="card-category">Errors</p>
-                      <Card.Title as="h4">23</Card.Title>
+                      <p className="card-category">Exam</p>
+                      <Card.Title as="h4">{dashBoard.numExam}</Card.Title>
                     </div>
                   </Col>
                 </Row>
@@ -110,8 +121,8 @@ function Dashboard() {
                   </Col>
                   <Col xs="7">
                     <div className="numbers">
-                      <p className="card-category">Followers</p>
-                      <Card.Title as="h4">+45K</Card.Title>
+                      <p className="card-category">Contest</p>
+                      <Card.Title as="h4">{dashBoard.numContest}</Card.Title>
                     </div>
                   </Col>
                 </Row>

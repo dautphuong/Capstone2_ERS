@@ -17,7 +17,7 @@ import {
 import Pagination from "@material-ui/lab/Pagination";
 import Button from "@material-ui/core/Button";
 // react-bootstrap components
-
+import { storage  } from "../util/firebase_connect";
 class Question extends React.Component {
   constructor(props) {
     super(props);
@@ -44,6 +44,13 @@ class Question extends React.Component {
       this.setState({ dataQuestion });
     });
   }
+  //  onFileChange = async (e) => {
+  //   const file = e.target.files[0];
+  //   const storageRef = app.storage().ref();
+  //   const fileRef = storageRef.child(file.name);
+  //   await fileRef.put(file);
+  //  console.log(await fileRef.getDownloadURL());
+  // };
   componentDidMount() {
     this.getAllQuestion();
   }
@@ -52,8 +59,8 @@ class Question extends React.Component {
     if (
       window.confirm(
         "Do you want to delete " +
-          dataQuestion.find((x) => x.id === id).title +
-          " ?"
+        dataQuestion.find((x) => x.id === id).title +
+        " ?"
       )
     ) {
       API.delete(`question/delete/${id}`).then((res) => {
@@ -139,8 +146,38 @@ class Question extends React.Component {
       }
     });
   }
-  changeHandleFile = (event) => {
-    this.setState({ selectedFile: event.target.files[0] });
+  changeHandleFile(e) {
+    // console.log('file:',e.target.files[0]  )
+    // this.setState({ selectedFile: e.target.files[0] });
+    // console.log(this.state.selectedFile)
+    console.log("hahaha")
+    const file = e.target.files[0];
+    console.log(file)
+    const uploadTask = storage.ref(`images/${file.name}`).put(file);
+    //   const fileRef = storageRef.child(file.name);
+    //    fileRef.put(file);
+    //  console.log( fileRef.child(file.name).getDownloadURL().then(url =>console.log(urf)));
+    uploadTask.on(
+      "state_changed",
+      snapshot => {
+        // const progress = Math.round(
+        //   (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        // );
+        // setProgress(progress);
+      },
+      error => {
+        console.log(error);
+      },
+      () => {
+        storage
+          .ref("images")
+          .child(file.name)
+          .getDownloadURL()
+          .then(url => {
+            console.log(url);
+          });
+      }
+    )
   };
   handleChangeInput(e) {
     this.setState({

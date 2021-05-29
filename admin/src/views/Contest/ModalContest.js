@@ -62,7 +62,7 @@ class ModalContest extends React.Component {
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Create Question
+             Contest
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
