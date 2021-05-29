@@ -1,9 +1,10 @@
 import React from "react";
 import axios from 'axios';
-import CountDown from 'react-native-countdown-component';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
     View,
     Text,
+    Button,
     StyleSheet,
     ScrollView,
     Alert,
@@ -11,8 +12,6 @@ import {
     TouchableOpacity,
     Image,
     Dimensions,
-    TouchableWithoutFeedback,
-    Keyboard
 } from "react-native";
 import DialogInput from "react-native-dialog-input";
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -29,8 +28,8 @@ class StartQuiz extends React.Component {
         this.state = {
             ready: "Bắt Đầu ...",
             result: "Xem đáp án ...",
-            start: false,
             startResult: false,
+            start: false,
             isDialogVisible: false,
             index: 0,
             correct: 0,
@@ -40,36 +39,6 @@ class StartQuiz extends React.Component {
             questionReport: '',
             content: ''
         };
-    }
-
-    async componentDidMount() {
-        const { contentPractice } = this.state;
-        const { id } = this.props.route.params;
-        console.log(this.props.route);
-        try {
-            await axios.get(`/question/findAllByIdExam/${id}`)
-                .then(res => {
-                    let listIdQuestion = res.data
-                    let arrQuestion = [];
-                    for (let i = 0; i < listIdQuestion.length; i++) {
-                        // axios.get(`/question/findById/` + listIdQuestion[i].idQuestion.trim())
-                        axios({
-                            method: "get",
-                            url: `/question/findById/` + listIdQuestion[i].idQuestion.trim(),
-                        })
-                            .then(res => {
-                                arrQuestion = arrQuestion.concat(res.data);
-                                this.setState(
-                                    {
-                                        contentPractice: arrQuestion
-                                    }
-                                )
-                            })
-                    }
-                })
-        } catch (error) {
-            console.error(error);
-        }
     }
     showDialog(isShow, question) {
 
@@ -104,6 +73,35 @@ class StartQuiz extends React.Component {
 
         console.log("Nội Dung Report: " + text);
     }
+    async componentDidMount() {
+        const { contentPractice } = this.state;
+        const { idLesson } = this.props.route.params;
+        console.log(this.props.route);
+        try {
+            await axios.get(`/question/findAllByIdLesson/${idLesson}`)
+                .then(res => {
+                    let listIdQuestion = res.data
+                    let arrQuestion = [];
+                    for (let i = 0; i < listIdQuestion.length; i++) {
+                        axios({
+                            method: "get",
+                            url: `/question/findById/` + listIdQuestion[i].idQuestion.trim(),
+                        })
+                            .then(res => {
+                                arrQuestion = arrQuestion.concat(res.data);
+                                this.setState(
+                                    {
+                                        contentPractice: arrQuestion
+                                    }
+                                )
+                            })
+                    }
+                })
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     final() {
         const { navigation } = this.props
         if (this.state.correct >= 5) {
@@ -113,7 +111,7 @@ class StartQuiz extends React.Component {
                     'Bạn có muốn làm lại',
                     [
                         {
-                            text: 'Làm Lại/ Xem đáp án', onPress: () => {
+                            text: 'Xem đáp án/ Làm lại', onPress: () => {
                                 this.setState(
                                     {
                                         start: false,
@@ -150,7 +148,7 @@ class StartQuiz extends React.Component {
                                         correct: 0
                                     }
                                 )
-                                navigation.navigate('Quiz')
+                                navigation.navigate('quizLesson')
                             }
                         },
                         { text: 'Tiếp tục', onPress: () => this.setState({ start: true }) },
@@ -160,6 +158,7 @@ class StartQuiz extends React.Component {
                                 navigation.navigate('Home')
                             }
                         },
+
                     ],
                     { cancelable: false }
                 )
@@ -167,12 +166,11 @@ class StartQuiz extends React.Component {
         }
     }
     render() {
-        const { navigation } = this.props
+        const { navigation } = this.props;
         const { contentPractice, start, startResult, correct, content } = this.state;
         if (startResult) {
             return (
                 <ImageBackground source={quiz} style={styles.container}>
-
                     <ScrollView>
                         {contentPractice.map((v, i) => {
                             return (
@@ -194,7 +192,7 @@ class StartQuiz extends React.Component {
                         }
                         <TouchableOpacity
                             style={styles.btnFinish}
-                            onPress={() => navigation.navigate('Home')}
+                            onPress={() => navigation.navigate('Quiz')}
                         >
                             <Text style={styles.textSubmit}>Kết Thúc</Text>
                         </TouchableOpacity>
@@ -204,54 +202,41 @@ class StartQuiz extends React.Component {
         }
         if (!start) {
             return (
-                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                    <ImageBackground source={bgImage} style={{ flex: 1, flexDirection: "column", justifyContent: 'center', }}>
-                        <View style={styles.containerLogo}>
-                            <Image source={logo} style={styles.logo}></Image>
-                        </View>
-                        <View style={styles.box}>
-                            <TouchableOpacity
-                                style={styles.content}
-                                onPress={() => this.setState({ start: true })}>
-                                <Image
-                                    source={Learn}
-                                    style={styles.image}
-                                />
-                                <Text style={styles.Text}>
-                                    {this.state.ready}
-                                </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.content}
-                                onPress={() => this.setState({ startResult: true })}>
-                                <Image
-                                    source={Learn}
-                                    style={styles.image}
-                                />
-                                <Text style={styles.Text}>
-                                    {this.state.result}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    </ImageBackground>
-                </TouchableWithoutFeedback>
+                <ImageBackground source={bgImage} style={{ flex: 1, flexDirection: "column", justifyContent: 'center', }}>
+                    <View style={styles.containerLogo}>
+                        <Image source={logo} style={styles.logo}></Image>
+                    </View>
+                    <View style={styles.box}>
+                        <TouchableOpacity
+                            style={styles.content}
+                            onPress={() => this.setState({ start: true })}>
+                            <Image
+                                source={Learn}
+                                style={styles.image}
+                            />
+                            <Text style={styles.Text}>
+                                {this.state.ready}
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.content}
+                            onPress={() => this.setState({ startResult: true })}>
+                            <Image
+                                source={Learn}
+                                style={styles.image}
+                            />
+                            <Text style={styles.Text}>
+                                {this.state.result}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                </ImageBackground>
             );
         }
         else {
             return (
+
                 <ImageBackground source={quiz} style={styles.container}>
-                    <CountDown
-                        size={20}
-                        until={10}
-                        onFinish={() => alert('Finished')}
-                        digitStyle={{ backgroundColor: '#FFF', borderWidth: 2, borderColor: '#1CC625' }}
-                        digitTxtStyle={{ color: '#1CC625' }}
-                        timeLabelStyle={{ color: 'red', fontWeight: 'bold' }}
-                        separatorStyle={{ color: '#1CC625' }}
-                        timeToShow={['H', 'M', 'S']}
-                        timeLabels={{ m: null, s: null }}
-                        showSeparator
-                    />
                     <ScrollView>
                         {contentPractice.map((v, i) => {
                             var radio_props = [
@@ -272,9 +257,9 @@ class StartQuiz extends React.Component {
                                     <DialogInput
                                         isDialogVisible={this.state.isDialogVisible}
                                         title={this.state.questionReport.title}
-                                        message={"Vui lòng nhập báo cáo"}
-                                        hintInput={"............."}
-                                        submitInput={(inputText) => { this.sendInput(inputText) }}
+                                        message={"Message for DialogInput #1"}
+                                        hintInput={"HINT INPUT"}
+                                        submitInput={(text) => { this.sendInput(text, this.state.questionReport.id) }}
                                         closeDialog={() => { this.showDialog(false, this.state.questionReport) }}
                                         modalStyle={{ backgroundColor: '#78C8E8' }}
                                     >
@@ -361,8 +346,7 @@ const styles = StyleSheet.create({
         height: 55,
         justifyContent: 'center',
         borderRadius: 50,
-        backgroundColor: 'white',
-
+        backgroundColor: 'white'
     },
     Text: {
         fontSize: 25,
@@ -379,7 +363,7 @@ const styles = StyleSheet.create({
         bottom: 150
     },
     containerLogo: {
-        bottom: 150,
+        bottom: 120,
         alignItems: 'center',
     },
     logo: {
@@ -401,15 +385,6 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
         bottom: 10
     },
-    btnFinish: {
-        width: WIDTH - 40,
-        height: 60,
-        borderRadius: 25,
-        backgroundColor: '#003399',
-        justifyContent: 'center',
-        marginHorizontal: 5,
-        bottom: 10
-    },
     textSubmit: {
         textAlign: 'center',
         fontSize: 20,
@@ -422,6 +397,15 @@ const styles = StyleSheet.create({
     answer: {
         color: "#ff0000",
         fontSize: 18
-    }
+    },
+    btnFinish: {
+        width: WIDTH - 40,
+        height: 60,
+        borderRadius: 25,
+        backgroundColor: '#003399',
+        justifyContent: 'center',
+        marginHorizontal: 5,
+        bottom: 10
+    },
 });
 

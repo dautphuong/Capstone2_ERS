@@ -1,13 +1,21 @@
 const firebase = require('../util/firebase_connect');
 const snapArray = require('../util/snapshot_to_array')
 const questionArr = require('../util/arrayQuestion')
-
+const docx=require('../util/docx');
 module.exports = class Quetion {
     title; //String
     answerChooses; //array
     answerRight; //String
     note; //String
     idTopic; //Topic
+
+    prototype(){
+        this.title = null;
+        this.answerChooses = null;
+        this.answerRight = null;
+        this.note = null;
+        this.idTopic = null;
+    }
 
     constructor(title, answerChooses, answerRight, note, idTopic) {
         this.title = title;
@@ -57,14 +65,6 @@ module.exports = class Quetion {
         .then(function (snapshot) {
             questionArr.question_array(snapArray.snap_array(snapshot))
             callback(snapArray.snap_array(snapshot));
-
-            // var resultArr=[];
-            // snapArray.snap_array(snapshot).forEach(function(item){
-            //     questionValue.question_value(item.idQuestion, function(data) {
-            //         resultArr.push(data);
-            //     })
-            // });
-            // callback(resultArr);
         });
              
     }
@@ -162,5 +162,18 @@ module.exports = class Quetion {
         firebase.database().ref("questions").once("value").then(function(snapshot) {
             callback(snapArray.snap_array(snapshot));
         })
+    }
+
+    saveListFile(req, callback) {
+        req.forEach(value=>{
+                    firebase.database().ref("questions/").push().set({
+                        title: value.title,
+                        answerChooses: value.answerChooses,
+                        answerRight: value.answerRight,
+                        idTopic: '-Man9lPOf8DMlCC0hAp0',
+                        note: value.note,
+                    });
+        })       
+        callback("successfull");
     }
 }

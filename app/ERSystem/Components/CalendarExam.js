@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { format } from "date-fns";
 import {
     StyleSheet,
     View,
@@ -8,6 +9,7 @@ import {
     Image,
     FlatList,
     TouchableOpacity,
+    Alert
 } from 'react-native';
 import bgImage from '../image/logins.jpg';
 import contest from '../image/contest.png';
@@ -24,39 +26,59 @@ export default class CalendarExam extends Component {
         axios.get('/contest/findAll')
             .then(res => {
                 this.setState({
-                  contests: res.data
-                   
+                    contests: res.data
+
                 })
                 console.log(res.data)
             })
             .catch(error => {
                 console.error(error)
             })
-    }
 
+    }
+    DisabledButton() {
+        this.setState({
+            pressed: true
+        })
+    }
+    checkOpen(content) {
+
+        var timeStart = (content.timeStart.split(' ')[0].split('-')).concat(content.timeStart.split(' ')[1].split(':'));
+        var timeEnd = (content.timeEnd.split(' ')[0].split('-')).concat(content.timeEnd.split(' ')[1].split(':'));
+        var d1 = new Date(timeStart[0], timeStart[1] - 1, timeStart[2], timeStart[3], timeStart[4], timeStart[5]);
+        var d2 = new Date(timeEnd[0], timeEnd[1] - 1, timeEnd[2], timeEnd[3], timeEnd[4], timeEnd[5]);
+        var now = new Date();
+
+        if (d1 - now < 0 && d2 - now > 0) {
+            return false
+        } else {
+            return true
+        }
+    }
     render() {
-        const {navigation} =this.props;
+        const { navigation } = this.props;
         const { contests } = this.state;
         return (
             <ImageBackground source={bgImage} style={styles.imageBackgroundContainer}>
                 <FlatList
                     data={contests}
-                    renderItem={({item}) =>(
-                <TouchableOpacity 
-                activeOpacity={0.6}
-                onPress={() => navigation.navigate('ReadyContest',{
-                    Contest: item.name,
-                    id: item.id
-                })}
-                >
-                <View style={styles.container}>
-                    <Text style={styles.title}>{item.name}</Text>
-                    <Text style={styles.title}>{item.timeStart}</Text>
-                    <Text style={styles.title}>{item.timeEnd}</Text>
-                    <Image style={styles.bookImage} source={contest}></Image>
-                </View>
-                </TouchableOpacity>
-                )}
+                    renderItem={({ item }) => (
+                        <TouchableOpacity
+                            disabled={this.checkOpen(item)}
+                            activeOpacity={0.6}
+                            onPress={() => navigation.navigate('ReadyContest', {
+                                Contest: item.title,
+                                idExam: item.idExam
+                            })}
+                        >
+                            <View style={styles.container}>
+                                <Text style={styles.title}>{item.title}</Text>
+                                <Text style={styles.title}>{item.timeStart}</Text>
+                                <Text style={styles.title}>{item.timeEnd}</Text>
+                                <Image style={styles.bookImage} source={contest}></Image>
+                            </View>
+                        </TouchableOpacity>
+                    )}
                 />
             </ImageBackground>
         )
@@ -65,17 +87,17 @@ export default class CalendarExam extends Component {
 };
 const styles = StyleSheet.create({
     bookImage: {
-        width: 70 ,
+        width: 70,
         height: 70
     },
-    imageBackgroundContainer:{
+    imageBackgroundContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'stretch',
         backgroundColor: '#fff',
         paddingTop: 16,
         paddingLeft: 16,
-        paddingRight:16,
+        paddingRight: 16,
     },
     container: {
         alignItems: 'center',
@@ -94,5 +116,5 @@ const styles = StyleSheet.create({
         marginBottom: 8,
         fontWeight: '700',
     },
-    
+
 })

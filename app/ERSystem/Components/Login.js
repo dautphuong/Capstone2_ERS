@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -34,9 +33,8 @@ export default class Login extends Component {
             loading: false,
         }
     }
-
     checkLogin() {
-        const { navigate } = this.props.navigation;
+        const { navigation } = this.props;
         const { username, password } = this.state;
         if (username !== '' && password) {
             const req = {
@@ -49,22 +47,34 @@ export default class Login extends Component {
             axios.post("/user/login", req)
                 .then(
                     res => {
-
+                        console.log(req.username)
                         Alert.alert('Bạn đã đăng nhập thành công',
                             this.setState({
-                                loading: false,
                                 "messageSuccess": this.state.messageSuccess,
-                                messageError: '',
+                                messageError: ''
                             }))
-
 
                         AsyncStorage.setItem("token", res.data.token)
                         AsyncStorage.setItem("id", res.data.id)
-                        navigate('Home');
                     },
+
+                ).then(
+                    res => {
+                        navigation.navigate('Home')
+                    }
                 )
+                .catch(err => {
+                    console.log(err)
+                    Alert.alert('Error', 'Tài khoản/ Mật khẩu không đúng',
+                        this.setState({
+                            loading: false,
+                            messageError: this.state.messageError,
+                            messageSuccess: ''
+                        }))
+
+                })
         } else {
-            Alert.alert('Tài khoản/ Mật khẩu không đúng',
+            Alert.alert('Error', 'Vui lòng Tên tài khoản và Mật khẩu',
                 this.setState({
                     loading: false,
                     messageError: this.state.messageError,
@@ -125,6 +135,7 @@ export default class Login extends Component {
                             secureTextEntry={this.state.showPass}
                             placeholderTextColor={'rgba(68, 248, 161, 0.7)'}
                             underlineColorAndroid='transparent'
+                            value={password}
                             onChangeText={(text) => this.setState({ password: text })}
                         />
                         <TouchableOpacity style={styles.btnEye}

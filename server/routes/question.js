@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const Question = require('../models/question');
+const docx=require('../util/docx');
 
 /**
  * @swagger
@@ -40,6 +41,22 @@ const Question = require('../models/question');
  *         answerRight: chọn A
  *         note: vì nó đúng
  *         idTopic: id topic
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     FILE:
+ *       type: object
+ *       required:
+ *         - url
+ *       properties:
+ *         url:
+ *           type: string
+ *           description: the url file in firebase
+ *       example:
+ *         url: link_firebase
  */
 
 /**
@@ -315,6 +332,42 @@ router.delete("/delete/:id", function(req, res) {
     question.findAll(function(data) {
         res.send(data)
     })
+});
+
+
+/**
+ * @swagger
+ * /question/getFile:
+ *   post:
+ *     summary: tạo danh sách question file docx
+ *     tags: [Question]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/FILE'
+ *     responses:
+ *       200:
+ *         description: The list question
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/FILE'
+ *       500:
+ *         description: Some server error
+ */
+ router.post('/getFile', (req, res) => {
+    try {
+        const question = new Question();
+        docx.docx(req.body.url,function(dataFile) {
+            question.saveListFile(dataFile,function(data) {
+                res.send(data)
+            });
+        });
+    } catch (err) {
+        res.status(400).send(err);
+    }
 });
 
 module.exports = router;

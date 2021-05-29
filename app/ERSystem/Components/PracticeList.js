@@ -10,45 +10,46 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import bgImage from '../image/logins.jpg';
-import book from '../image/book.png';
-axios.defaults.baseURL = 'https://715c8260cfb7.ngrok.io';
-export default class ListTopic extends Component {
+import dumbbell from '../image/dumbbell.png';
+
+export default class PracticeList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            topics: []
+            practice: []
         }
     }
-    componentDidMount() {
-        axios.get('/topic/findAll')
-            .then(res => {
-                this.setState({
-                    topics: res.data
+    async componentDidMount() {
+        try {
+            let str = `/exam/findByType/practice`
+            axios.get(str)
+                .then(res => {
+                    this.setState({
+                        practice: res.data
+                    })
                 })
-            })
-            .catch(error => {
-                console.error(error)
-            })
+        } catch (error) {
+            console.error(error);
+        }
     }
-
     render() {
+        const { practice } = this.state;
         const { navigation } = this.props;
-        const { topics } = this.state;
         return (
             <ImageBackground source={bgImage} style={styles.imageBackgroundContainer}>
                 <FlatList
-                    data={topics}
+                    data={practice}
                     renderItem={({ item }) => (
-                        <TouchableOpacity
-                            activeOpacity={0.6}
-                            onPress={() => navigation.navigate('ListLesson', {
-                                Topics: item.name,
-                                id: item.id
+                        <TouchableOpacity activeOpacity={0.6}
+                            onPress={() => navigation.navigate('Quiz', {
+                                name: item.title,
+                                id: item.id,
+                                timeSet: item.timeSet
                             })}
                         >
                             <View style={styles.container}>
-                                <Text style={styles.title}>{item.name}</Text>
-                                <Image style={styles.bookImage} source={book}></Image>
+                                <Text style={styles.title}>{item.title}</Text>
+                                <Image style={styles.bookImage} source={dumbbell}></Image>
                             </View>
                         </TouchableOpacity>
                     )}
@@ -68,7 +69,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'stretch',
         backgroundColor: '#fff',
-        paddingTop: 16,
+        paddingTop: 12,
         paddingLeft: 16,
         paddingRight: 16,
     },

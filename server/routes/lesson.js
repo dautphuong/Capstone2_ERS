@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const Lesson = require('../models/lesson');
 const {verifyToken}=require('../util/authorization')
+const snapArray = require('../util/snapshot_to_array')
 
 /**
  * @swagger
@@ -257,6 +258,7 @@ router.delete("/delete/:id", function(req, res) {
  router.get('/findAll', function(req, res) {
     const lesson = new Lesson();
     lesson.findAll(function(data) {
+        snapArray.resetArr();
         res.send(data)
     })
 });

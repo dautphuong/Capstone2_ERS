@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, ScrollView,FlatList, TouchableOpacity, Text, StyleSheet, ImageBackground } from 'react-native';
+
+import { View, FlatList, TouchableOpacity, Text, StyleSheet, ImageBackground } from 'react-native';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import  AsyncStorage  from '@react-native-async-storage/async-storage';
@@ -8,7 +9,7 @@ export default class Profile extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            learners:[]
+            learners: []
         }
     }
 
@@ -30,12 +31,12 @@ export default class Profile extends Component {
         this.props.navigation.navigate("Login")
     }
     render() {
-        const {learners} = this.state;
+        const { learners } = this.state;
         return (
             <ImageBackground source={require('../image/logins.jpg')} style={styles.ImageBackground} >
                 <FlatList
                     data={learners}
-                    renderItem={({item}) => (
+                    renderItem={({ item }) => (
                         <View>
                             <View style={styles.Header}></View>
                             <View style={styles.avatar}>

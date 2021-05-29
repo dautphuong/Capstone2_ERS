@@ -18,26 +18,28 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/css/animate.min.css";
 import "./assets/scss/light-bootstrap-dashboard-react.scss?v=2.0.0";
 import "./assets/css/demo.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+
 import Login from './views/Login'
-
-import AdminLayout from "layouts/Admin.js";
-
+import CreateExam from './views/Exam/CreateExam'
+import AdminLayout from "./layouts/Admin";
 ReactDOM.render(
-  <BrowserRouter>
+  <React.StrictMode>
+   <Router>
     <Switch>
       <Route path="/admin/login" >
-        <Login/>
+        <Login />
       </Route>
       <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
-    <Redirect from="/admin/login" to="/admin/dashboard" />
+      <Redirect from="/admin/login" to="/admin/dashboard" />
     </Switch>
-  </BrowserRouter>,
+  </Router>
+  </React.StrictMode>,
   document.getElementById("root")
 );

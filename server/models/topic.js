@@ -31,14 +31,14 @@ module.exports = class Topic {
 
     delete(id, callback) {
         firebase.database().ref("topics/").once("value").then(function(snapshot) {
-            if (snapArray.snap_array(snapshot).some(value => value.id == id)) {
+            if (snapArray.snap_array(snapshot).some(value => value.id == id) &&( id !=='-Man9lPOf8DMlCC0hAp0')) {
 
                 //delete question by topic
                 firebase.database().ref("questions/").once("value").then(function(snapshot) {
                     if (snapshot.exists()) {
                         snapArray.snap_array(snapshot).filter(value => value.idTopic == id).forEach(function(item){
                             const question = new Question();
-    question.delete(item.id, function(data) {
+                question.delete(item.id, function(data) {
     })
                         });
                     } 

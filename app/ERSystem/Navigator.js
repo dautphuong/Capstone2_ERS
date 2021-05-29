@@ -13,7 +13,11 @@ import Translate from './Components/Translate';
 import History from './Components/History';
 import CalendarExam from './Components/CalendarExam';
 import ReadyContest from './Components/ReadyContest';
+import Quiz from './Components/Quiz';
+import Result from './Components/Result';
 import Profile from './Components/Profile';
+import PracticeList from './Components/PracticeList';
+import quizLesson from './Components/quizLesson';
 const Stack = createStackNavigator();
 const TabNavigator = createBottomTabNavigator();
 function AppNavigator() {
@@ -131,7 +135,7 @@ function AppNavigator() {
           component={ReadyContest}
           options={({ route }) =>
           ({
-            id: route.params.id,
+            idExam: route.params.idExam,
             title: route.params.Contest,
             headerStyle: {
               backgroundColor: '#78C8E8',
@@ -144,8 +148,75 @@ function AppNavigator() {
           })
           }
         />
+        <Stack.Screen name="PracticeList"
+          component={PracticeList}
+          options={{
+            headerTitle: 'Danh sách bài tập',
+            headerStyle: {
+              backgroundColor: '#78C8E8',
+            },
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+
+        />
+        <Stack.Screen name="Quiz"
+          component={Quiz}
+          options={({ route }) =>
+          ({
+            id: route.params.id,
+            title: route.params.name,
+            timeSet: route.params.timeSet,
+            headerStyle: {
+              backgroundColor: '#78C8E8',
+            },
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 15,
+              right: 25
+            },
+          })
+          }
+        />
+        {/* <Stack.Screen name="Result"
+          component={Result}
+          options={({ route }) =>
+          ({
+            id: route.params.id,
+            title: route.params.name,
+            headerStyle: {
+              backgroundColor: '#78C8E8',
+            },
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 15,
+              right: 25
+            },
+          })
+          }
+        /> */}
+        <Stack.Screen name="quizLesson"
+          component={quizLesson}
+          options={({ route }) =>
+          ({
+            id: route.params.idLesson,
+            title: route.params.title,
+            headerStyle: {
+              backgroundColor: '#78C8E8',
+            },
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 15,
+              right: 25
+            },
+          })
+          }
+        />
+
+
       </Stack.Navigator>
-    </NavigationContainer>
+    </NavigationContainer >
   );
 }
 
