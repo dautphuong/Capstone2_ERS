@@ -29,7 +29,7 @@ module.exports = class Exam {
                     if (snapshot.exists()) {
         
                 firebase.database().ref("exam-question/").push().set({
-                    idLesson: uniqueKey,
+                    idExam: uniqueKey,
                     idQuestion: item
                 });
             }
