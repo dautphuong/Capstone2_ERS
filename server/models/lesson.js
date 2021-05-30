@@ -123,12 +123,12 @@ module.exports = class Lesson {
     }
 
     updateListQuestion(req, callback){
-        firebase.database().ref("exams/" + req.id).once("value").then(function(snapshot) {
+        firebase.database().ref("lessons/" + req.id).once("value").then(function(snapshot) {
             if (snapshot.exists()) {
                 req.listQuestion.forEach(function(item){
                     
                     firebase.database().ref("lesson-question/").push().set({
-                        idExam: req.id,
+                        idLesson: req.id,
                         idQuestion: item
                     });
 
