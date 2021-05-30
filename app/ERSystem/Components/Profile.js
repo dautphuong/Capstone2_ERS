@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { View, FlatList, TouchableOpacity, Text, StyleSheet,Image, ImageBackground } from 'react-native';
+import { View, FlatList,SafeAreaView, TouchableOpacity, Text, StyleSheet,Image, ImageBackground } from 'react-native';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import  AsyncStorage  from '@react-native-async-storage/async-storage';
@@ -9,8 +9,12 @@ export default class Profile extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            learners: []
-        }
+            learners: [],
+            modalIsOpen: false,
+            new: [],
+            email: '',
+            error: null,
+        };
     }
 
     async componentDidMount() {
@@ -45,31 +49,17 @@ export default class Profile extends Component {
             console.error(error);
         }
     }
-    onUsernameChange = username => {
-        this.setState({username});
-      };
     
-    onPasswordChange = password => {
-        this.setState({password});
-    };
-    update(userId, data){
-        try{
-            const options = {
+    updateEmail(){
+        const { item, packed } = this.state;
+            fetch(`/user/update`, {
+                method: 'PUT',
                 headers: {
-                    Accept: "application/json",
-                    "Content-Type": "multipart/form-data"
-                }
-            };
-    
-            const form_data = new FormData();
-            for ( let key in data )
-                form_data.append(key, data[key]);
-    
-            axios.put(`/user/update/`, form_data, options);
-            return res.data;
-        }catch (e) {
-            console.log(error)
-        }
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ item, packed })
+            });
     }
     render() {
         const { learners } = this.state;
@@ -86,13 +76,11 @@ export default class Profile extends Component {
                             <View style={styles.email}>
                                 <Text style={styles.user}>Tên đăng nhập</Text>
                                 <Text>{item.username}</Text>
-                                <Text
-                                    onPress={() => this.update()}
-                                >sửa</Text>
                             </View>
                             <View style={styles.pass}>
-                                <Text style={styles.user}>
-                                <Text>Email</Text>
+                                <Text  style={styles.Text}>
+                                        <Text style={styles.user}>Email</Text>
+                                        <Text style={styles.update} onPress={() => {this.update()}}>                                                                        sửa</Text>
                                 </Text>
                                 <Text>{item.email}</Text>
                             </View>
@@ -105,14 +93,14 @@ export default class Profile extends Component {
                                 onPress={() => this.logout()}>
                                 <Text style={styles.logout}>Đăng xuất</Text>
                             </TouchableOpacity>
-
                         </View>
                     )}
                 />
             </ImageBackground>
         )
+    };
     }
-};
+    
 const styles = StyleSheet.create({
     Header: {
         padding: 5,
@@ -129,6 +117,13 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         marginTop: -70,
 
+    },
+    text:{
+        flexDirection: 'row'
+    },
+    update:{
+        color: 'blue',
+        marginLeft: '90%',
     },
     avatar: {
         alignItems: 'center',
