@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { View, FlatList, TouchableOpacity, Text, StyleSheet, ImageBackground } from 'react-native';
+import { View, FlatList, TouchableOpacity, Text, StyleSheet,Image, ImageBackground } from 'react-native';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import  AsyncStorage  from '@react-native-async-storage/async-storage';
@@ -14,6 +14,7 @@ export default class Profile extends Component {
     }
 
     async componentDidMount() {
+        let token = await  AsyncStorage.getItem('token');
         let idUser = await AsyncStorage.getItem('id');
         try {
             axios.get(`/user/findById/${idUser}`)
@@ -26,9 +27,49 @@ export default class Profile extends Component {
             console.error(error);
         }
     }
-    logout = async ()=>{
-        AsyncStorage.clear();
-        this.props.navigation.navigate("Login")
+    logout(){
+        const { navigation } = this.props;
+        try {
+            axios.put(`/user/logout`)
+                .then(res => {
+                    AsyncStorage.removeItem('token')
+                    AsyncStorage.removeItem('id')
+                })
+                .then(
+                    res => {
+                        
+                        navigation.navigate('Login')
+                    }
+                )
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    onUsernameChange = username => {
+        this.setState({username});
+      };
+    
+    onPasswordChange = password => {
+        this.setState({password});
+    };
+    update(userId, data){
+        try{
+            const options = {
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "multipart/form-data"
+                }
+            };
+    
+            const form_data = new FormData();
+            for ( let key in data )
+                form_data.append(key, data[key]);
+    
+            axios.put(`/user/update/`, form_data, options);
+            return res.data;
+        }catch (e) {
+            console.log(error)
+        }
     }
     render() {
         const { learners } = this.state;
@@ -40,11 +81,14 @@ export default class Profile extends Component {
                         <View>
                             <View style={styles.Header}></View>
                             <View style={styles.avatar}>
-                                <UserAvatar name="Avishay Bar" style={styles.Image2} />
+                                <UserAvatar style={styles.Image2}>{item.avatar}</UserAvatar>
                             </View>
                             <View style={styles.email}>
                                 <Text style={styles.user}>Tên đăng nhập</Text>
                                 <Text>{item.username}</Text>
+                                <Text
+                                    onPress={() => this.update()}
+                                >sửa</Text>
                             </View>
                             <View style={styles.pass}>
                                 <Text style={styles.user}>
