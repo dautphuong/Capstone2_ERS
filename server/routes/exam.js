@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const Exam = require('../models/exam');
-
+const { validationResult } = require('express-validator');
+const { validate } = require('../util/validator');
 /**
  * @swagger
  * components:
@@ -66,13 +67,19 @@ const Exam = require('../models/exam');
  *       500:
  *         description: Some server error
  */
-router.post('/save', (req, res) => {
+router.post('/save', 
+validate.validateExam(),
+(req, res) => {
     const exam = new Exam(
         req.body.title,
         req.body.type,
         req.body.timeSet,
         req.body.listQuestion
     );
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
     try {
         exam.save(exam, function(data) {
             res.send(data)

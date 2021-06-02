@@ -2,6 +2,8 @@ const router = require('express').Router();
 const Lesson = require('../models/lesson');
 const {verifyToken}=require('../util/authorization')
 const snapArray = require('../util/snapshot_to_array')
+const { validationResult } = require('express-validator');
+const { validate } = require('../util/validator');
 
 /**
  * @swagger
@@ -68,13 +70,19 @@ const snapArray = require('../util/snapshot_to_array')
  *       500:
  *         description: Some server error
  */
-router.post('/save', (req, res) => {
+router.post('/save', 
+validate.validateLesson(),
+(req, res) => {
     const lesson = new Lesson(
         req.body.title,
         req.body.content,
         req.body.idTopic,
         req.body.listQuestion
     );
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
     try {
         lesson.save(lesson, function(data) {
             res.send(data)

@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const Contest = require('../models/contest');
-
+const { validationResult } = require('express-validator');
+const { validate } = require('../util/validator');
 /**
  * @swagger
  * components:
@@ -66,13 +67,19 @@ const Contest = require('../models/contest');
  *       500:
  *         description: Some server error
  */
-router.post('/save', (req, res) => {
+router.post('/save',
+validate.validateContest(),
+(req, res) => {
     const contest = new Contest(
         req.body.title,
         req.body.timeStart,
         req.body.timeEnd,
         req.body.idExam
     );
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
     try {
         contest.save(contest, function(data) {
             res.send(data)

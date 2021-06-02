@@ -10,9 +10,9 @@ const swaggerJsdoc = require("swagger-jsdoc");
 app.use(bodyParser.json()); //this will accept json request
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
 //Middlewares
 app.use(cors());
+
 const swaggerSpec = swaggerJsdoc({
     swaggerDefinition: {
       openapi: "3.0.0",
@@ -57,6 +57,7 @@ const contestRouter = require('./routes/contest');
 const historyRouter = require('./routes/history');
 const reportRouter = require('./routes/report');
 const notificationRouter=require('./routes/notification')
+
 //Router Middlewares
 app.use('/user', authRouter);
 app.use('/lesson', lessonRouter);

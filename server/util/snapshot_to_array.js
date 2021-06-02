@@ -1,5 +1,7 @@
 const firebase = require("./firebase_connect");
 var returnArr2=[];
+var returnArr3=[];
+
 module.exports = {
     snap_array: function (snapshot) {
         var returnArr = [];
@@ -26,11 +28,32 @@ module.exports = {
         return returnArr2;
     },
 
+    snap_arrQ: function (snapshot) {
+        snapshot.forEach(function (childSnapshot) {
+            firebase.database().ref("topics/" + childSnapshot.val().idTopic).once("value").then(function (snapshot) {
+                if (snapshot.exists()) {
+                    var item = childSnapshot.val();
+                    item.id = childSnapshot.key;
+                    getNameTopicQ(item, snapshot.val().name)
+                }
+            });
+        });
+
+        return returnArr3;
+    },
+
     resetArr:function(){
         returnArr2=[];
+    },
+    resetArr2:function(){
+        returnArr3=[];
     }
 }
-
+var getNameTopicQ = (item, nameTopic) => {
+    item.nameTopic = nameTopic;
+    returnArr3.push(item);
+    console.log(returnArr3[0].id)
+}
 var getNameTopic = (item, nameTopic) => {
     item.nameTopic = nameTopic;
     returnArr2.push(item);

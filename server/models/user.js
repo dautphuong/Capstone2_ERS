@@ -23,55 +23,55 @@ module.exports = class User {
 
     register(req, callback) {
         bcrypt.hash(req.password, 10, function (err, hash){
-            req.password = hash;
+            firebase.database().ref("learners/").once("value").then(function(snapshot) {
+                if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
+                    callback("Account already exists");
+                } else {
+                    firebase.database().ref("admin/").once("value").then(function(snapshot) {
+                        if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
+                            callback("Account already exists");
+                        } else {
+                            firebase.database().ref("learners/").push().set({
+                                username: req.username,
+                                password: hash,
+                                email: req.email,
+                                avatar: "https://firebasestorage.googleapis.com/v0/b/er-system-2b346.appspot.com/o/avatar.jpg?alt=media&token=0ebb592a-5e15-42d1-8f0f-04998873d251",
+                                createOnUTC: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
+                                lastLogin: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
+                            });
+    
+                            callback("Successlly");
+                        }
+                    })
+                }
+            });
           })
           
-        firebase.database().ref("learners/").once("value").then(function(snapshot) {
-            if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
-                callback("Account already exists");
-            } else {
-                firebase.database().ref("admin/").once("value").then(function(snapshot) {
-                    if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
-                        callback("Account already exists");
-                    } else {
-                        firebase.database().ref("learners/").push().set({
-                            username: req.username,
-                            password: req.password,
-                            email: req.email,
-                            avatar: "https://firebasestorage.googleapis.com/v0/b/er-system-2b346.appspot.com/o/avatar.jpg?alt=media&token=0ebb592a-5e15-42d1-8f0f-04998873d251",
-                            createOnUTC: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
-                            lastLogin: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
-                        });
-
-                        callback("Successlly");
-                    }
-                })
-            }
-        });
+        
     }
 
     createAdmin(req, callback) {
         bcrypt.hash(req.password, 10, function (err, hash){
-            req.password = hash;
+            firebase.database().ref("learners/").once("value").then(function(snapshot) {
+                if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
+                    callback("Account already exists");
+                } else {
+                    firebase.database().ref("admin/").once("value").then(function(snapshot) {
+                        if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
+                            callback("Account already exists");
+                        } else {
+                            firebase.database().ref("admin/").push().set({
+                                username: req.username,
+                                password: hash,
+                            });
+    
+                            callback("Successlly");
+                        }
+                    })
+                }
+            });
           })
-        firebase.database().ref("learners/").once("value").then(function(snapshot) {
-            if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
-                callback("Account already exists");
-            } else {
-                firebase.database().ref("admin/").once("value").then(function(snapshot) {
-                    if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
-                        callback("Account already exists");
-                    } else {
-                        firebase.database().ref("admin/").push().set({
-                            username: req.username,
-                            password: req.password,
-                        });
-
-                        callback("Successlly");
-                    }
-                })
-            }
-        });
+       
     }
 
     findAllUser(callback) {
@@ -109,20 +109,22 @@ module.exports = class User {
     }
 
     updateUser(req, callback) {
+        bcrypt.hash(req.password, 10, function (err, hash){
+
         firebase.database().ref("learners/" + req.id).once("value").then(function(snapshot) {
             if (snapshot.exists()) {
                 firebase.database().ref("learners/" + req.id).update({
-                    password: req.password,
+                    password: hash,
                     email: req.email,
                     avatar: req.avatar,
-                    isLessonConfirm: req.isLessonConfirm,
                 });
                 callback("successfull");
             } else {
                 firebase.database().ref("admin/" + req.id).once("value").then(function(snapshot) {
                     if (snapshot.exists()) {
+
                         firebase.database().ref("admin/" + req.id).update({
-                            password: req.password,
+                            password: hash,
                         });
                         callback("successfull");
                     } else {
@@ -131,6 +133,7 @@ module.exports = class User {
                 });
             }
         });
+     })
     }
 
 
