@@ -48,16 +48,12 @@ export default class Register extends Component {
                     console.log(res)
                     Alert.alert('Bạn đã đăng ký thành công',
                         navigation.navigate('Login'),
-                        this.setState({
-                            "messageSuccess": this.state.messageSuccess
-                        }))
+                    )
                 })
                 .catch(err => {
                     console.log(err)
                     Alert.alert('Error', 'Tài khoản ít nhất có 6 ký tự',
-                        this.setState({
-                            "messageError": this.state.messageError
-                        }))
+                    )
 
                 })
         } else {

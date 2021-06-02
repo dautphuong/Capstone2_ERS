@@ -55,8 +55,9 @@ export default class LessonContent extends Component {
 
                             <TouchableOpacity
                                 style={styles.btnPractice}
-                                onPress={() => navigation.navigate('Quiz', {
+                                onPress={() => navigation.navigate('quizLesson', {
                                     idLesson: item.id,
+                                    title: item.title,
                                 })}
                             >
                                 <Text style={styles.Text}>Làm Bài Tập</Text>
