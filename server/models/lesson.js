@@ -132,7 +132,7 @@ module.exports = class Lesson {
                         idQuestion: item
                     });
 
-        });
+                });
             }
             callback("ok")
         });

@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const History = require('../models/history');
-
+const { validationResult } = require('express-validator');
+const { validate } = require('../util/validator');
 /**
  * @swagger
  * components:
@@ -66,13 +67,19 @@ const History = require('../models/history');
  *       500:
  *         description: Some server error
  */
- router.post('/save', (req, res) => {
+ router.post('/save',
+ validate.validateHistory(),
+ (req, res) => {
     const history = new History(
         req.body.idUser,
         req.body.idExam,
         req.body.answer,
         req.body.result
     );
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
     try {
         history.save(history, function(data) {
             res.send(data)

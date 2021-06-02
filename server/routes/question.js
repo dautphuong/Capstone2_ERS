@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const Question = require('../models/question');
 const docx=require('../util/docx');
+const snapArray = require('../util/snapshot_to_array')
 
 /**
  * @swagger
@@ -51,12 +52,17 @@ const docx=require('../util/docx');
  *       type: object
  *       required:
  *         - url
+ *         - idTopic
  *       properties:
  *         url:
  *           type: string
  *           description: the url file in firebase
+ *         idTopic:
+ *           type: string
+ *           description: the id topic
  *       example:
  *         url: link_firebase
+ *         idTopic: topicId
  */
 
 /**
@@ -330,6 +336,7 @@ router.delete("/delete/:id", function(req, res) {
  router.get('/findAll', function(req, res) {
     const question = new Question();
     question.findAll(function(data) {
+        snapArray.resetArr2();
         res.send(data)
     })
 });
@@ -361,7 +368,7 @@ router.delete("/delete/:id", function(req, res) {
     try {
         const question = new Question();
         docx.docx(req.body.url,function(dataFile) {
-            question.saveListFile(dataFile,function(data) {
+            question.saveListFile(dataFile,req.body.idTopic,function(data) {
                 res.send(data)
             });
         });

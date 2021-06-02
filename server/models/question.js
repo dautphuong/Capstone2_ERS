@@ -120,7 +120,7 @@ module.exports = class Quetion {
                 //delete exam question
         firebase.database().ref("exam-question/").once("value").then(function(snapshot) {
             if (snapshot.exists()) {
-                snapArray.snap_array(snapshot).filter(value => value.idQuestion == id).forEach(function(item){
+                snapArray.snap_array(snapshot).filter(value => value.idQuestion === id).forEach(function(item){
                     firebase.database().ref("exam-question/" + item.id).remove();
                 });
             } 
@@ -128,7 +128,7 @@ module.exports = class Quetion {
            //delete lesson question
            firebase.database().ref("lesson-question/").once("value").then(function(snapshot) {
             if (snapshot.exists()) {
-                snapArray.snap_array(snapshot).filter(value => value.idQuestion == id).forEach(function(item){
+                snapArray.snap_array(snapshot).filter(value => value.idQuestion === id).forEach(function(item){
                     firebase.database().ref("lesson-question/" + item.id).remove();
                 });
             } 
@@ -160,17 +160,17 @@ module.exports = class Quetion {
 
     findAll(callback) {
         firebase.database().ref("questions").once("value").then(function(snapshot) {
-            callback(snapArray.snap_array(snapshot));
+            callback(snapArray.snap_arrQ(snapshot));
         })
     }
 
-    saveListFile(req, callback) {
+    saveListFile(req,idTopic, callback) {
         req.forEach(value=>{
                     firebase.database().ref("questions/").push().set({
                         title: value.title,
                         answerChooses: value.answerChooses,
                         answerRight: value.answerRight,
-                        idTopic: '-Man9lPOf8DMlCC0hAp0',
+                        idTopic: idTopic,
                         note: value.note,
                     });
         })       
