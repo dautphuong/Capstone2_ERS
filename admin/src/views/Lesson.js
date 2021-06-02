@@ -15,14 +15,14 @@ import Select from "react-select";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { data, event } from "jquery";
-import { Button, ButtonToolbar } from "react-bootstrap";
+import {  ButtonToolbar } from "react-bootstrap";
 import PopupLesson from "./PopupLesson";
 import CreateTypeLesson from "./CreateTypeLesson";
-import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import IntlMessages from "../util/IntlMessages";
 import TablePagination from "@material-ui/core/TablePagination";
+import Button from "@material-ui/core/Button";
 import API from "../api";
 class Lesson extends React.Component {
   constructor(props) {
@@ -75,8 +75,8 @@ class Lesson extends React.Component {
     if (
       window.confirm(
         "Do you want to delete " +
-          dataLesson.find((x) => x.id === id).title +
-          " ?"
+        dataLesson.find((x) => x.id === id).title +
+        " ?"
       )
     ) {
       API.delete(`lesson/delete/${id}`)
@@ -129,7 +129,7 @@ class Lesson extends React.Component {
     API.put(`lesson/update`, data, {})
       .then((res) => {
         if (res && res.status === 200) {
-          alert("Update succseful");
+          alert("Update is successful");
           this.setState({
             addModalShow: false,
             dataModal: { idTopic: "", title: "", id: "" },
@@ -160,7 +160,10 @@ class Lesson extends React.Component {
           content: "",
         });
       })
-      .then(() => this.getAllLesson());
+      .then(() =>
+        setTimeout(() => {
+          this.getAllLesson();
+        }, 500));
   };
   render() {
     //alert(this.state.selectValue)
@@ -240,20 +243,41 @@ class Lesson extends React.Component {
               <Card>
                 <Card.Header>
                   <Card.Title as="h4" style={{ width: "35%", float: "left" }}>
-                    Light Bootstrap Table Heading
+                   Lesson
                   </Card.Title>
-                  <a
+                  {/* <a
                     onClick={() => this.setState({ addModalTypeLesson: true })}
                   >
                     List of Topic
-                  </a>
+                  </a> */}
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disableElevation
+                    style={{
+                      float: "right",
+                      height: "57px",
+                      marginRight: "110px",
+                      marginTop:'35px'
+                    }}
+                    onClick={() => this.setState({ addModalTypeLesson: true })}
+                  >
+                    List of Topic
+                    </Button>
                   <CreateTypeLesson
                     show={this.state.addModalTypeLesson}
                     onHide={addModalTypeLessonClose}
                   />
-                  <ButtonToolbar style={{ paddingLeft: "29%" }}>
                     <Button
-                      variant="primary"
+                      variant="contained"
+                      color="primary"
+                      disableElevation
+                      style={{
+                        float: "right",
+                        height: "57px",
+                        marginRight: "110px",
+                        marginTop:'35px'
+                      }}
                       onClick={() =>
                         this.setState({
                           addModalShow: true,
@@ -276,7 +300,6 @@ class Lesson extends React.Component {
                       content={this.state.content}
                       handleInputContent={(e) => this.handleInputContent(e)}
                     />
-                  </ButtonToolbar>
                   {/* <p className="card-category" style={{ width: '50%' }}>
                     Created using Montserrat Font Family
                 </p> */}

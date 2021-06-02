@@ -17,18 +17,28 @@ import {
   Row,
   Col,
 } from "react-bootstrap";
+import { makeStyles, withStyles } from '@material-ui/core/styles';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
 import API from "../../api";
 import Button from "@material-ui/core/Button";
 import Pagination from "@material-ui/lab/Pagination";
 import { Route } from "react-router";
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import NativeSelect from '@material-ui/core/NativeSelect';
+import InputBase from '@material-ui/core/InputBase';
 //import CreateExam from "./Exam/CreateExam";
 
 function ListExam() {
   const [dataExam, setDataExam] = useState([]);
+  const [dataViewExam,setDataViewExam]= useState([]);
+  const [type,setType] = useState('');
   const getAllApi = () => {
-    API.get(`exam/findAll`).then((res) => {
+    API.get(`exam/findExamLesson `).then((res) => {
       const dataExam = res.data;
       setDataExam(dataExam);
+      setDataViewExam(dataExam);
     });
   };
   let { path, url } = useRouteMatch();
@@ -39,8 +49,8 @@ function ListExam() {
     if (
       window.confirm(
         "Do you want to delete " +
-          dataExam.find((x) => x.id === id).title +
-          " ?"
+        dataExam.find((x) => x.id === id).title +
+        " ?"
       )
     ) {
       API.delete(`exam/delete/${id}`).then((res) => {
@@ -49,8 +59,12 @@ function ListExam() {
       });
     }
   };
+  const UpdateExam = (id) => {
+    sessionStorage.setItem("idExam", id);
+    window.location = "/admin/exam/updateExam";
+  }
   // let { path, url } = useRouteMatch();
-  const ViewDataTable = dataExam.map((data, i) => {
+  const ViewDataTable = dataViewExam.map((data, i) => {
     return (
       <tr>
         <td>{data.title}</td>
@@ -61,6 +75,7 @@ function ListExam() {
           <i
             className="zmdi zmdi-edit"
             style={{ width: "10%", marginRight: "10px" }}
+            onClick={() => UpdateExam(data.id)}
           />
           <i
             className="zmdi zmdi-delete"
@@ -71,6 +86,33 @@ function ListExam() {
       </tr>
     );
   });
+  const getAllDataExamAndPractice = (type) => {
+    API.get(`/exam/findByType/${type}`).then((res) => {
+      const dataExam = res.data;
+     // setDataExam(dataExam);
+      setDataViewExam(dataExam);
+    });
+  };
+  
+  const  handleChange = (event) => {
+    setType(event.target.value);
+    if(type===''){
+      console.log("type:  ")
+      setDataViewExam(dataExam);
+      console.log(dataViewExam);
+    }
+    else{
+      setDataViewExam(dataExam.filter(data => data.type === type))
+      console.log("Exam:",dataViewExam);
+    }
+  };
+  const useStyles = makeStyles((theme) => ({
+    margin: {
+      margin: theme.spacing(1),
+    },
+  }));
+  console.log(type)
+  console.log(dataExam)
   return (
     <>
       <Container fluid>
@@ -79,6 +121,21 @@ function ListExam() {
             <Card id="selectedColumn" className="strpied-tabled-with-hover">
               <Card.Header>
                 <Card.Title as="h4">List of exam questions</Card.Title>
+                <FormControl className={useStyles.margin}>
+                  <InputLabel htmlFor="demo-customized-select-native">Type</InputLabel>
+                  <NativeSelect
+                    id="demo-customized-select-native"
+                    value={type}
+                    onChange={handleChange}
+                    //input={<BootstrapInput />}
+                    style={{width:"300px"}}
+                  >
+                    <option aria-label="None" value="" />
+                    <option value="exam">Exam</option>
+                    <option value="lesson">Lesson</option>
+                    <option value='practice'>Practice</option>
+                  </NativeSelect>
+                </FormControl>
                 <Link to={`${url}/createExam`}>
                   <Button
                     variant="contained"
@@ -113,16 +170,6 @@ function ListExam() {
           </Col>
         </Row>
       </Container>
-      {/* <Switch>
-        <Route
-          path={`${path}/createExam`}
-          render={(props) => <CreateExam {...props} />}
-        />
-        <Route
-          path={`${path}/list`}
-          render={(props) => <ListExam {...props} />}
-        />
-      </Switch> */}
     </>
   );
 }

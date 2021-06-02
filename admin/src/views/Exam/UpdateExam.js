@@ -15,13 +15,14 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Pagination from "@material-ui/lab/Pagination";
 import API from "../../api";
 import TextField from '@material-ui/core/TextField';
-class CreateExam extends React.Component {
+class UpdateExam extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       dataQuestion: [],
       checked: false,
-      arrQuestion: []
+      arrQuestion: [],
+      idExam : sessionStorage.getItem("idExam")
     }
   }
   getAllQuestion() {
@@ -32,8 +33,17 @@ class CreateExam extends React.Component {
         console.log(this.state.dataQuestion)
       })
   }
+  getExam() {
+    API.get(`exam/findById`)
+      .then(res => {
+        const dataQuestion = res.data;
+        this.setState({ dataQuestion });
+        console.log(this.state.dataQuestion)
+      })
+  }
   componentDidMount() {
     this.getAllQuestion();
+    console.log("IdExam:",this.state.idExam)
   }
   handleChange = (e) => {
     this.setState({ checked: e.target.value })
@@ -145,4 +155,4 @@ class CreateExam extends React.Component {
   }
 }
 
-export default CreateExam;
+export default UpdateExam;

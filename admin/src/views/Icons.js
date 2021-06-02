@@ -31,7 +31,7 @@ class Icons extends React.Component {
     };
   }
   getAllContest() {
-    
+
     API.get(`contest/findAll`).then((res) => {
       const dataContest = res.data;
       this.setState({ dataContest });
@@ -41,24 +41,59 @@ class Icons extends React.Component {
   componentDidMount() {
     this.getAllContest();
   }
+  validate() {
+    if (!this.state.data.timeStart) {
+      alert("Time start  not exist")
+      return false;
+    }
+    if (!this.state.data.timeEnd) {
+      alert("Time start  not exist")
+      return false;
+    }
+    if (!this.state.data.title) {
+      alert("Title is empty")
+      return false;
+    }
+    if (!this.state.data.idExam) {
+      alert("Exam is empty")
+      return false;
+    }
+    if (moment(this.state.data.timeStart).isAfter(this.state.data.timeEnd)) {
+      alert("Time contest incorrect ")
+      return false;
+    }
+    if (!moment(this.state.data.timeEnd).isAfter(Date().toLocaleString())) {
+      alert("Time end  incorrect ")
+      return false;
+    }
+    if (!moment(this.state.data.timeStart).isAfter(Date().toLocaleString())) {
+      alert("Time start  incorrect ")
+      return false;
+    }
+    return true;
+  }
   createContest = () => {
-    var dataCreate = {
-      title: this.state.data.title,
-      timeStart: moment(this.state.data.timeStart).format("YYYY-MM-DD HH:mm:ss"),
-      timeEnd:  moment(this.state.data.timeEnd).format("YYYY-MM-DD HH:mm:ss"),
-      idExam: this.state.data.idExam,
-    };
-    API.post(`contest/save`,dataCreate, {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-      },
-    }).then((res) => {
-      if (res && res.status === 200) {
-        this.setState({ addModalShow: false });
-        this.getAllContest();
-      }
-    });
+    //console.log(moment(this.state.data.timeStart).format("YYYY-MM-DDTHH:mm:ss.SSSSZ"));
+    const validate = this.validate();
+    if (validate) {
+      var dataCreate = {
+        title: this.state.data.title,
+        timeStart: moment(this.state.data.timeStart).format("YYYY-MM-DD HH:mm:ss"),
+        timeEnd: moment(this.state.data.timeEnd).format("YYYY-MM-DD HH:mm:ss"),
+        idExam: this.state.data.idExam,
+      };
+      API.post(`contest/save`, dataCreate, {
+        headers: {
+          "Content-Type": "application/json;charset=UTF-8",
+          "Access-Control-Allow-Origin": "*",
+        },
+      }).then((res) => {
+        if (res && res.status === 200) {
+          this.setState({ addModalShow: false });
+          this.getAllContest();
+        }
+      });
+    }
     //console.log(data)
   };
   updateContest = () => {
@@ -66,11 +101,10 @@ class Icons extends React.Component {
       id: this.state.data.id,
       title: this.state.data.title,
       timeStart: moment(this.state.data.timeStart).format("YYYY-MM-DD HH:mm:ss"),
-      timeEnd:  moment(this.state.data.timeEnd).format("YYYY-MM-DD HH:mm:ss"),
+      timeEnd: moment(this.state.data.timeEnd).format("YYYY-MM-DD HH:mm:ss"),
       idExam: this.state.data.idExam,
     };
     API.put(`contest/update`, dataUpdate, {
-      // Thay api update
       headers: {
         "Content-Type": "application/json;charset=UTF-8",
         "Access-Control-Allow-Origin": "*",
@@ -87,8 +121,8 @@ class Icons extends React.Component {
     if (
       window.confirm(
         "Do you want to delete " +
-          dataContest.find((x) => x.id === id).title +
-          " ?"
+        dataContest.find((x) => x.id === id).title +
+        " ?"
       )
     ) {
       API.delete(`contest/delete/${id}`).then((res) => {

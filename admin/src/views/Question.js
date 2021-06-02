@@ -17,7 +17,8 @@ import {
 import Pagination from "@material-ui/lab/Pagination";
 import Button from "@material-ui/core/Button";
 // react-bootstrap components
-import { storage  } from "../util/firebase_connect";
+import { storage } from "../util/firebase_connect";
+import ImportFile from './Question/ImportFile'
 class Question extends React.Component {
   constructor(props) {
     super(props);
@@ -25,6 +26,9 @@ class Question extends React.Component {
       dataQuestion: [],
       addModalShow: false,
       addModalTypeQuestion: true,
+      addModalFile: false,
+      idTopicFile: "",
+      file: '',
       selectedFile: "",
       answerA: "",
       answerB: "",
@@ -68,44 +72,103 @@ class Question extends React.Component {
       });
     }
   }
+  validate() {
+    if (!this.state.data.answerRight) {
+      alert("answer right is empty")
+      return false;
+    }
+    if (!this.state.data.idTopic) {
+      alert("Topic is empty")
+      return false;
+    }
+    if (!this.state.data.note) {
+      alert("Note is empty")
+      return false;
+    }
+    if (!this.state.data.title) {
+      alert("Title is empty")
+      return false;
+    }
+    if (this.state.answerB === '') {
+      alert("answer B is empty")
+      return false;
+    }
+    if (this.state.answerC === '') {
+      alert("answer C is empty")
+      return false;
+    }
+    if (this.state.answerD === '') {
+      alert("answer D is empty")
+      return false;
+    }
+    if (this.state.answerA === '') {
+      alert("answer A is empty")
+      return false;
+    }
+    return true
+  }
   createQuestion() {
-    var answer = [];
-    answer.push(
-      this.state.answerA,
-      this.state.answerB,
-      this.state.answerC,
-      this.state.answerD
-    );
-    var dataCreate = {
-      ...this.state.data,
-      answerChooses: answer,
-      selectedFile: this.props.selectedFile,
-    };
-    API.post(`question/save`, dataCreate, {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-      },
-    }).then((res) => {
-      if (res && res.status === 200) {
-        this.setState({
-          addModalShow: false,
-          data: {
-            answerRight: "",
-            idTopic: "",
-            note: "",
-            title: "",
+    // if (this.state.file !== '') {
+    //   this.uploadFile();
+    //   this.setState({
+    //     addModalShow: false,
+    //     data: {
+    //       answerRight: "",
+    //       idTopic: "",
+    //       note: "",
+    //       title: "",
+    //     },
+    //     selectedFile: "",
+    //     addModalTypeQuestion: true,
+    //     answerA: "",
+    //     answerB: "",
+    //     answerC: "",
+    //     answerD: "",
+    //   });
+    //   this.getAllQuestion();
+    // }
+    // else {
+      const validate = this.validate();
+      if (validate) {
+        var answer = [];
+        answer.push(
+          this.state.answerA,
+          this.state.answerB,
+          this.state.answerC,
+          this.state.answerD
+        );
+        var dataCreate = {
+          ...this.state.data,
+          answerChooses: answer,
+          selectedFile: this.props.selectedFile,
+        };
+        API.post(`question/save`, dataCreate, {
+          headers: {
+            "Content-Type": "application/json;charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
           },
-          selectedFile: "",
-          addModalTypeQuestion: true,
-          answerA: "",
-          answerB: "",
-          answerC: "",
-          answerD: "",
+        }).then((res) => {
+          if (res && res.status === 200) {
+            this.setState({
+              addModalShow: false,
+              data: {
+                answerRight: "",
+                idTopic: "",
+                note: "",
+                title: "",
+              },
+              selectedFile: "",
+              addModalTypeQuestion: true,
+              answerA: "",
+              answerB: "",
+              answerC: "",
+              answerD: "",
+            });
+            this.getAllQuestion();
+          }
         });
-        this.getAllQuestion();
       }
-    });
+    //}
   }
   updateQuestion() {
     var answer = [];
@@ -146,39 +209,54 @@ class Question extends React.Component {
       }
     });
   }
+  uploadFile() {
+    if (this.state.file !== '') {
+      const uploadTask = storage.ref(`images/${this.state.file.name}`).put(this.state.file);
+      uploadTask.on(
+        "state_changed",
+        snapshot => {
+        },
+        error => {
+          console.log(error);
+        },
+        () => {
+          storage
+            .ref("images")
+            .child(this.state.file.name)
+            .getDownloadURL()
+            .then(url => {
+              this.updateUrlBE(url);
+            });
+        }
+      )
+    }
+  }
+  updateUrlBE(urlFile) {
+    const data = {
+      url: urlFile,
+      idTopic:this.state.idTopicFile
+    }
+    console.log(data)
+    // API.post(`question/getFile`, data, {
+    //   headers: {
+    //     "Content-Type": "application/json;charset=UTF-8",
+    //     "Access-Control-Allow-Origin": "*",
+    //   },
+    // }).then((res) => {
+    //   if (res && res.status === 200) {
+    //     alert("Upload file is successful")
+    //   }
+    // })
+  }
   changeHandleFile(e) {
-    // console.log('file:',e.target.files[0]  )
-    // this.setState({ selectedFile: e.target.files[0] });
-    // console.log(this.state.selectedFile)
-    console.log("hahaha")
+    this.setState({ file: e.target.files[0] })
     const file = e.target.files[0];
-    console.log(file)
-    const uploadTask = storage.ref(`images/${file.name}`).put(file);
-    //   const fileRef = storageRef.child(file.name);
-    //    fileRef.put(file);
-    //  console.log( fileRef.child(file.name).getDownloadURL().then(url =>console.log(urf)));
-    uploadTask.on(
-      "state_changed",
-      snapshot => {
-        // const progress = Math.round(
-        //   (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-        // );
-        // setProgress(progress);
-      },
-      error => {
-        console.log(error);
-      },
-      () => {
-        storage
-          .ref("images")
-          .child(file.name)
-          .getDownloadURL()
-          .then(url => {
-            console.log(url);
-          });
-      }
-    )
+    console.log("File:", this.state.file)
   };
+  changeTopicFile(e) {
+    this.setState({ idTopicFile: e.target.value })
+    console.log(this.state.idTopicFile)
+  }
   handleChangeInput(e) {
     this.setState({
       data: {
@@ -188,16 +266,20 @@ class Question extends React.Component {
     });
   }
   render() {
+    console.log(this.state.dataQuestion)
     let addModalClose = () => this.setState({ addModalShow: false });
+    let addModalFileClose = () => this.setState({ addModalFile: false })
     let ViewDataTable = this.state.dataQuestion.map((data, i) => {
       let ViewAnswerChooses = data.answerChooses.map((answer) => {
         return <li style={{ "list-style-type": "none" }}>{answer}</li>;
       });
+      //console.log(data.answerChooses)
       return (
         <tr>
           <td style={{ width: "35%" }}>{data.title}</td>
           <td style={{ width: "20%" }}>{ViewAnswerChooses}</td>
           <td style={{ width: "10%" }}>{data.answerRight}</td>
+          <td>{data.nameTopic}</td>
           <td style={{ width: "35%" }}>{data.note} </td>
           <td>
             <i
@@ -234,6 +316,7 @@ class Question extends React.Component {
             <Card className="strpied-tabled-with-hover">
               <Card.Header>
                 <Card.Title as="h4">List of question</Card.Title>
+
                 <Button
                   variant="contained"
                   color="primary"
@@ -289,6 +372,28 @@ class Question extends React.Component {
                   answerC={this.state.answerC}
                   answerD={this.state.answerD}
                 />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  disableElevation
+                  style={{
+                    float: "right",
+                    height: "57px",
+                    marginRight: "110px",
+                    //marginTop: '35px'
+                  }}
+                  onClick={() => this.setState({ addModalFile: true })}
+                >
+                  Import File
+                    </Button>
+                <ImportFile
+                  show={this.state.addModalFile}
+                  onHide={addModalFileClose}
+                  changeHandleFile={(e) => this.changeHandleFile(e)}
+                  changeTopicFile = {(e) => this.changeTopicFile(e)}
+                  uploadFile = {()=>this.uploadFile()}
+                />
+
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
                 {/* <Grid>
@@ -296,7 +401,14 @@ class Question extends React.Component {
                       <DataGrid rows={rows} columns={columns} pageSize={10} checkboxSelection style={{ height: "300px" }} />
                     </div>
                   </Grid> */}
-                <Table className="table-hover table-striped">
+                <Table className="table-hover table-striped"
+                  style={{
+                    height: "800px",
+                    display: "block",
+                    overflowY: "scroll",
+                    width: "100%"
+                  }}
+                >
                   <thead>
                     <tr>
                       <th className="border-0" style={{ width: "35%" }}>
@@ -308,19 +420,25 @@ class Question extends React.Component {
                       <th className="border-0" style={{ width: "10%" }}>
                         Answer Right{" "}
                       </th>
+                      <th className="border-0" style={{ width: "10%" }}>
+                        Topic
+                      </th>
                       <th className="border-0" style={{ width: "35%" }}>
                         Explain
                       </th>
                     </tr>
                   </thead>
-                  <tbody>{ViewDataTable}</tbody>
+                  <tbody
+                  >
+                    {ViewDataTable}
+                  </tbody>
                 </Table>
               </Card.Body>
             </Card>
           </Col>
         </Row>
-        <Pagination defaultPage={1} count={3} style={{ padding: "10px 0" }} />
-      </Container>
+        {/* <Pagination defaultPage={1} count={3} style={{ padding: "10px 0" }} /> */}
+      </Container >
     );
   }
 }

@@ -22,6 +22,7 @@ import Button from "@material-ui/core/Button";
 import { Route } from "react-router";
 import CreateExam from "./Exam/CreateExam";
 import ListExam from "./Exam/ListExam";
+import UpdateExam from './Exam/UpdateExam';
 function Exam() {
   const [dataExam, setDataExam] = useState([]);
   const getAllApi = () => {
@@ -57,10 +58,10 @@ function Exam() {
         <td>{data.timeSet}</td>
         <td>{data.createOnUTC}</td>
         <td>
-          <i
+          {/* <i
             className="zmdi zmdi-edit"
             style={{ width: "10%", marginRight: "10px" }}
-          />
+          /> */}
           <i
             className="zmdi zmdi-delete"
             style={{ width: "10%", marginRight: "10px" }}
@@ -121,6 +122,10 @@ function Exam() {
         exact
           path={`${path}/`}
           render={(props) => <ListExam {...props} />}
+        />
+         <Route
+          path={`${path}/updateExam`}
+          render={(props) => <UpdateExam {...props} />}
         />
       </Switch> 
     //</>

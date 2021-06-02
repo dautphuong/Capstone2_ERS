@@ -16,6 +16,7 @@ import {
   KeyboardDatePicker,
 } from "@material-ui/pickers";
 import API from "../../api";
+import moment from 'moment';
 class ModalContest extends React.Component {
   constructor(props) {
     super(props);
@@ -24,7 +25,8 @@ class ModalContest extends React.Component {
     };
   }
   componentDidMount() {
-    API.get(`exam/findAll`).then((res) => {
+    const exam = 'exam'
+    API.get(`/exam/findByType/${exam}`).then((res) => {
       const dataExam = res.data;
       this.setState({ dataExam });
     });
@@ -62,7 +64,7 @@ class ModalContest extends React.Component {
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-             Contest
+            Contest
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>

@@ -32,8 +32,8 @@ class CreateTypeLesson extends React.Component {
     }
     buttonCreate = (event) => {
         event.preventDefault();
-        const data ={
-             name:this.state.name
+        const data = {
+            name: this.state.name
         };
         console.log(data)
         // console.log("data:" ,data)
@@ -63,6 +63,11 @@ class CreateTypeLesson extends React.Component {
                 <tr>
                     <td>{data.name}</td>
                     <td>
+                    <i
+                            className="zmdi zmdi-edit" 
+                            //onClick={this.DeleteType.bind(this, data.id)}
+                            style={{ width: "10%", marginRight: "10px" }}
+                        />
                         <i
                             className="zmdi zmdi-delete" onClick={this.DeleteType.bind(this, data.id)}
                             style={{ width: "10%", marginRight: "10px" }}
@@ -80,7 +85,7 @@ class CreateTypeLesson extends React.Component {
             >
                 <Modal.Header closeButton>
                     <Modal.Title id="contained-modal-title-vcenter">
-                        Create Type Lesson
+                        Create Topic
     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body >
@@ -100,19 +105,31 @@ class CreateTypeLesson extends React.Component {
                     >
                         Create type
                     </Button>
-                    <Table className="table-hover table-striped">
+                    <Table className="table-hover table-striped" style={{
+                        
+                        height: "300px",
+                        display: "block",
+                        overflowY: "scroll",
+                        width: "100%"
+                    }}
+                    >
                         <thead>
-                            <tr>
+                            < tr >
                                 <th className="border-0">Name</th>
-                                <th className="border-0">Name</th>
+                                <th className="border-0"></th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody 
+                        // style={{
+                        //     height: "50px !important",
+                        //     overflowY: "scroll"
+                        // }}
+                        >
                             {ViewDataTable}
                         </tbody>
                     </Table>
-                </Modal.Body>
-            </Modal>
+                </Modal.Body >
+            </Modal >
         )
     }
 }

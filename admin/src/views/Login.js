@@ -67,13 +67,13 @@ class Login extends React.Component {
                                     containerClass="mb-0"
                                     onChange={(e)=> this.handleInput(e)}
                                 />
-                                <p className="font-small blue-text d-flex justify-content-end pb-3">
+                                {/* <p className="font-small blue-text d-flex justify-content-end pb-3">
                                     Forgot
                 <a href="#!" className="blue-text ml-1">
 
                                         Password?
                 </a>
-                                </p>
+                                </p> */}
                                 <div className="text-center mb-3">
                                     <MDBBtn
                                         type="button"
@@ -85,7 +85,7 @@ class Login extends React.Component {
                                         Sign in
                 </MDBBtn>
                                 </div>
-                                <p className="font-small dark-grey-text text-right d-flex justify-content-center mb-3 pt-2">
+                                {/* <p className="font-small dark-grey-text text-right d-flex justify-content-center mb-3 pt-2">
 
                                     or Sign in with:
               </p>
@@ -114,16 +114,16 @@ class Login extends React.Component {
                                     >
                                         <MDBIcon fab icon="google-plus-g" className="blue-text" />
                                     </MDBBtn>
-                                </div>
+                                </div> */}
                             </MDBCardBody>
                             <MDBModalFooter className="mx-5 pt-3 mb-1">
-                                <p className="font-small grey-text d-flex justify-content-end">
+                                {/* <p className="font-small grey-text d-flex justify-content-end">
                                     Not a member?
                 <a href="#!" className="blue-text ml-1">
 
                                         Sign Up
                 </a>
-                                </p>
+                                </p> */}
                             </MDBModalFooter>
                         </MDBCard>
                     </MDBCol>
