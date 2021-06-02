@@ -59,8 +59,9 @@ function ListExam() {
       });
     }
   };
-  const UpdateExam = (id) => {
+  const UpdateExam = (id,type) => {
     sessionStorage.setItem("idExam", id);
+    sessionStorage.setItem("type", type);
     window.location = "/admin/exam/updateExam";
   }
   // let { path, url } = useRouteMatch();
@@ -75,7 +76,7 @@ function ListExam() {
           <i
             className="zmdi zmdi-edit"
             style={{ width: "10%", marginRight: "10px" }}
-            onClick={() => UpdateExam(data.id)}
+            onClick={() => UpdateExam(data.id,data.type)}
           />
           <i
             className="zmdi zmdi-delete"
