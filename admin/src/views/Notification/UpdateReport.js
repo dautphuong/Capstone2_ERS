@@ -59,8 +59,8 @@ class UpdateReport extends React.Component {
               id="demo-simple-select "
               fullWidth
               name="idTopic"
-              //value={this.props.data.idTopic}
-              //onChange={(e) => this.props.handleChangeInput(e)}
+              value={this.props.data.idTopic}
+              onChange={(e) => this.props.handleChangeInput(e)}
             >
               {viewTopic}
             </Select>
@@ -69,53 +69,53 @@ class UpdateReport extends React.Component {
             id="standard-password-input"
             label="Title"
             name="title"
-           // value={this.props.data.title}
-            //onChange={(e) => this.props.handleChangeInput(e)}
+           value={this.props.data.title}
+            onChange={(e) => this.props.handleChangeInput(e)}
           />
           <br />
           <TextField
             id="standard-password-input"
             label="A."
-           // value={this.props.answerA}
-            //onChange={(e) => this.props.setStateAnswerA(e)}
+           value={this.props.answerA}
+           onChange={(e) => this.props.setStateAnswerA(e)}
           />
           <TextField
             id="standard-password-input"
             label="B."
             style={{ marginLeft: '80px' }}
-            //value={this.props.answerB}
-            //onChange={(e) => this.props.setStateAnswerB(e)}
+            value={this.props.answerB}
+            onChange={(e) => this.props.setStateAnswerB(e)}
           />
           <br />
           <TextField
             id="standard-password-input"
             label="C."
-            //value={this.props.answerC}
-            //onChange={(e) => this.props.setStateAnswerC(e)}
+            value={this.props.answerC}
+            onChange={(e) => this.props.setStateAnswerC(e)}
           />
 
           <TextField
             id="standard-password-input"
             label="D."
             style={{ marginLeft: '80px' }}
-            //value={this.props.answerD}
-            //onChange={(e) => this.props.setStateAnswerD(e)}
+           value={this.props.answerD}
+           onChange={(e) => this.props.setStateAnswerD(e)}
           />
           <br />
           <TextField
             id="standard-password-input"
             label="Answer Right"
             name="answerRight"
-            //value={this.props.data.answerRight}
-            //onChange={(e) => this.props.handleChangeInput(e)}
+            value={this.props.data.answerRight}
+            onChange={(e) => this.props.handleChangeInput(e)}
           />
           <TextField
             id="standard-password-input"
             label="Note"
             name="note"
             style={{ marginLeft: '80px' }}
-            //value={this.props.data.note}
-            //onChange={(e) => this.props.handleChangeInput(e)}
+            value={this.props.data.note}
+            onChange={(e) => this.props.handleChangeInput(e)}
           />
           <br />
 
@@ -124,7 +124,7 @@ class UpdateReport extends React.Component {
 
           <Button
             style={{ marginLeft: "26%" }}
-            //onClick={this.props.updateQuestion}
+            onClick={this.props.updateQuestion}
           >
             Submit
             </Button>

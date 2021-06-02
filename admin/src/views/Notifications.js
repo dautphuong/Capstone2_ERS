@@ -23,7 +23,17 @@ class Notifications extends React.Component {
     this.state = {
       dataNotification: [],
       dataQuestion: [],
-      addModalShow : false
+      addModalShow: false,
+      answerA: "",
+      answerB: "",
+      answerC: "",
+      answerD: "",
+      data: {
+        answerRight: "",
+        idTopic: "",
+        note: "",
+        title: "",
+      },
     };
   }
   getAllNotifications() {
@@ -39,12 +49,13 @@ class Notifications extends React.Component {
     this.getAllNotifications();
   }
   DeleteNotification(id) {
+    console.log(id);
     const report = this.state.dataNotification.find(x => x.id === id)
     console.log(report)
     if (
       window.confirm(
         "Do you want to delete report  " +
-        this.state.dataQuestion.find((x) => x.id === report.idQuestion).title +
+        this.state.dataNotification.find((x) => x.id === id).question.title +
         " ?"
       )
     ) {
@@ -55,6 +66,54 @@ class Notifications extends React.Component {
         })
         .then(() => this.getAllNotifications());
     }
+  }
+  updateQuestion() {
+    var answer = [];
+    answer.push(
+      this.state.answerA,
+      this.state.answerB,
+      this.state.answerC,
+      this.state.answerD
+    );
+    var dataUpdate = {
+      ...this.state.data,
+      answerChooses: answer,
+      selectedFile: this.props.selectedFile,
+    };
+    console.log(dataUpdate)
+    API.put(`question/update`, dataUpdate, {
+      headers: {
+        "Content-Type": "application/json;charset=UTF-8",
+        "Access-Control-Allow-Origin": "*",
+      },
+    }).then((res) => {
+      if (res && res.status === 200) {
+        this.setState({
+          addModalShow: false,
+          data: {
+            answerRight: "",
+            idTopic: "",
+            note: "",
+            title: "",
+          },
+          selectedFile: "",
+          addModalTypeQuestion: true,
+          answerA: "",
+          answerB: "",
+          answerC: "",
+          answerD: "",
+        });
+        this.getAllNotifications();
+      }
+    });
+  }
+  handleChangeInput(e) {
+    this.setState({
+      data: {
+        ...this.state.data,
+        [e.target.name]: e.target.value,
+      },
+    });
   }
   render() {
     let addModalClose = () => this.setState({ addModalShow: false });
@@ -72,11 +131,21 @@ class Notifications extends React.Component {
           {/* <td style={{ width: "35%" }}>{data.note} </td> */}
           <td>{data.content}</td>
           <td>
-          <i
+            <i
               className="zmdi zmdi-edit"
               style={{ width: "10%", marginRight: "10px" }}
-              onClick={()=>{
+              onClick={() => {
                 this.setState({ addModalShow: true });
+                this.setState({
+                  data: {
+                    ...this.state.data,
+                    ...data.question,
+                  },
+                  answerA: data.question.answerChooses[0],
+                  answerB: data.question.answerChooses[1],
+                  answerC: data.question.answerChooses[2],
+                  answerD: data.question.answerChooses[3],
+                });
               }}
             />
             <i
@@ -120,6 +189,25 @@ class Notifications extends React.Component {
                 <UpdateReport
                   show={this.state.addModalShow}
                   onHide={addModalClose}
+                  data={this.state.data}
+                  answerA={this.state.answerA}
+                  handleChangeInput={(e) => this.handleChangeInput(e)}
+                  updateQuestion={() => this.updateQuestion()}
+                  setStateAnswerA={(e) =>
+                    this.setState({ answerA: e.target.value })
+                  }
+                  setStateAnswerB={(e) =>
+                    this.setState({ answerB: e.target.value })
+                  }
+                  setStateAnswerC={(e) =>
+                    this.setState({ answerC: e.target.value })
+                  }
+                  setStateAnswerD={(e) =>
+                    this.setState({ answerD: e.target.value })
+                  }
+                  answerB={this.state.answerB}
+                  answerC={this.state.answerC}
+                  answerD={this.state.answerD}
                 />
               </Table>
             </Card.Body>
