@@ -237,16 +237,16 @@ class Question extends React.Component {
       idTopic:this.state.idTopicFile
     }
     console.log(data)
-    // API.post(`question/getFile`, data, {
-    //   headers: {
-    //     "Content-Type": "application/json;charset=UTF-8",
-    //     "Access-Control-Allow-Origin": "*",
-    //   },
-    // }).then((res) => {
-    //   if (res && res.status === 200) {
-    //     alert("Upload file is successful")
-    //   }
-    // })
+    API.post(`question/getFile`, data, {
+      headers: {
+        "Content-Type": "application/json;charset=UTF-8",
+        "Access-Control-Allow-Origin": "*",
+      },
+    }).then((res) => {
+      if (res && res.status === 200) {
+        alert("Upload file is successful")
+      }
+    })
   }
   changeHandleFile(e) {
     this.setState({ file: e.target.files[0] })

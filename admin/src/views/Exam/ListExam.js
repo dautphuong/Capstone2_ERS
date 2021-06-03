@@ -88,25 +88,29 @@ function ListExam() {
     );
   });
   const getAllDataExamAndPractice = (type) => {
-    API.get(`/exam/findByType/${type}`).then((res) => {
+    API.get(`exam/findByType/${type}`).then((res) => {
       const dataExam = res.data;
      // setDataExam(dataExam);
       setDataViewExam(dataExam);
     });
   };
   
-  const  handleChange = (event) => {
-    setType(event.target.value);
+  const  handleChange = (e) => {
+    setType(e.target.value);
+    let type= e.target.value;  
+    let dataE = dataExam;
+    console.log({dataExam})
     if(type===''){
-      console.log("type:  ")
       setDataViewExam(dataExam);
-      console.log(dataViewExam);
+      console.log("haha : ", dataViewExam);
     }
     else{
-      setDataViewExam(dataExam.filter(data => data.type === type))
+      dataE = dataE.filter(data => data.type === type)
+      setDataViewExam(dataE)
       console.log("Exam:",dataViewExam);
     }
   };
+
   const useStyles = makeStyles((theme) => ({
     margin: {
       margin: theme.spacing(1),
