@@ -38,8 +38,6 @@ ReactDOM.render(
       </Route>
       <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
       <Redirect from="/admin/login" to="/admin/dashboard" />
-      <Route path="/admin/createExam"  render={(props) => <CreateExam {...props} />} />
-      
     </Switch>
   </Router>
   </React.StrictMode>,
