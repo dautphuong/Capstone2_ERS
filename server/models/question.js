@@ -1,13 +1,21 @@
 const firebase = require('../util/firebase_connect');
 const snapArray = require('../util/snapshot_to_array')
 const questionArr = require('../util/arrayQuestion')
-
+const docx=require('../util/docx');
 module.exports = class Quetion {
     title; //String
     answerChooses; //array
     answerRight; //String
     note; //String
     idTopic; //Topic
+
+    prototype(){
+        this.title = null;
+        this.answerChooses = null;
+        this.answerRight = null;
+        this.note = null;
+        this.idTopic = null;
+    }
 
     constructor(title, answerChooses, answerRight, note, idTopic) {
         this.title = title;
@@ -57,14 +65,6 @@ module.exports = class Quetion {
         .then(function (snapshot) {
             questionArr.question_array(snapArray.snap_array(snapshot))
             callback(snapArray.snap_array(snapshot));
-
-            // var resultArr=[];
-            // snapArray.snap_array(snapshot).forEach(function(item){
-            //     questionValue.question_value(item.idQuestion, function(data) {
-            //         resultArr.push(data);
-            //     })
-            // });
-            // callback(resultArr);
         });
              
     }
@@ -120,7 +120,7 @@ module.exports = class Quetion {
                 //delete exam question
         firebase.database().ref("exam-question/").once("value").then(function(snapshot) {
             if (snapshot.exists()) {
-                snapArray.snap_array(snapshot).filter(value => value.idQuestion == id).forEach(function(item){
+                snapArray.snap_array(snapshot).filter(value => value.idQuestion === id).forEach(function(item){
                     firebase.database().ref("exam-question/" + item.id).remove();
                 });
             } 
@@ -128,7 +128,7 @@ module.exports = class Quetion {
            //delete lesson question
            firebase.database().ref("lesson-question/").once("value").then(function(snapshot) {
             if (snapshot.exists()) {
-                snapArray.snap_array(snapshot).filter(value => value.idQuestion == id).forEach(function(item){
+                snapArray.snap_array(snapshot).filter(value => value.idQuestion === id).forEach(function(item){
                     firebase.database().ref("lesson-question/" + item.id).remove();
                 });
             } 
@@ -160,7 +160,34 @@ module.exports = class Quetion {
 
     findAll(callback) {
         firebase.database().ref("questions").once("value").then(function(snapshot) {
-            callback(snapArray.snap_array(snapshot));
+            callback(snapArray.snap_arrQ(snapshot));
         })
+    }
+
+    saveListFile(req,idTopic, callback) {
+        req.forEach(value=>{
+                    firebase.database().ref("questions/").push().set({
+                        title: value.title,
+                        answerChooses: value.answerChooses,
+                        answerRight: value.answerRight,
+                        idTopic: idTopic,
+                        note: value.note,
+                    });
+        })       
+        callback("successfull");
+    }
+
+    findQuestionByIdExam(idExam, callback) {
+        firebase.database().ref("exam-question").orderByChild("idExam").equalTo(idExam).once('value')
+        .then(function (snapshot) {
+            callback(snapArray.snap_arrQuestionbyExam(snapshot));
+        });
+    }
+
+    findQuestionByIdLesson(idLesson, callback) {
+        firebase.database().ref("lesson-question").orderByChild("idLesson").equalTo(idLesson).once('value')
+        .then(function (snapshot) {
+            callback(snapArray.snap_arrQuestionbyExam(snapshot));
+        });
     }
 }

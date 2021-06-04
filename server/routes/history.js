@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const History = require('../models/history');
-
+const { validationResult } = require('express-validator');
+const { validate } = require('../util/validator');
 /**
  * @swagger
  * components:
@@ -13,6 +14,7 @@ const History = require('../models/history');
  *         - idExam
  *         - answer
  *         - result
+ *         - idContest
  *       properties:
  *         id:
  *           type: string
@@ -29,10 +31,14 @@ const History = require('../models/history');
  *         result:
  *           type: string
  *           description: point
+ *         idContest:
+ *           type: string
+ *           description: idContest
  *       example:
  *         id: random
  *         idUser: id User
  *         idExam: id Exam
+ *         idContest: id Contest
  *         answer: [{"question":"id question","choose":"answer"},{"question":"id question 3","choose":""},{"question":"id question 3","choose":"answer 3"}]
  *         result: 32/40
  */
@@ -66,13 +72,20 @@ const History = require('../models/history');
  *       500:
  *         description: Some server error
  */
- router.post('/save', (req, res) => {
+ router.post('/save',
+ validate.validateHistory(),
+ (req, res) => {
     const history = new History(
+        req.body.idContest,
         req.body.idUser,
         req.body.idExam,
         req.body.answer,
         req.body.result
     );
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
     try {
         history.save(history, function(data) {
             res.send(data)
@@ -169,4 +182,35 @@ const History = require('../models/history');
 });
 
 
+/**
+ * @swagger
+ * /history/findById/{id}:
+ *   get:
+ *     summary: History theo id
+ *     tags: [History]
+ *     parameters: 
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The id
+ * 
+ *     responses:
+ *       200:
+ *         description: The History description by id
+ *         contens:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/History'
+ *       404:
+ *         description: The user was not found
+ */
+// router.get('/findByid/:id',verifyToken, function(req, res) {
+router.get('/findByid/:id', function(req, res) {
+    const history = new History();
+    history.findById(req.params.id, function(data) {
+        res.send(data)
+    })
+});
 module.exports = router;

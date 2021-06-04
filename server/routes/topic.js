@@ -8,12 +8,17 @@ const snapArray = require('../util/snapshot_to_array')
  *     Topic:
  *       type: object
  *       required:
+ *         - id
  *         - name
  *       properties:
+ *         id:
+ *           type: string
+ *           description: the id topic       
  *         name:
  *           type: string
- *           description: the topic
+ *           description: the name topic
  *       example:
+ *         id: idTopic
  *         name: danh từ
  */
 
@@ -110,5 +115,37 @@ router.delete("/delete/:id", function(req, res) {
     
 });
 
+/**
+ * @swagger
+ * /topic/update:
+ *   put:
+ *     summary: update name topic
+ *     tags: [Topic]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Topic'
+ *     responses:
+ *       200:
+ *         description: The topic was successfully updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Topic'
+ *       500:
+ *         description: Some server error
+ */
+ router.put('/update', function(req, res) {
+    const topic = new Topic();
+    try {
+        topic.update(req.body, function(data) {
+            res.send(data)
+        });
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});
 module.exports = router;
 //ok

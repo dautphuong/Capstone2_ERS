@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const Report = require('../models/report');
+const snapReport = require('../util/findReportQuestion')
 
 /**
  * @swagger
@@ -174,5 +175,27 @@ const Report = require('../models/report');
     })
 });
 
-
+/**
+ * @swagger
+ * /report/findReportQuestion:
+ *   get:
+ *     summary: Danh sách report
+ *     tags: [Report]
+ *     responses:
+ *       200:
+ *         description: The list of the report
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Report'
+ */
+ router.get('/findReportQuestion', function(req, res) {
+    const report = new Report();
+    report.findReportQuestion(function(data) {
+        snapReport.resetArr();
+        res.send(data)
+    })
+});
 module.exports = router;

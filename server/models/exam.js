@@ -1,5 +1,6 @@
 const firebase = require('../util/firebase_connect');
-const snapArray = require('../util/snapshot_to_array')
+const snapArray = require('../util/snapshot_to_array');
+const snapType = require('../util/findAllExam');
 module.exports = class Exam {
     title; //String
     type; //Bài tập - Thực hành - Thi
@@ -29,7 +30,7 @@ module.exports = class Exam {
                     if (snapshot.exists()) {
         
                 firebase.database().ref("exam-question/").push().set({
-                    idLesson: uniqueKey,
+                    idExam: uniqueKey,
                     idQuestion: item
                 });
             }
@@ -144,5 +145,9 @@ module.exports = class Exam {
         firebase.database().ref("exams").once("value").then(function(snapshot) {
             callback(snapArray.snap_array(snapshot));
         })
+    }
+
+    findExamLessonHaveType(callback) {
+        callback(snapType.findAllType());
     }
 }
