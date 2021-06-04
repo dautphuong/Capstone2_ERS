@@ -57,6 +57,7 @@ const contestRouter = require('./routes/contest');
 const historyRouter = require('./routes/history');
 const reportRouter = require('./routes/report');
 const notificationRouter=require('./routes/notification')
+const translateRouter=require('./routes/translate')
 
 //Router Middlewares
 app.use('/user', authRouter);
@@ -69,6 +70,7 @@ app.use('/contest', contestRouter);
 app.use('/history', historyRouter);
 app.use('/report', reportRouter);
 app.use('/notification', notificationRouter);
+app.use('/translate', translateRouter);
 
 
 app.listen(process.env.PORT || 3000, function(){
