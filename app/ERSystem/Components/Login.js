@@ -55,6 +55,7 @@ export default class Login extends Component {
                             }))
 
                         AsyncStorage.setItem("token", res.data.token)
+                        console.log(res.data.token)
                         AsyncStorage.setItem("id", res.data.id)
                     },
 
@@ -165,14 +166,6 @@ export default class Login extends Component {
                         onPress={() => navigation.navigate('Register')}
                     >
                         <Text style={styles.Text}>Tạo tài khoản</Text>
-                    </TouchableOpacity>
-                    <Divider style={styles.divider}></Divider>
-                    <TouchableOpacity style={styles.btnGoogle}>
-                        <Ionicons name={'logo-google'}
-                            size={28}
-                            color={'rgba(238,0,0,0.7)'}
-                            style={styles.inputIconGoogle} />
-                        <Text style={styles.textGoogle}>Đăng nhập với Google</Text>
                     </TouchableOpacity>
                 </ImageBackground>
             </TouchableWithoutFeedback>

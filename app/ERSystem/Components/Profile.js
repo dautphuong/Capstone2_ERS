@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-
 import { View, FlatList, TouchableOpacity, Text, StyleSheet, ImageBackground } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -14,6 +13,7 @@ export default class Profile extends Component {
 
     async componentDidMount() {
         let idUser = await AsyncStorage.getItem('id');
+        console.log(idUser)
         try {
             axios.get(`/user/findById/${idUser}`)
                 .then(res => {
