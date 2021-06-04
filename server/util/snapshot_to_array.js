@@ -41,13 +41,35 @@ module.exports = {
 
         return returnArr3;
     },
+    snap_arrQuestionbyExam: function (snapshot) {
+        var questionArr = [];
 
+        snapshot.forEach(function (childSnapshot) {
+            var item = childSnapshot.val();
+            questionArr.push(item.idQuestion);
+        });
+
+        return questionArr;
+    },
+    snap_type_lesson: function (snapshot) {
+        var lessonArr = [];
+
+        snapshot.forEach(function (childSnapshot) {
+            var item = childSnapshot.val();
+            item.id = childSnapshot.key;
+            item.type='lesson';
+            lessonArr.push(item);
+        });
+
+        return lessonArr;
+    },
     resetArr:function(){
         returnArr2=[];
     },
     resetArr2:function(){
         returnArr3=[];
     }
+    
 }
 var getNameTopicQ = (item, nameTopic) => {
     item.nameTopic = nameTopic;

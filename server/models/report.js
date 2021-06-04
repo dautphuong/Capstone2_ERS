@@ -1,5 +1,6 @@
 const firebase = require('../util/firebase_connect');
 const snapArray = require('../util/snapshot_to_array')
+const snapReport = require('../util/findReportQuestion')
 
 module.exports=class Report{
     content;//String
@@ -63,4 +64,12 @@ module.exports=class Report{
             }
         });
     }
+
+    
+    findReportQuestion(callback) {
+        firebase.database().ref("reports").once("value").then(function(snapshot) {
+            callback(snapReport.snap_array(snapshot));
+        })
+    }
+    
 }

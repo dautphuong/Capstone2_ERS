@@ -108,15 +108,13 @@ module.exports = class User {
         });
     }
 
-    updateUser(req, callback) {
+    updatePassword(req, callback) {
         bcrypt.hash(req.password, 10, function (err, hash){
 
         firebase.database().ref("learners/" + req.id).once("value").then(function(snapshot) {
             if (snapshot.exists()) {
                 firebase.database().ref("learners/" + req.id).update({
                     password: hash,
-                    email: req.email,
-                    avatar: req.avatar,
                 });
                 callback("successfull");
             } else {
@@ -212,6 +210,31 @@ module.exports = class User {
                 });
             }else{               
                    callback('username wrong');
+            }
+        });
+    }
+
+    updateAvatar(req, callback) {
+        firebase.database().ref("learners/" + req.id).once("value").then(function(snapshot) {
+            if (snapshot.exists()) {
+                firebase.database().ref("learners/" + req.id).update({
+                    avatar: req.avatar,
+                });
+                callback("successfull");
+            } else {
+                callback("Data does not exits");
+            }
+        });
+    }
+    updateEmail(req, callback) {
+        firebase.database().ref("learners/" + req.id).once("value").then(function(snapshot) {
+            if (snapshot.exists()) {
+                firebase.database().ref("learners/" + req.id).update({
+                    email: req.email,
+                });
+                callback("successfull");
+            } else {
+                callback("Data does not exits");
             }
         });
     }

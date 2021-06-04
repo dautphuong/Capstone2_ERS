@@ -33,7 +33,7 @@ let validateRegisterUser = () => {
   let validateHistory=()=>{
     return[
       check('idUser').not().isEmpty().withMessage('id user does not Empty'),
-      check('title').not().isEmpty().withMessage('id Exam does not Empty'),
+      check('idExam').not().isEmpty().withMessage('id Exam does not Empty'),
       check('result').not().isEmpty().withMessage('result does not Empty'),
     ]
   }
@@ -46,12 +46,19 @@ let validateRegisterUser = () => {
 
     ]
   }
+  let validateFileTopic=()=>{
+    return[
+      check('idTopic').not().isEmpty().withMessage('id topic does not Empty'),
+      check('url').not().isEmpty().withMessage('url does not Empty'),
+    ]
+  }
 
   let validate = {
     validateRegisterUser:validateRegisterUser,
     validateLesson:validateLesson,
     validateExam:validateExam,
     validateHistory:validateHistory,
-    validateContest:validateContest
+    validateContest:validateContest,
+    validateFileTopic:validateFileTopic
   };
   module.exports = {validate};

@@ -2,7 +2,8 @@ const router = require('express').Router();
 const Question = require('../models/question');
 const docx=require('../util/docx');
 const snapArray = require('../util/snapshot_to_array')
-
+const { validationResult } = require('express-validator');
+const { validate } = require('../util/validator');
 /**
  * @swagger
  * components:
@@ -364,7 +365,9 @@ router.delete("/delete/:id", function(req, res) {
  *       500:
  *         description: Some server error
  */
- router.post('/getFile', (req, res) => {
+ router.post('/getFile',
+ validate.validateFileTopic(),
+ (req, res) => {
     try {
         const question = new Question();
         docx.docx(req.body.url,function(dataFile) {
@@ -375,6 +378,66 @@ router.delete("/delete/:id", function(req, res) {
     } catch (err) {
         res.status(400).send(err);
     }
+});
+
+/**
+ * @swagger
+ * /question/findQuestionByIdExam/{idExam}:
+ *   get:
+ *     summary: danh sách id question theo exam
+ *     tags: [Question]
+ *     parameters:
+ *       - in: path
+ *         name: idExam
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The id exam 
+ *     responses:
+ *       200:
+ *         description: The questions description by exam
+ *         contens:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Question'
+ *       404:
+ *         description: The user was not found
+ */
+ router.get('/findQuestionByIdExam/:idExam', function(req, res) {
+    const question = new Question();
+    question.findQuestionByIdExam(req.params.idExam, function(data) {
+        res.send(data)
+    })
+});
+
+/**
+ * @swagger
+ * /question/findQuestionByIdLesson/{idLesson}:
+ *   get:
+ *     summary: danh sách id question theo lesson
+ *     tags: [Question]
+ *     parameters:
+ *       - in: path
+ *         name: idLesson
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The id lesson 
+ *     responses:
+ *       200:
+ *         description: The questions description by lesson
+ *         contens:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Question'
+ *       404:
+ *         description: The user was not found
+ */
+ router.get('/findQuestionByIdLesson/:idLesson', function(req, res) {
+    const question = new Question();
+    question.findQuestionByIdLesson(req.params.idLesson, function(data) {
+        res.send(data)
+    })
 });
 
 module.exports = router;
