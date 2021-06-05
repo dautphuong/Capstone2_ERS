@@ -146,6 +146,7 @@ export default class Contest extends Component {
             })
         console.log(req);
         const { navigation } = this.props
+
         if (this.state.correct >= 5) {
             return (
                 Alert.alert(
@@ -257,8 +258,29 @@ export default class Contest extends Component {
                 <ImageBackground source={quiz} style={styles.container}>
                     <CountDown
                         size={20}
-                        until={4000}
-                        onFinish={() => this.final()}
+                        until={timeSet * 1}
+                        onFinish={() => {
+                            var result = this.state.correct;
+                            var contentPractice = this.state.contentPractice
+                            let arrChoose = this.state.Chooses
+                            for (let i = 0; i < contentPractice.length; i++) {
+                                if (arrChoose[i] == undefined) {
+                                    arrChoose[i] = { question: contentPractice[i].id, choose: ' ' };
+
+                                } else
+                                    if (arrChoose[i].choose === contentPractice[i].answerRight) {
+                                        result++;
+                                    }
+
+                            }
+                            this.setState({
+                                correct: result
+                            }, () => {
+                                console.log(this.state.correct);
+                                this.final()
+                            });
+
+                        }}
                         digitStyle={{ backgroundColor: '#FFF', borderWidth: 2, borderColor: '#000066' }}
                         digitTxtStyle={{ color: '#996600' }}
                         timeLabelStyle={{ color: 'red', fontWeight: 'bold' }}

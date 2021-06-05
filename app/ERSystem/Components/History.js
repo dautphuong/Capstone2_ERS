@@ -43,14 +43,16 @@ export default class CalendarExam extends Component {
         var timeStart = (content.contest.timeStart.split(' ')[0].split('-')).concat(content.contest.timeStart.split(' ')[1].split(':'));
         var timeEnd = (content.contest.timeEnd.split(' ')[0].split('-')).concat(content.contest.timeEnd.split(' ')[1].split(':'));
         var d1 = new Date(timeStart[0], timeStart[1] - 1, timeStart[2], timeStart[3], timeStart[4], timeStart[5]);
-        var d2 = new Date(timeEnd[0], timeEnd[1] - 1, timeEnd[2], timeEnd[3], timeEnd[4], timeEnd[5]);
+        var d2 = new Date(timeEnd[0], timeEnd[1] - 1, timeEnd[2] - 1, timeEnd[3], timeEnd[4], timeEnd[5]);
         var now = new Date();
-
-        if (d1 - now < 0 && d2 - now > 0) {
-            return true
+        console.log(d2);
+        console.log(now);
+        console.log(d2 - now);
+        if (d2 - now < 0) {
+            return false
         }
         else {
-            return false
+            return true
         }
     }
 

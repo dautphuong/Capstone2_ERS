@@ -71,6 +71,7 @@ export default class CalendarExam extends Component {
         var d1 = new Date(timeStart[0], timeStart[1] - 1, timeStart[2], timeStart[3], timeStart[4], timeStart[5]);
         var d2 = new Date(timeEnd[0], timeEnd[1] - 1, timeEnd[2], timeEnd[3], timeEnd[4], timeEnd[5]);
         var now = new Date();
+        console.log(d2)
         if (d1 - now < 0 && d2 - now > 0) {
             return false
         }

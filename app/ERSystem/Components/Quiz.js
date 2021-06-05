@@ -126,6 +126,18 @@ class StartQuiz extends React.Component {
                             }
                         },
                         {
+                            text: 'Làm lại', onPress: () => {
+                                this.setState(
+                                    {
+                                        start: false,
+                                        correct: 0
+                                    },
+                                    navigation.navigate('Quiz')
+                                )
+                            }
+                        },
+
+                        {
                             text: 'Kết Thúc', onPress: () => {
                                 this.setState({ start: true })
                                 navigation.navigate('Home')
@@ -151,6 +163,18 @@ class StartQuiz extends React.Component {
                                 )
                             }
                         },
+                        {
+                            text: 'Làm lại', onPress: () => {
+                                this.setState(
+                                    {
+                                        start: false,
+                                        correct: 0
+                                    },
+                                    navigation.navigate('Quiz')
+                                )
+                            }
+                        },
+
                         {
                             text: 'Kết Thúc', onPress: () => {
                                 this.setState({ start: true })

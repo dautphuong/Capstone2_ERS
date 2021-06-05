@@ -1,6 +1,14 @@
 import React, { Component } from 'react';
-import { View, TextInput, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import {
+    View,
+    TextInput,
+    StyleSheet,
+    TouchableOpacity,
+    Text,
+    ImageBackground
+} from 'react-native';
 import axios from 'axios';
+import bgImage from '../image/logins.jpg';
 export default class Translator extends Component {
     constructor(props) {
         super(props);
@@ -31,26 +39,30 @@ export default class Translator extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
-                <View style={styles.input}>
-                    <TextInput
-                        style={{ flex: 1, height: 80 }}
-                        placeholder="Enter Text"
-                        underlineColorAndroid='transparent'
-                        onChangeText={inputText => this.setState({ inputText })}
-                        value={this.state.inputText}
-                    />
+            <ImageBackground source={bgImage} style={{ width: "100%", height: "100%" }}>
+                <View style={styles.container}>
+                    <Text style={styles.Titles}>Dịch Anh Việt</Text>
+                    <View style={styles.input}>
+                        <TextInput
+                            style={{ flex: 1, height: 80 }}
+                            placeholder="Nhập từ tiếng anh muốn dịch"
+                            underlineColorAndroid='transparent'
+                            onChangeText={inputText => this.setState({ inputText })}
+                            value={this.state.inputText}
+                        />
+                    </View>
+                    <View style={styles.output}>
+                        <Text>{this.state.outputText}</Text>
+                    </View>
+                    <TouchableOpacity
+                        style={styles.submitButton}
+                        onPress={() => { this.changeLanguage() }}
+                    >
+                        <Text style={styles.submitButtonText}>Tra từ</Text>
+                    </TouchableOpacity>
                 </View>
-                <View style={styles.output}>
-                    <Text>{this.state.outputText}</Text>
-                </View>
-                <TouchableOpacity
-                    style={styles.submitButton}
-                    onPress={() => { this.changeLanguage() }}
-                >
-                    <Text >English</Text>
-                </TouchableOpacity>
-            </View>
+            </ImageBackground>
+
         )
     }
 }
@@ -94,6 +106,14 @@ const styles = StyleSheet.create({
         height: 40,
     },
     submitButtonText: {
-        color: 'white'
+        fontWeight: 'bold',
+        color: 'white',
+        justifyContent: 'center',
+        textAlign: 'center'
+    },
+    Titles: {
+        fontWeight: 'bold',
+        justifyContent: 'center',
+        textAlign: 'center'
     },
 })
