@@ -1,6 +1,7 @@
-import React from "react";
+import React, { Component } from "react";
 import axios from 'axios';
 import CountDown from 'react-native-countdown-component';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
     View,
     Text,
@@ -21,7 +22,7 @@ import logo from '../image/English_REVIEW.png';
 import quiz from '../image/bgQuiz.png';
 axios.defaults.timeout = 1000;
 const { width: WIDTH } = Dimensions.get('window')
-export default class Contest extends React.Component {
+export default class Contest extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -31,19 +32,19 @@ export default class Contest extends React.Component {
             isDialogVisible: false,
             index: 0,
             correct: 0,
-            contentPractice: [{
-                answerChooses: []
-            }],
+            contentPractice: [],
             questionReport: '',
             content: '',
-            timeSet: 0
+            Chooses: [],
+            timeSet: 0,
         };
     }
 
     async componentDidMount() {
         const { contentPractice } = this.state;
         const idExam = this.props.route.params.idExam;
-
+        const idContest = this.props.route.params.idContest;
+        console.log(idContest)
         try {
             axios.get(`/exam/findById/${idExam}`)
                 .then(res2 => {
@@ -55,7 +56,7 @@ export default class Contest extends React.Component {
                 })
             await axios.get(`/question/findAllByIdExam/${idExam}`)
                 .then(res => {
-
+                    console.log(res.data)
                     let listIdQuestion = res.data
                     console.log(res.data)
                     let arrQuestion = [];
@@ -69,12 +70,13 @@ export default class Contest extends React.Component {
                                 this.setState(
                                     {
 
-                                        contentPractice: arrQuestion
+                                        contentPractice: arrQuestion,
+
                                     }
                                 )
                             })
                     }
-
+                    this.state.Chooses[listIdQuestion.length - 1] = undefined
                 })
 
         } catch (error) {
@@ -92,6 +94,11 @@ export default class Contest extends React.Component {
 
             });
 
+    }
+
+    choosesValue(number, value, idQuestion) {
+        const arrChoose = this.state.Chooses;
+        arrChoose[number] = { question: idQuestion, choose: value };
     }
     sendInput(text, question) {
         console.log("text :" + text)
@@ -116,27 +123,36 @@ export default class Contest extends React.Component {
 
         console.log("Nội Dung Report: " + text);
     }
-    final() {
+    async final() {
+        const idUser = await AsyncStorage.getItem('id');
+        const idExam = this.props.route.params.idExam;
+        const idContest = this.props.route.params.idContest;
+        const result = this.state.correct;
+        const arrChoose = this.state.Chooses;
+        const req = {
+            "idUser": idUser,
+            "idContest": idContest,
+            "idExam": idExam,
+            "answer": arrChoose,
+            "result": result
+        }
+        axios.post("/history/save", req)
+            .then(
+                res => {
+                    console.log(res)
+                }
+            ).catch(error => {
+                console.log(error)
+            })
+        console.log(req);
         const { navigation } = this.props
+
         if (this.state.correct >= 5) {
             return (
                 Alert.alert(
-                    'Số câu đúng của bạn: ' + this.state.correct + '\n Chúc mừng bạn ❤❤❤',
-                    'Bạn có muốn làm lại',
+                    'Số câu đúng của bạn: ' + this.state.correct,
+                    'Chúc mừng bạn ❤❤❤',
                     [
-                        {
-                            text: 'Xem đáp án', onPress: () => {
-                                this.setState(
-                                    {
-                                        startResult: false,
-                                        correct: 0
-                                    }
-                                )
-                                navigation.navigate('Quiz')
-                            }
-                        },
-
-                        { text: 'Tiếp tục', onPress: () => this.setState({ start: true }) },
                         {
                             text: 'Kết Thúc', onPress: () => {
                                 this.setState({ start: true })
@@ -151,21 +167,9 @@ export default class Contest extends React.Component {
         } else {
             return (
                 Alert.alert(
-                    'Your Score is ' + this.state.correct + '\n Come on 💪💪💪',
-                    'You Want to Play Again',
+                    'Số câu đúng của bạn: ' + this.state.correct,
+                    'Chúc mừng bạn 💪💪💪',
                     [
-                        {
-                            text: 'Xem đáp án', onPress: () => {
-                                this.setState(
-                                    {
-                                        startResult: true,
-                                        correct: 0
-                                    }
-                                )
-                                navigation.navigate('ReadyContest')
-                            }
-                        },
-                        { text: 'Tiếp tục', onPress: () => this.setState({ start: true }) },
                         {
                             text: 'Kết Thúc', onPress: () => {
                                 this.setState({ start: true })
@@ -180,8 +184,8 @@ export default class Contest extends React.Component {
     }
     render() {
         const { navigation } = this.props
-        const { contentPractice, start, startResult, correct, content, timeSet } = this.state;
-        console.log(timeSet)
+        const { contentPractice, start, startResult, correct, content, timeSet, Chooses } = this.state;
+        console.log(this.state.contentPractice)
         if (!start) {
             return (
                 <ImageBackground source={bgImage} style={{ flex: 1, flexDirection: "column", justifyContent: 'center', }}>
@@ -217,7 +221,18 @@ export default class Contest extends React.Component {
                                 >
                                     <Text style={styles.question}>
                                         Câu Hỏi {i + 1}: {v.title}
+
                                     </Text>
+                                    {this.state.Chooses.map((value, index) => {
+                                        if (i === index) {
+                                            return (
+                                                <Text
+                                                    key={index}
+                                                    style={styles.answer}>Đáp án bạn đã chọn: {value.choose}</Text>
+                                            )
+                                        }
+                                    })
+                                    }
                                     <Text style={styles.answer}>Đáp án: {v.answerRight}</Text>
                                     <Text style={styles.answer}>Giải thích:
                                      {"\n"}
@@ -225,6 +240,7 @@ export default class Contest extends React.Component {
                                     </Text>
                                 </View>
                             )
+
                         })
                         }
                         <TouchableOpacity
@@ -243,7 +259,28 @@ export default class Contest extends React.Component {
                     <CountDown
                         size={20}
                         until={timeSet * 1}
-                        onFinish={() => alert('Finished')}
+                        onFinish={() => {
+                            var result = this.state.correct;
+                            var contentPractice = this.state.contentPractice
+                            let arrChoose = this.state.Chooses
+                            for (let i = 0; i < contentPractice.length; i++) {
+                                if (arrChoose[i] == undefined) {
+                                    arrChoose[i] = { question: contentPractice[i].id, choose: ' ' };
+
+                                } else
+                                    if (arrChoose[i].choose === contentPractice[i].answerRight) {
+                                        result++;
+                                    }
+
+                            }
+                            this.setState({
+                                correct: result
+                            }, () => {
+                                console.log(this.state.correct);
+                                this.final()
+                            });
+
+                        }}
                         digitStyle={{ backgroundColor: '#FFF', borderWidth: 2, borderColor: '#000066' }}
                         digitTxtStyle={{ color: '#996600' }}
                         timeLabelStyle={{ color: 'red', fontWeight: 'bold' }}
@@ -274,7 +311,7 @@ export default class Contest extends React.Component {
                                         title={this.state.questionReport.title}
                                         message={"Vui Lòng Nhập Báo Cáo"}
                                         hintInput={"....................."}
-                                        submitInput={(inputText) => { this.sendInput(inputText) }}
+                                        submitInput={(inputText) => { this.sendInput(inputText, this.state.questionReport.id) }}
                                         closeDialog={() => { this.showDialog(false, this.state.questionReport) }}
                                         modalStyle={{ backgroundColor: '#78C8E8' }}
                                     >
@@ -295,18 +332,12 @@ export default class Contest extends React.Component {
                                             buttonColor={'#000066'}
                                             labelStyle={{ fontSize: 18, color: '#000066' }}
                                             animation={false}
-                                            initial={-1}
+                                            initial={false}
                                             onPress={(value) => {
-                                                var result = this.state.correct;
-                                                if (value === v.answerRight) result++;
-                                                console.log("result :" + result)
-                                                this.setState(
-                                                    { correct: result }
-                                                )
+                                                this.choosesValue(i, value, v.id, v.answerRight);
                                             }}
                                         />
                                     </View>
-
                                 </View>
 
                             )
@@ -314,7 +345,32 @@ export default class Contest extends React.Component {
                         }
                         <TouchableOpacity
                             style={styles.btnSubmit}
-                            onPress={() => this.final()}
+                            onPress={() => {
+                                var result = this.state.correct;
+                                var contentPractice = this.state.contentPractice;
+                                const arrChoose = this.state.Chooses;
+                                if (arrChoose.includes(undefined)) {
+                                    return (
+                                        Alert.alert('Error', 'Vui lòng làm hết các câu hỏi',
+                                        )
+                                    )
+                                } else {
+                                    for (let i = 0; i < contentPractice.length; i++) {
+                                        if (arrChoose[i].choose === contentPractice[i].answerRight) {
+                                            result++;
+                                        }
+
+                                    }
+                                    this.setState({
+                                        correct: result
+                                    }, () => {
+                                        console.log(this.state.correct);
+                                        this.final()
+                                    });
+
+
+                                }
+                            }}
                         >
                             <Text style={styles.textSubmit}>Nộp bài</Text>
                         </TouchableOpacity>

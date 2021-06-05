@@ -1,6 +1,5 @@
 import React from 'react';
-
-import { StyleSheet, View, Text, Image, ImageBackground, TouchableOpacity, FlatList } from 'react-native';
+import { StyleSheet, View, Text, Image, ImageBackground, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -11,6 +10,10 @@ import Exam from '../image/Exam.jpg';
 import Learn from '../image/startlearn.jpg';
 
 export default class Home extends React.Component {
+    constructor() {
+        super();
+    };
+
     render() {
         const { navigation } = this.props;
         return (

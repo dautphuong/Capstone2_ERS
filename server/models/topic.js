@@ -62,4 +62,17 @@ module.exports = class Topic {
             
         });
     }
+
+    update(req, callback) {
+                firebase.database().ref("topics/"+req.id).once("value").then(function(snapshot) {
+                    if (snapshot.exists()) {
+                        firebase.database().ref("topics/" + req.id).update({
+                            name:req.name
+                        });
+                        callback("successfull");
+                    } else {
+                        callback("Topic does not exist");
+            }
+        });
+    } 
 }

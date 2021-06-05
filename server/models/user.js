@@ -14,79 +14,79 @@ module.exports = class User {
     lastLogin; //Date
 
 
-    constructor(username, password, email,isLessonConfirm) {
+    constructor(username, password, email, isLessonConfirm) {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.isLessonConfirm=isLessonConfirm;
+        this.isLessonConfirm = isLessonConfirm;
     };
 
     register(req, callback) {
-        bcrypt.hash(req.password, 10, function (err, hash){
-            req.password = hash;
-          })
-          
-        firebase.database().ref("learners/").once("value").then(function(snapshot) {
-            if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
-                callback("Account already exists");
-            } else {
-                firebase.database().ref("admin/").once("value").then(function(snapshot) {
-                    if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
-                        callback("Account already exists");
-                    } else {
-                        firebase.database().ref("learners/").push().set({
-                            username: req.username,
-                            password: req.password,
-                            email: req.email,
-                            avatar: "https://firebasestorage.googleapis.com/v0/b/er-system-2b346.appspot.com/o/avatar.jpg?alt=media&token=0ebb592a-5e15-42d1-8f0f-04998873d251",
-                            createOnUTC: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
-                            lastLogin: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
-                        });
+        bcrypt.hash(req.password, 10, function (err, hash) {
+            firebase.database().ref("learners/").once("value").then(function (snapshot) {
+                if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
+                    callback("Account already exists");
+                } else {
+                    firebase.database().ref("admin/").once("value").then(function (snapshot) {
+                        if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
+                            callback("Account already exists");
+                        } else {
+                            firebase.database().ref("learners/").push().set({
+                                username: req.username,
+                                password: hash,
+                                email: req.email,
+                                avatar: "https://firebasestorage.googleapis.com/v0/b/er-system-2b346.appspot.com/o/avatar.jpg?alt=media&token=0ebb592a-5e15-42d1-8f0f-04998873d251",
+                                createOnUTC: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
+                                lastLogin: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
+                            });
 
-                        callback("Successlly");
-                    }
-                })
-            }
-        });
+                            callback("Successlly");
+                        }
+                    })
+                }
+            });
+        })
+
+
     }
 
     createAdmin(req, callback) {
-        bcrypt.hash(req.password, 10, function (err, hash){
-            req.password = hash;
-          })
-        firebase.database().ref("learners/").once("value").then(function(snapshot) {
-            if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
-                callback("Account already exists");
-            } else {
-                firebase.database().ref("admin/").once("value").then(function(snapshot) {
-                    if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
-                        callback("Account already exists");
-                    } else {
-                        firebase.database().ref("admin/").push().set({
-                            username: req.username,
-                            password: req.password,
-                        });
+        bcrypt.hash(req.password, 10, function (err, hash) {
+            firebase.database().ref("learners/").once("value").then(function (snapshot) {
+                if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
+                    callback("Account already exists");
+                } else {
+                    firebase.database().ref("admin/").once("value").then(function (snapshot) {
+                        if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
+                            callback("Account already exists");
+                        } else {
+                            firebase.database().ref("admin/").push().set({
+                                username: req.username,
+                                password: hash,
+                            });
 
-                        callback("Successlly");
-                    }
-                })
-            }
-        });
+                            callback("Successlly");
+                        }
+                    })
+                }
+            });
+        })
+
     }
 
     findAllUser(callback) {
-        firebase.database().ref("learners").once("value").then(function(snapshot) {
+        firebase.database().ref("learners").once("value").then(function (snapshot) {
             callback(snapArray.snap_array(snapshot));
         })
     }
     findAllAdmin(callback) {
-        firebase.database().ref("admin").once("value").then(function(snapshot) {
+        firebase.database().ref("admin").once("value").then(function (snapshot) {
             callback(snapArray.snap_array(snapshot));
         })
     }
 
     findById(id, callback) {
-        firebase.database().ref("learners/" + id).once("value").then(function(snapshot) {
+        firebase.database().ref("learners/" + id).once("value").then(function (snapshot) {
             if (snapshot.exists()) {
                 var item = snapshot.val();
                 item.id = snapshot.key;
@@ -94,7 +94,7 @@ module.exports = class User {
                 callback(arr);
             } else {
 
-                firebase.database().ref("admin/" + id).once("value").then(function(snapshot) {
+                firebase.database().ref("admin/" + id).once("value").then(function (snapshot) {
                     if (snapshot.exists()) {
                         var item = snapshot.val();
                         item.id = snapshot.key;
@@ -108,50 +108,54 @@ module.exports = class User {
         });
     }
 
-    updateUser(req, callback) {
-        firebase.database().ref("learners/" + req.id).once("value").then(function(snapshot) {
-            if (snapshot.exists()) {
-                firebase.database().ref("learners/" + req.id).update({
-                    password: req.password,
-                    email: req.email,
-                    avatar: req.avatar,
-                    isLessonConfirm: req.isLessonConfirm,
-                });
-                callback("successfull");
-            } else {
-                firebase.database().ref("admin/" + req.id).once("value").then(function(snapshot) {
-                    if (snapshot.exists()) {
-                        firebase.database().ref("admin/" + req.id).update({
-                            password: req.password,
-                        });
-                        callback("successfull");
-                    } else {
-                        callback("Data does not exist");
-                    }
-                });
-            }
-        });
+
+
+    updatePassword(req, callback) {
+        bcrypt.hash(req.password, 10, function (err, hash) {
+
+            firebase.database().ref("learners/" + req.id).once("value").then(function (snapshot) {
+
+                if (snapshot.exists()) {
+                    firebase.database().ref("learners/" + req.id).update({
+                        password: hash,
+                    });
+                    callback("successfull");
+                } else {
+                    firebase.database().ref("admin/" + req.id).once("value").then(function (snapshot) {
+                        if (snapshot.exists()) {
+
+                            firebase.database().ref("admin/" + req.id).update({
+                                password: hash,
+                            });
+                            callback("successfull");
+                        } else {
+                            callback("Data does not exist");
+                        }
+                    });
+                }
+            });
+        })
     }
 
 
     deleteById(id, callback) {
 
-        firebase.database().ref("learners/" + id).once("value").then(function(snapshot) {
+        firebase.database().ref("learners/" + id).once("value").then(function (snapshot) {
             if (snapshot.exists()) {
-            //delete history by user
-            firebase.database().ref("historys/").once("value").then(function(snapshot) {
-                if (snapshot.exists()) {
-                    snapArray.snap_array(snapshot).filter(value => value.idUser == id).forEach(function(item){
-                        firebase.database().ref("historys/" + item.id).remove();
-                    });
-                } 
-            });
-            callback("successfull");
+                //delete history by user
+                firebase.database().ref("historys/").once("value").then(function (snapshot) {
+                    if (snapshot.exists()) {
+                        snapArray.snap_array(snapshot).filter(value => value.idUser == id).forEach(function (item) {
+                            firebase.database().ref("historys/" + item.id).remove();
+                        });
+                    }
+                });
+                callback("successfull");
 
                 firebase.database().ref("learners/" + id).remove();
             } else {
 
-                firebase.database().ref("admin/" + id).once("value").then(function(snapshot) {
+                firebase.database().ref("admin/" + id).once("value").then(function (snapshot) {
                     if (snapshot.exists()) {
                         firebase.database().ref("admin/" + id).remove();
                     } else {
@@ -159,56 +163,81 @@ module.exports = class User {
                     }
                 });
             }
-            
+
         });
     }
 
     logout(req, callback) {
-        firebase.database().ref("learners/" + req.id).once("value").then(function(snapshot) {
+        firebase.database().ref("learners/" + req.id).once("value").then(function (snapshot) {
             if (snapshot.exists()) {
                 firebase.database().ref("learners/" + req.id).update({
                     lastLogin: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
                 });
                 callback(snapshot.val());
             } else {
-               callback("Data does not exist");
+                callback("Data does not exist");
             }
         });
     }
-    
+
     checkLogin(req, callback) {
-        
-        firebase.database().ref("learners/" ).once("value").then(function(snapshot) {
+
+        firebase.database().ref("learners/").once("value").then(function (snapshot) {
             if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
                 var item = snapArray.snap_array(snapshot).filter(value => value.username == req.username)[0]
 
-                bcrypt.compare(req.password, item.password, function(err, result) {
-                    if(result){
+                bcrypt.compare(req.password, item.password, function (err, result) {
+                    if (result) {
                         callback(item);
-                    }else{
+                    } else {
                         callback('password wrong');
                     }
                 });
-            }else{               
-                   callback('username wrong');
+            } else {
+                callback('username wrong');
             }
         });
     }
 
     checkLoginAdmin(req, callback) {
-        firebase.database().ref("admin/" ).once("value").then(function(snapshot) {
+        firebase.database().ref("admin/").once("value").then(function (snapshot) {
             if (snapArray.snap_array(snapshot).some(value => value.username == req.username)) {
                 var item = snapArray.snap_array(snapshot).filter(value => value.username == req.username)[0]
 
-                bcrypt.compare(req.password, item.password, function(err, result) {
-                    if(result){
+                bcrypt.compare(req.password, item.password, function (err, result) {
+                    if (result) {
                         callback(item);
-                    }else{
+                    } else {
                         callback('password wrong');
                     }
                 });
-            }else{               
-                   callback('username wrong');
+            } else {
+                callback('username wrong');
+            }
+        });
+    }
+
+    updateAvatar(req, callback) {
+        firebase.database().ref("learners/" + req.id).once("value").then(function (snapshot) {
+            if (snapshot.exists()) {
+                firebase.database().ref("learners/" + req.id).update({
+                    avatar: req.avatar,
+                });
+                callback("successfull");
+            } else {
+                callback("Data does not exits");
+            }
+        });
+    }
+    updateEmail(req, callback) {
+        firebase.database().ref("learners/" + req.id).once("value").then(function (snapshot) {
+            if (snapshot.exists()) {
+                firebase.database().ref("learners/" + req.id).update({
+                    email: req.email,
+                });
+                callback("successfull");
+            } else {
+                callback("Data does not exits");
             }
         });
     }

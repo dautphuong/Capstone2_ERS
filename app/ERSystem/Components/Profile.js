@@ -33,6 +33,7 @@ export default class Profile extends Component {
     async componentDidMount() {
         let token = await AsyncStorage.getItem('token');
         let idUser = await AsyncStorage.getItem('id');
+        console.log(idUser)
         try {
             axios.get(`/user/findById/${idUser}`)
                 .then(res => {
