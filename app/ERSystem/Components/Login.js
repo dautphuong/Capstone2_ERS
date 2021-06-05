@@ -61,6 +61,9 @@ export default class Login extends Component {
 
                 ).then(
                     res => {
+                        this.setState({
+                            loading: false,
+                        })
                         navigation.navigate('Home')
                     }
                 )
@@ -156,9 +159,9 @@ export default class Login extends Component {
                         onPress={() => this.checkLogin()}
                         disabled={loading}
                     >
-                        <Text style={styles.Text}>
-                            {loading ? "Loading..." : "Đăng Nhập"}
-                        </Text>
+                    <Text style={styles.Text}>
+                    {loading ? "Loading..." : "Đăng Nhập"}
+                    </Text> 
                     </TouchableOpacity>
 
                     <TouchableOpacity
