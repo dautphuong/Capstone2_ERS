@@ -123,6 +123,17 @@ export default class quizLesson extends Component {
                             }
                         },
                         {
+                            text: 'Làm lại', onPress: () => {
+                                this.setState(
+                                    {
+                                        start: false,
+                                        correct: 0
+                                    },
+                                )
+                            }
+                        },
+
+                        {
                             text: 'Kết Thúc', onPress: () => {
                                 this.setState({ start: true })
                                 navigation.navigate('Home')
@@ -148,6 +159,17 @@ export default class quizLesson extends Component {
                                 )
                             }
                         },
+                        {
+                            text: 'Làm lại', onPress: () => {
+                                this.setState(
+                                    {
+                                        start: false,
+                                        correct: 0
+                                    },
+                                )
+                            }
+                        },
+
                         {
                             text: 'Kết Thúc', onPress: () => {
                                 this.setState({ start: true })

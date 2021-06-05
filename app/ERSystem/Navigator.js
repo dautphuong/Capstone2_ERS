@@ -45,6 +45,12 @@ function AppNavigator() {
             headerShown: false
           }}
         />
+        <Stack.Screen name="History"
+          component={TabScreen}
+          options={{
+            headerShown: false
+          }}
+        />
         <Stack.Screen name="ListTopic"
           component={ListTopic}
           options={{
