@@ -1,6 +1,9 @@
 const router = require('express').Router();
 const Question = require('../models/question');
-
+const docx=require('../util/docx');
+const snapArray = require('../util/snapshot_to_array')
+const { validationResult } = require('express-validator');
+const { validate } = require('../util/validator');
 /**
  * @swagger
  * components:
@@ -40,6 +43,27 @@ const Question = require('../models/question');
  *         answerRight: chọn A
  *         note: vì nó đúng
  *         idTopic: id topic
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     FILE:
+ *       type: object
+ *       required:
+ *         - url
+ *         - idTopic
+ *       properties:
+ *         url:
+ *           type: string
+ *           description: the url file in firebase
+ *         idTopic:
+ *           type: string
+ *           description: the id topic
+ *       example:
+ *         url: link_firebase
+ *         idTopic: topicId
  */
 
 /**
@@ -313,6 +337,105 @@ router.delete("/delete/:id", function(req, res) {
  router.get('/findAll', function(req, res) {
     const question = new Question();
     question.findAll(function(data) {
+        snapArray.resetArr2();
+        res.send(data)
+    })
+});
+
+
+/**
+ * @swagger
+ * /question/getFile:
+ *   post:
+ *     summary: tạo danh sách question file docx
+ *     tags: [Question]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/FILE'
+ *     responses:
+ *       200:
+ *         description: The list question
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/FILE'
+ *       500:
+ *         description: Some server error
+ */
+ router.post('/getFile',
+ validate.validateFileTopic(),
+ (req, res) => {
+    try {
+        const question = new Question();
+        docx.docx(req.body.url,function(dataFile) {
+            question.saveListFile(dataFile,req.body.idTopic,function(data) {
+                res.send(data)
+            });
+        });
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+/**
+ * @swagger
+ * /question/findQuestionByIdExam/{idExam}:
+ *   get:
+ *     summary: danh sách id question theo exam
+ *     tags: [Question]
+ *     parameters:
+ *       - in: path
+ *         name: idExam
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The id exam 
+ *     responses:
+ *       200:
+ *         description: The questions description by exam
+ *         contens:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Question'
+ *       404:
+ *         description: The user was not found
+ */
+ router.get('/findQuestionByIdExam/:idExam', function(req, res) {
+    const question = new Question();
+    question.findQuestionByIdExam(req.params.idExam, function(data) {
+        res.send(data)
+    })
+});
+
+/**
+ * @swagger
+ * /question/findQuestionByIdLesson/{idLesson}:
+ *   get:
+ *     summary: danh sách id question theo lesson
+ *     tags: [Question]
+ *     parameters:
+ *       - in: path
+ *         name: idLesson
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The id lesson 
+ *     responses:
+ *       200:
+ *         description: The questions description by lesson
+ *         contens:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Question'
+ *       404:
+ *         description: The user was not found
+ */
+ router.get('/findQuestionByIdLesson/:idLesson', function(req, res) {
+    const question = new Question();
+    question.findQuestionByIdLesson(req.params.idLesson, function(data) {
         res.send(data)
     })
 });

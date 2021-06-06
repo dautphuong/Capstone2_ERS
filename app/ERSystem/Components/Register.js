@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Ionicons from 'react-native-vector-icons/Ionicons'
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import {
     StyleSheet,
     View,
@@ -18,24 +18,46 @@ import bgImage from '../image/logins.jpg';
 import logo from '../image/English_REVIEW.png';
 
 const { width: WIDTH } = Dimensions.get('window');
-
+const initialState = {
+    showPass: true,
+    press: false,
+    username: '',
+    email: '',
+    account: '',
+    password: '',
+    nameError: '',
+    passwordError: '',
+    mailError: '',
+}
 export default class Register extends Component {
-    constructor() {
-        super()
-        this.state = {
-            showPass: true,
-            press: false,
-            username: '',
-            email: '',
-            password: '',
-            messageSuccess: '',
-            messageError: ''
+    state = initialState;
+    validate() {
+        let nameError = '';
+        let passwordError = '';
+        let mailError = '';
+        if (!this.state.password) {
+            passwordError = 'Mật khẩu không được để trống';
         }
+        if (!this.state.username) {
+            nameError = 'Tên tài khoản không được để trống';
+        }
+        if (!this.state.email.includes("@")) {
+            mailError = "Email sai";
+        }
+
+        if (mailError || nameError || passwordError) {
+            this.setState({ mailError, nameError, passwordError });
+            return false;
+        }
+        return true;
     }
     registerClickHandler() {
         const { navigation } = this.props
         console.log(this.state.username, this.state.email, this.state.password)
-        if (this.state.username !== '' && this.state.email !== '' && this.state.password !== '') {
+        const invalid = this.validate();
+        if (invalid) {
+            console.log(this.state)
+            this.setState(initialState)
             const dataPayloads = {
                 "username": this.state.username,
                 "email": this.state.email,
@@ -44,26 +66,23 @@ export default class Register extends Component {
             axios.post('/user/register', dataPayloads)
 
                 .then(res => {
-                    Alert.alert('Vui lòng điền thông tin')
-                    console.log(res)
-                    Alert.alert('Bạn đã đăng ký thành công',
-                        navigation.navigate('Login'),
-                        this.setState({
-                            "messageSuccess": this.state.messageSuccess
-                        }))
+                    console.log(res.data)
+                    if (res.data === "Account already exists") {
+                        Alert.alert("'Error', 'Vui lòng Tên tài khoản và Mật khẩu'")
+                    } else {
+                        Alert.alert('Bạn đã đăng ký thành công',
+                            navigation.navigate('Login'),
+                        )
+                    }
                 })
                 .catch(err => {
                     console.log(err)
-                    Alert.alert('Error', 'Tài khoản ít nhất có 6 ký tự',
-                        this.setState({
-                            "messageError": this.state.messageError
-                        }))
 
                 })
+
         } else {
-            Alert.alert('Error', 'Vui lòng điền đây đủ thông tin', [{
-                text: 'Oke'
-            }])
+
+
         }
     }
     showPass = () => {
@@ -87,6 +106,7 @@ export default class Register extends Component {
                             size={28}
                             color={'rgba(255,255,255,0.7)'}
                             style={styles.inputIcon} />
+
                         <TextInput
                             style={styles.input}
                             placeholder={'Tên tài khoản'}
@@ -94,8 +114,9 @@ export default class Register extends Component {
                             underlineColorAndroid='transparent'
                             onChangeText={(text) => this.setState({ username: text })}
                         />
-                    </View>
 
+                    </View>
+                    <Text style={{ fontSize: 12, color: "red", bottom: 120 }}>{this.state.nameError}</Text>
                     <View style={styles.inputContainer}>
                         <Ionicons name={'lock-closed-outline'}
                             size={28}
@@ -104,6 +125,7 @@ export default class Register extends Component {
                         <TextInput
                             style={styles.input}
                             placeholder={'Mật Khẩu'}
+                            minLength={5}
                             secureTextEntry={this.state.showPass}
                             placeholderTextColor={'rgba(68, 248, 161, 0.7)'}
                             underlineColorAndroid='transparent'
@@ -118,7 +140,7 @@ export default class Register extends Component {
                             </Ionicons>
                         </TouchableOpacity>
                     </View>
-
+                    <Text style={{ fontSize: 12, color: "red", bottom: 120 }}>{this.state.passwordError}</Text>
                     <View style={styles.inputContainer}>
                         <Ionicons name={'logo-google'}
                             size={28}
@@ -133,6 +155,7 @@ export default class Register extends Component {
                             onChangeText={(text) => this.setState({ email: text })}
                         />
                     </View>
+                    <Text style={{ fontSize: 12, color: "red", bottom: 120 }}>{this.state.mailError}</Text>
                     <TouchableOpacity
                         style={styles.btnRegister}
                         onPress={() => this.registerClickHandler()}

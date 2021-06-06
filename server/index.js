@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
-const port = 4000;
+const port = process.env.PORT || 3000;
 const cors = require("cors");
 const swaggerUI = require('swagger-ui-express');
 const swaggerJsdoc = require("swagger-jsdoc");
@@ -23,7 +23,7 @@ const swaggerSpec = swaggerJsdoc({
           "A sample project to understand how easy it is to document and Express API",
       },
       servers: [{
-                    url: "http://localhost:4000",
+                    url: "http://localhost:3000",
                 }, ],
     },
      components: {
@@ -56,6 +56,8 @@ const examRouter = require('./routes/exam');
 const contestRouter = require('./routes/contest');
 const historyRouter = require('./routes/history');
 const reportRouter = require('./routes/report');
+const notificationRouter=require('./routes/notification')
+const translateRouter=require('./routes/translate')
 
 //Router Middlewares
 app.use('/user', authRouter);
@@ -67,6 +69,10 @@ app.use('/exam', examRouter);
 app.use('/contest', contestRouter);
 app.use('/history', historyRouter);
 app.use('/report', reportRouter);
+app.use('/notification', notificationRouter);
+app.use('/translate', translateRouter);
 
 
-app.listen(port, () => console.log('Server up and running , Swagger : http://localhost:4000/api-docs/'));
+app.listen(process.env.PORT || 3000, function(){
+  console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+});

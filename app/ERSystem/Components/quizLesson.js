@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import axios from 'axios';
 import CountDown from 'react-native-countdown-component';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
     View,
     Text,
@@ -22,11 +21,12 @@ import logo from '../image/English_REVIEW.png';
 import quiz from '../image/bgQuiz.png';
 axios.defaults.timeout = 1000;
 const { width: WIDTH } = Dimensions.get('window')
-export default class Contest extends Component {
+export default class quizLesson extends Component {
     constructor(props) {
         super(props)
         this.state = {
             ready: "Bắt Đầu ...",
+            result: "Xem đáp án ...",
             start: false,
             startResult: false,
             isDialogVisible: false,
@@ -36,29 +36,17 @@ export default class Contest extends Component {
             questionReport: '',
             content: '',
             Chooses: [],
-            timeSet: 0,
         };
     }
 
     async componentDidMount() {
         const { contentPractice } = this.state;
-        const idExam = this.props.route.params.idExam;
-        const idContest = this.props.route.params.idContest;
-        console.log(idContest)
+        const idLesson = this.props.route.params.idLesson;
+        console.log(idLesson)
         try {
-            axios.get(`/exam/findById/${idExam}`)
-                .then(res2 => {
-                    this.setState(
-                        {
-                            timeSet: res2.data[0].timeSet
-                        })
-
-                })
-            await axios.get(`/question/findAllByIdExam/${idExam}`)
+            await axios.get(`/question/findAllByIdLesson/${idLesson}`)
                 .then(res => {
-                    console.log(res.data)
                     let listIdQuestion = res.data
-                    console.log(res.data)
                     let arrQuestion = [];
                     for (let i = 0; i < listIdQuestion.length; i++) {
                         axios({
@@ -69,22 +57,17 @@ export default class Contest extends Component {
                                 arrQuestion = arrQuestion.concat(res.data);
                                 this.setState(
                                     {
-
-                                        contentPractice: arrQuestion,
-
+                                        contentPractice: arrQuestion
                                     }
                                 )
                             })
                     }
                     this.state.Chooses[listIdQuestion.length - 1] = undefined
                 })
-
         } catch (error) {
             console.error(error);
         }
     }
-
-
     showDialog(isShow, question) {
 
         this.setState(
@@ -94,11 +77,6 @@ export default class Contest extends Component {
 
             });
 
-    }
-
-    choosesValue(number, value, idQuestion) {
-        const arrChoose = this.state.Chooses;
-        arrChoose[number] = { question: idQuestion, choose: value };
     }
     sendInput(text, question) {
         console.log("text :" + text)
@@ -123,36 +101,38 @@ export default class Contest extends Component {
 
         console.log("Nội Dung Report: " + text);
     }
-    async final() {
-        const idUser = await AsyncStorage.getItem('id');
-        const idExam = this.props.route.params.idExam;
-        const idContest = this.props.route.params.idContest;
-        const result = this.state.correct;
+    choosesValue(number, value, idQuestion) {
         const arrChoose = this.state.Chooses;
-        const req = {
-            "idUser": idUser,
-            "idContest": idContest,
-            "idExam": idExam,
-            "answer": arrChoose,
-            "result": result
-        }
-        axios.post("/history/save", req)
-            .then(
-                res => {
-                    console.log(res)
-                }
-            ).catch(error => {
-                console.log(error)
-            })
-        console.log(req);
+        arrChoose[number] = { question: idQuestion, choose: value };
+    }
+    final() {
         const { navigation } = this.props
-
         if (this.state.correct >= 5) {
             return (
                 Alert.alert(
                     'Số câu đúng của bạn: ' + this.state.correct,
                     'Chúc mừng bạn ❤❤❤',
                     [
+                        {
+                            text: 'Xem đáp án', onPress: () => {
+                                this.setState(
+                                    {
+                                        startResult: false,
+                                    }
+                                )
+                            }
+                        },
+                        {
+                            text: 'Làm lại', onPress: () => {
+                                this.setState(
+                                    {
+                                        start: false,
+                                        correct: 0
+                                    },
+                                )
+                            }
+                        },
+
                         {
                             text: 'Kết Thúc', onPress: () => {
                                 this.setState({ start: true })
@@ -171,6 +151,26 @@ export default class Contest extends Component {
                     'Chúc mừng bạn 💪💪💪',
                     [
                         {
+                            text: 'Xem đáp án', onPress: () => {
+                                this.setState(
+                                    {
+                                        startResult: true,
+                                    }
+                                )
+                            }
+                        },
+                        {
+                            text: 'Làm lại', onPress: () => {
+                                this.setState(
+                                    {
+                                        start: false,
+                                        correct: 0
+                                    },
+                                )
+                            }
+                        },
+
+                        {
                             text: 'Kết Thúc', onPress: () => {
                                 this.setState({ start: true })
                                 navigation.navigate('Home')
@@ -184,8 +184,7 @@ export default class Contest extends Component {
     }
     render() {
         const { navigation } = this.props
-        const { contentPractice, start, startResult, correct, content, timeSet, Chooses } = this.state;
-        console.log(this.state.contentPractice)
+        const { contentPractice, start, startResult, correct, content } = this.state;
         if (!start) {
             return (
                 <ImageBackground source={bgImage} style={{ flex: 1, flexDirection: "column", justifyContent: 'center', }}>
@@ -256,39 +255,6 @@ export default class Contest extends Component {
         else {
             return (
                 <ImageBackground source={quiz} style={styles.container}>
-                    <CountDown
-                        size={20}
-                        until={timeSet * 1}
-                        onFinish={() => {
-                            var result = this.state.correct;
-                            var contentPractice = this.state.contentPractice
-                            let arrChoose = this.state.Chooses
-                            for (let i = 0; i < contentPractice.length; i++) {
-                                if (arrChoose[i] == undefined) {
-                                    arrChoose[i] = { question: contentPractice[i].id, choose: ' ' };
-
-                                } else
-                                    if (arrChoose[i].choose === contentPractice[i].answerRight) {
-                                        result++;
-                                    }
-
-                            }
-                            this.setState({
-                                correct: result
-                            }, () => {
-                                console.log(this.state.correct);
-                                this.final()
-                            });
-
-                        }}
-                        digitStyle={{ backgroundColor: '#FFF', borderWidth: 2, borderColor: '#000066' }}
-                        digitTxtStyle={{ color: '#996600' }}
-                        timeLabelStyle={{ color: 'red', fontWeight: 'bold' }}
-                        separatorStyle={{ color: '#000066' }}
-                        timeToShow={['H', 'M', 'S']}
-                        timeLabels={{ m: null, s: null }}
-                        showSeparator
-                    />
                     <ScrollView>
                         {contentPractice.map((v, i) => {
                             var radio_props = [
@@ -309,8 +275,8 @@ export default class Contest extends Component {
                                     <DialogInput
                                         isDialogVisible={this.state.isDialogVisible}
                                         title={this.state.questionReport.title}
-                                        message={"Vui Lòng Nhập Báo Cáo"}
-                                        hintInput={"....................."}
+                                        message={"Vui lòng nhập báo cáo"}
+                                        hintInput={"............."}
                                         submitInput={(inputText) => { this.sendInput(inputText, this.state.questionReport.id) }}
                                         closeDialog={() => { this.showDialog(false, this.state.questionReport) }}
                                         modalStyle={{ backgroundColor: '#78C8E8' }}
@@ -332,12 +298,13 @@ export default class Contest extends Component {
                                             buttonColor={'#000066'}
                                             labelStyle={{ fontSize: 18, color: '#000066' }}
                                             animation={false}
-                                            initial={false}
+                                            initial={-1}
                                             onPress={(value) => {
                                                 this.choosesValue(i, value, v.id, v.answerRight);
                                             }}
                                         />
                                     </View>
+
                                 </View>
 
                             )
@@ -377,11 +344,14 @@ export default class Contest extends Component {
                     </ScrollView>
                 </ImageBackground >
             )
-        }
 
+
+
+        }
 
     }
 }
+
 
 const styles = StyleSheet.create({
     paperQuestion: {

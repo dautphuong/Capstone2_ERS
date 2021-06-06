@@ -214,7 +214,7 @@ router.get('/findById/:id', function(req, res) {
 
 /**
  * @swagger
- * /user/update:
+ * /user/updatePassword:
  *   put:
  *     summary: update thông tin user
  *     tags: [User]
@@ -226,7 +226,7 @@ router.get('/findById/:id', function(req, res) {
  *             $ref: '#/components/schemas/User'
  *     responses:
  *       200:
- *         description: The account was successfully created
+ *         description: The password update successfully 
  *         content:
  *           application/json:
  *             schema:
@@ -234,10 +234,10 @@ router.get('/findById/:id', function(req, res) {
  *       500:
  *         description: Some server error
  */
-router.put('/update', function(req, res) {
+router.put('/updatePassword', function(req, res) {
     const user = new User();
     try {
-        user.updateUser(req.body, function(data) {
+        user.updatePassword(req.body, function(data) {
             res.send(data)
         });
 
@@ -273,6 +273,72 @@ router.delete("/delete/:id", function(req, res) {
     })
 });
 
+/**
+ * @swagger
+ * /user/updateEmail:
+ *   put:
+ *     summary: update thông tin user
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       200:
+ *         description: The email update successfully 
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       500:
+ *         description: Some server error
+ */
+ router.put('/updateEmail', function(req, res) {
+    const user = new User();
+    try {
+        user.updateEmail(req.body, function(data) {
+            res.send(data)
+        });
 
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+/**
+ * @swagger
+ * /user/updateAvatar:
+ *   put:
+ *     summary: update thông tin user
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       200:
+ *         description: The avatar update successfully 
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       500:
+ *         description: Some server error
+ */
+ router.put('/updateAvatar', function(req, res) {
+    const user = new User();
+    try {
+        user.updateAvatar(req.body, function(data) {
+            res.send(data)
+        });
+
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});
 module.exports = router;
 //ok

@@ -44,6 +44,7 @@ export default class PracticeList extends Component {
                             onPress={() => navigation.navigate('Quiz', {
                                 name: item.title,
                                 id: item.id,
+                                timeSet: item.timeSet
                             })}
                         >
                             <View style={styles.container}>
