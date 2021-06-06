@@ -113,19 +113,19 @@ class UpdateExam extends React.Component {
       listQuestion: this.state.questionExam
     }
     console.log("dataUpdate",updateLessonData);
-    // API.put(`lesson/update`, updateLessonData, {
-    //   headers: {
-    //     "Content-Type": "application/json;charset=UTF-8",
-    //     "Access-Control-Allow-Origin": "*",
-    //   },
-    // }).then((res) => {
-    //   if (res && res.status === 200) {
-    //     alert("Successful")
-    //     setTimeout(() => {
-    //       window.location = "/admin/exam";
-    //     }, 150)
-    //   }
-    // });
+    API.put(`lesson/update`, updateLessonData, {
+      headers: {
+        "Content-Type": "application/json;charset=UTF-8",
+        "Access-Control-Allow-Origin": "*",
+      },
+    }).then((res) => {
+      if (res && res.status === 200) {
+        alert("Successful")
+        setTimeout(() => {
+          window.location = "/admin/exam";
+        }, 150)
+      }
+    });
   }
   updateExam = () => {
     console.log("hahahahahaah", this.state.dataInfo)
@@ -302,7 +302,14 @@ class UpdateExam extends React.Component {
                     />
                   </>
                 )}
-                <Table className="table-hover table-striped">
+                <Table className="table-hover table-striped"
+                   style={{
+                    height: "800px",
+                    display: "block",
+                    overflowY: "scroll",
+                    width: "100%"
+                  }}
+                >
                   <thead>
                     <tr>
                       <th className="border-0"></th>

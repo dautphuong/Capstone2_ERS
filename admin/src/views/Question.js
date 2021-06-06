@@ -128,46 +128,46 @@ class Question extends React.Component {
     //   this.getAllQuestion();
     // }
     // else {
-      const validate = this.validate();
-      if (validate) {
-        var answer = [];
-        answer.push(
-          this.state.answerA,
-          this.state.answerB,
-          this.state.answerC,
-          this.state.answerD
-        );
-        var dataCreate = {
-          ...this.state.data,
-          answerChooses: answer,
-          selectedFile: this.props.selectedFile,
-        };
-        API.post(`question/save`, dataCreate, {
-          headers: {
-            "Content-Type": "application/json;charset=UTF-8",
-            "Access-Control-Allow-Origin": "*",
-          },
-        }).then((res) => {
-          if (res && res.status === 200) {
-            this.setState({
-              addModalShow: false,
-              data: {
-                answerRight: "",
-                idTopic: "",
-                note: "",
-                title: "",
-              },
-              selectedFile: "",
-              addModalTypeQuestion: true,
-              answerA: "",
-              answerB: "",
-              answerC: "",
-              answerD: "",
-            });
-            this.getAllQuestion();
-          }
-        });
-      }
+    const validate = this.validate();
+    if (validate) {
+      var answer = [];
+      answer.push(
+        this.state.answerA,
+        this.state.answerB,
+        this.state.answerC,
+        this.state.answerD
+      );
+      var dataCreate = {
+        ...this.state.data,
+        answerChooses: answer,
+        selectedFile: this.props.selectedFile,
+      };
+      API.post(`question/save`, dataCreate, {
+        headers: {
+          "Content-Type": "application/json;charset=UTF-8",
+          "Access-Control-Allow-Origin": "*",
+        },
+      }).then((res) => {
+        if (res && res.status === 200) {
+          this.setState({
+            addModalShow: false,
+            data: {
+              answerRight: "",
+              idTopic: "",
+              note: "",
+              title: "",
+            },
+            selectedFile: "",
+            addModalTypeQuestion: true,
+            answerA: "",
+            answerB: "",
+            answerC: "",
+            answerD: "",
+          });
+          this.getAllQuestion();
+        }
+      });
+    }
     //}
   }
   updateQuestion() {
@@ -234,7 +234,7 @@ class Question extends React.Component {
   updateUrlBE(urlFile) {
     const data = {
       url: urlFile,
-      idTopic:this.state.idTopicFile
+      idTopic: this.state.idTopicFile
     }
     console.log(data)
     API.post(`question/getFile`, data, {
@@ -271,7 +271,11 @@ class Question extends React.Component {
     let addModalFileClose = () => this.setState({ addModalFile: false })
     let ViewDataTable = this.state.dataQuestion.map((data, i) => {
       let ViewAnswerChooses = data.answerChooses.map((answer) => {
-        return <li style={{ "list-style-type": "none" }}>{answer}</li>;
+        return (<li
+         // style={{ "list-style-type": "none" }}
+        >
+          {answer}
+        </li>)
       });
       //console.log(data.answerChooses)
       return (
@@ -390,8 +394,8 @@ class Question extends React.Component {
                   show={this.state.addModalFile}
                   onHide={addModalFileClose}
                   changeHandleFile={(e) => this.changeHandleFile(e)}
-                  changeTopicFile = {(e) => this.changeTopicFile(e)}
-                  uploadFile = {()=>this.uploadFile()}
+                  changeTopicFile={(e) => this.changeTopicFile(e)}
+                  uploadFile={() => this.uploadFile()}
                 />
 
               </Card.Header>

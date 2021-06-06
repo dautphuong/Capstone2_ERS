@@ -27,6 +27,12 @@ function Header() {
     }
     return "Brand";
   };
+  const logOut= (e) =>{
+    e.preventDefault();
+    setTimeout(() => {
+      window.location = "/admin/login";
+    }, 1000)
+  }
   return (
     <Navbar bg="light" expand="lg">
       <Container fluid>
@@ -180,7 +186,7 @@ function Header() {
               <Nav.Link
                 className="m-0"
                 href="#pablo"
-                onClick={(e) => e.preventDefault()}
+                onClick={(e) =>logOut(e)}
               >
                 <span className="no-icon">Log out</span>
               </Nav.Link>

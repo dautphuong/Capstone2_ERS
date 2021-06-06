@@ -64,6 +64,9 @@ class TableList extends React.Component {
           this.setState({ addModalShow: false });
           this.getAllUser();
         }
+        if(res.data==="Account already exists"){
+            alert("Account already exist")
+        }
       });
       // console.log(data)
     }

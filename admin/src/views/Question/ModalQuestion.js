@@ -118,10 +118,10 @@ class ModalQuestion extends React.Component {
             onChange={(e) => this.props.handleChangeInput(e)}
           />
           <br />
-          {this.props.addModalTypeQuestion ? (
+          {/* {this.props.addModalTypeQuestion ? (
             <input type="file" name="file" onChange={(e) => this.props.changeHandleFile(e)} />
           ):''
-          }
+          } */}
           
         </Modal.Body>
         <Modal.Footer>
