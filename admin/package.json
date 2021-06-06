@@ -8,6 +8,7 @@
     "@fortawesome/fontawesome-free": "5.15.2",
     "@material-ui/core": "^4.11.4",
     "@material-ui/data-grid": "^4.0.0-alpha.28",
+    "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.58",
     "@material-ui/pickers": "^3.3.10",
     "axios": "^0.21.1",
@@ -16,6 +17,9 @@
     "gulp": "4.0.2",
     "gulp-append-prepend": "1.0.8",
     "mdbreact": "^5.0.2",
+    "moment": "^2.29.1",
+    "mui-datatables": "^3.7.7",
+    "node-sass": "4.14.1",
     "react": "^17.0.1",
     "react-bootstrap": "1.4.3",
     "react-chartist": "0.14.3",
@@ -25,7 +29,8 @@
     "react-router": "5.2.0",
     "react-router-dom": "5.2.0",
     "react-scripts": "4.0.1",
-    "react-select": "^4.3.0"
+    "react-select": "^4.3.0",
+    "firebase": "^8.3.0"
   },
   "optionalDependencies": {
     "jquery": "3.5.1",

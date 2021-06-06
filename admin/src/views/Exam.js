@@ -21,7 +21,8 @@ import API from "../api";
 import Button from "@material-ui/core/Button";
 import { Route } from "react-router";
 import CreateExam from "./Exam/CreateExam";
-
+import ListExam from "./Exam/ListExam";
+import UpdateExam from './Exam/UpdateExam';
 function Exam() {
   const [dataExam, setDataExam] = useState([]);
   const getAllApi = () => {
@@ -57,10 +58,10 @@ function Exam() {
         <td>{data.timeSet}</td>
         <td>{data.createOnUTC}</td>
         <td>
-          <i
+          {/* <i
             className="zmdi zmdi-edit"
             style={{ width: "10%", marginRight: "10px" }}
-          />
+          /> */}
           <i
             className="zmdi zmdi-delete"
             style={{ width: "10%", marginRight: "10px" }}
@@ -71,58 +72,63 @@ function Exam() {
     );
   });
   return (
-    <>
-      <Container fluid>
-        <Row>
-          <Col md="12">
-            <Card id="selectedColumn" className="strpied-tabled-with-hover">
-              <Card.Header>
-                <Card.Title as="h4">List of exam questions</Card.Title>
-                <Link to={`${url}/createExam`}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    disableElevation
-                    style={{
-                      float: "right",
-                      height: "57px",
-                      marginRight: "110px",
-                    }}
-                    to={`${url}/createExam`}
-                  >
-                    Create Exam
-                  </Button>
-                </Link>
-              </Card.Header>
-              <Card.Body className="table-full-width table-responsive px-0">
-                <Table className="table-hover table-striped">
-                  <thead>
-                    <tr>
-                      <th className="border-0">Name</th>
-                      <th className="border-0">Type</th>
-                      <th className="border-0">Time</th>
-                      <th className="border-0">Create On UTC</th>
-                      <th className="border-0"></th>
-                    </tr>
-                  </thead>
-                  <tbody>{ViewDataTable}</tbody>
-                </Table>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-      </Container>
-      {/* <Switch>
+    // <>
+    //   <Container fluid>
+    //     <Row>
+    //       <Col md="12">
+    //         <Card id="selectedColumn" className="strpied-tabled-with-hover">
+    //           <Card.Header>
+    //             <Card.Title as="h4">List of exam questions</Card.Title>
+    //             <Link to={`${url}/createExam`}>
+    //               <Button
+    //                 variant="contained"
+    //                 color="primary"
+    //                 disableElevation
+    //                 style={{
+    //                   float: "right",
+    //                   height: "57px",
+    //                   marginRight: "110px",
+    //                 }}
+    //                 to={`${url}/createExam`}
+    //               >
+    //                 Create Exam
+    //               </Button>
+    //             </Link>
+    //           </Card.Header>
+    //           <Card.Body className="table-full-width table-responsive px-0">
+    //             <Table className="table-hover table-striped">
+    //               <thead>
+    //                 <tr>
+    //                   <th className="border-0">Name</th>
+    //                   <th className="border-0">Type</th>
+    //                   <th className="border-0">Time</th>
+    //                   <th className="border-0">Create On UTC</th>
+    //                   <th className="border-0"></th>
+    //                 </tr>
+    //               </thead>
+    //               <tbody>{ViewDataTable}</tbody>
+    //             </Table>
+    //           </Card.Body>
+    //         </Card>
+    //       </Col>
+    //     </Row>
+    //   </Container>
+      <Switch>
         <Route
           path={`${path}/createExam`}
           render={(props) => <CreateExam {...props} />}
         />
         <Route
-          path={`${path}/list`}
+        exact
+          path={`${path}/`}
           render={(props) => <ListExam {...props} />}
         />
-      </Switch> */}
-    </>
+         <Route
+          path={`${path}/updateExam`}
+          render={(props) => <UpdateExam {...props} />}
+        />
+      </Switch> 
+    //</>
   );
 }
 

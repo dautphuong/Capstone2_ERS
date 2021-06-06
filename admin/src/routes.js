@@ -57,17 +57,17 @@ const dashboardRoutes = [
     layout: "/admin",
   },
   {
-    path: "/question",
-    name: "Question",
-    icon: "nc-icon nc-circle-09",
-    component: Question,
-    layout: "/admin",
-  },
-  {
     path: "/lesson",
     name: "Lesson",
     icon: "nc-icon nc-paper-2",
     component: Lesson,
+    layout: "/admin",
+  },
+  {
+    path: "/question",
+    name: "Question",
+    icon: "nc-icon nc-circle-09",
+    component: Question,
     layout: "/admin",
   },
   {
@@ -86,7 +86,7 @@ const dashboardRoutes = [
   },
   {
     path: "/notifications",
-    name: "Notifications",
+    name: "Report Manager",
     icon: "nc-icon nc-bell-55",
     component: Notifications,
     layout: "/admin",

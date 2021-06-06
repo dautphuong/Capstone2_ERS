@@ -9,7 +9,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import API from "../../api";
-class ModalQuestion extends React.Component {
+class UpdateReport extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -45,7 +45,7 @@ class ModalQuestion extends React.Component {
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Question
+           Update Question
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -69,37 +69,37 @@ class ModalQuestion extends React.Component {
             id="standard-password-input"
             label="Title"
             name="title"
-            value={this.props.data.title}
+           value={this.props.data.title}
             onChange={(e) => this.props.handleChangeInput(e)}
           />
-          <br/>
+          <br />
           <TextField
             id="standard-password-input"
             label="A."
-            value={this.props.answerA}
-            onChange={(e) => this.props.setStateAnswerA(e)}
+           value={this.props.answerA}
+           onChange={(e) => this.props.setStateAnswerA(e)}
           />
           <TextField
             id="standard-password-input"
             label="B."
-            style={{    marginLeft: '80px'}}
+            style={{ marginLeft: '80px' }}
             value={this.props.answerB}
             onChange={(e) => this.props.setStateAnswerB(e)}
           />
-          <br/>
+          <br />
           <TextField
             id="standard-password-input"
             label="C."
             value={this.props.answerC}
             onChange={(e) => this.props.setStateAnswerC(e)}
           />
-  
+
           <TextField
             id="standard-password-input"
             label="D."
-            style={{    marginLeft: '80px'}}
-            value={this.props.answerD}
-            onChange={(e) => this.props.setStateAnswerD(e)}
+            style={{ marginLeft: '80px' }}
+           value={this.props.answerD}
+           onChange={(e) => this.props.setStateAnswerD(e)}
           />
           <br />
           <TextField
@@ -113,34 +113,21 @@ class ModalQuestion extends React.Component {
             id="standard-password-input"
             label="Note"
             name="note"
-            style={{    marginLeft: '80px'}}
+            style={{ marginLeft: '80px' }}
             value={this.props.data.note}
             onChange={(e) => this.props.handleChangeInput(e)}
           />
           <br />
-          {this.props.addModalTypeQuestion ? (
-            <input type="file" name="file" onChange={(e) => this.props.changeHandleFile(e)} />
-          ):''
-          }
-          
+
         </Modal.Body>
         <Modal.Footer>
-          {this.props.addModalTypeQuestion ? (
-            <Button
-              style={{ marginLeft: "26%" }}
-              onClick={this.props.createQuestion}
-            >
-              Create
-            </Button>
-          ) : (
-            <Button
-              style={{ marginLeft: "26%" }}
-              onClick={this.props.updateQuestion}
-            >
-              Submit
-            </Button>
-          )}
 
+          <Button
+            style={{ marginLeft: "26%" }}
+            onClick={this.props.updateQuestion}
+          >
+            Submit
+            </Button>
           <Button
             variant="danger"
             style={{ marginRight: "26%" }}
@@ -153,4 +140,4 @@ class ModalQuestion extends React.Component {
     );
   }
 }
-export default ModalQuestion;
+export default UpdateReport;
