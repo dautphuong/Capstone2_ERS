@@ -31,7 +31,6 @@ class Icons extends React.Component {
     };
   }
   getAllContest() {
-
     API.get(`contest/findAll`).then((res) => {
       const dataContest = res.data;
       this.setState({ dataContest });
@@ -74,6 +73,7 @@ class Icons extends React.Component {
   }
   createContest = () => {
     //console.log(moment(this.state.data.timeStart).format("YYYY-MM-DDTHH:mm:ss.SSSSZ"));
+    console.log(this.state.data.timeEnd)
     const validate = this.validate();
     if (validate) {
       var dataCreate = {

@@ -102,6 +102,7 @@ class ModalContest extends React.Component {
               label="Start time"
               type="datetime-local"
               name="timeStart"
+              //value={moment(this.props.data.timeStart ).format("yyyy-MM-ddTHH:mm")}
               value={this.props.data.timeStart}
               className={useStyles1.textField}
               InputLabelProps={{

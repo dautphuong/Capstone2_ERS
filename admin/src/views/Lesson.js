@@ -267,6 +267,7 @@ class Lesson extends React.Component {
                   <CreateTypeLesson
                     show={this.state.addModalTypeLesson}
                     onHide={addModalTypeLessonClose}
+                    getAllLesson={() => this.getAllLesson()}
                   />
                     <Button
                       variant="contained"

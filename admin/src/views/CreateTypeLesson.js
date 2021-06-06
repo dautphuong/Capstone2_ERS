@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, Row, Col, Form, Table } from 'react-bootstrap'
+import { Modal, Row, Col, Form, Table, ModalBody } from 'react-bootstrap'
 import API from '../api';
 import TextField from '@material-ui/core/TextField';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -9,15 +9,21 @@ class CreateTypeLesson extends React.Component {
         super(props);
         this.state = {
             dataType: [],
-            name: ''
+            name: '',
+            showModal: false,
+            topicEdit: '',
+            idTopic: ''
         }
     }
-    componentDidMount() {
+    getAllTopic() {
         API.get(`topic/findAll`)
             .then(res => {
                 const dataType = res.data;
                 this.setState({ dataType });
             })
+    }
+    componentDidMount() {
+        this.getAllTopic()
     }
     DeleteType(id) {
         console.log(id);
@@ -26,10 +32,32 @@ class CreateTypeLesson extends React.Component {
             API.delete(`topic/delete/${id}`)
                 .then(res => {
                     console.log(res.data)
-                    this.componentDidMount();
+                    this.getAllTopic();
                 })
         }
     }
+    updateCreate = (event) => {
+        event.preventDefault();
+        const data = {
+            id: this.state.idTopic,
+            name: this.state.topicEdit
+        };
+        console.log("data", data)
+        console.log("data:", data)
+        API.put(`topic/update`, data, {
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+                "Access-Control-Allow-Origin": "*",
+            }
+        })
+            .then(res => {
+                console.log(res);
+                console.log(res.data);
+                this.setState ({showModal: false,topicEdit: '',idTopic: ''})
+                this.getAllTopic();
+            })
+    }
+
     buttonCreate = (event) => {
         event.preventDefault();
         const data = {
@@ -46,14 +74,19 @@ class CreateTypeLesson extends React.Component {
             .then(res => {
                 console.log(res);
                 console.log(res.data);
-                this.componentDidMount();
+                this.getAllTopic();
             })
     }
     handleName = (e) => {
         this.setState({ name: e.target.value })
         console.log(e.target.value)
     }
+    handleChangeTopic = (e) => {
+        this.setState({ topicEdit: e.target.value })
+        console.log(this.state.topicEdit)
+    }
     render() {
+        let addModalClose = () => this.setState({ showModal: false })
         let options = [
             { name: "Edit", icon: "zmdi-edit" },
             { name: "Delete", icon: "zmdi-delete" },
@@ -61,11 +94,11 @@ class CreateTypeLesson extends React.Component {
         const ViewDataTable = this.state.dataType.map((data, i) => {
             return (
                 <tr>
-                    <td>{data.name}</td>
+                    <td disabled >{data.name}</td>
                     <td>
-                    <i
-                            className="zmdi zmdi-edit" 
-                            //onClick={this.DeleteType.bind(this, data.id)}
+                        <i
+                            className="zmdi zmdi-edit"
+                            onClick={() => this.setState({ showModal: true, topicEdit: data.name, idTopic: data.id })}
                             style={{ width: "10%", marginRight: "10px" }}
                         />
                         <i
@@ -77,59 +110,86 @@ class CreateTypeLesson extends React.Component {
             )
         })
         return (
-            <Modal
-                {...this.props}
-                size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        Create Topic
+            <>
+                <Modal
+                    {...this.props}
+                    size="lg"
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title id="contained-modal-title-vcenter">
+                            Create Topic
     </Modal.Title>
-                </Modal.Header>
-                <Modal.Body >
-                    <TextField
-                        id="standard-textarea"
-                        label="Name"
-                        placeholder="Name"
-                        style={{ marginTop: '15px', float: 'left', width: '75%' }}
-                        onChange={this.handleName}
-                        multiline
-                        on
-                    />
-                    <Button variant="contained"
-                        color="primary"
-                        disableElevation style={{ float: 'right', height: '43px', width: '129px', marginTop: '20px', fontSize: 'small' }}
-                        onClick={this.buttonCreate}
-                    >
-                        Create type
-                    </Button>
-                    <Table className="table-hover table-striped" style={{
-                        
-                        height: "300px",
-                        display: "block",
-                        overflowY: "scroll",
-                        width: "100%"
-                    }}
-                    >
-                        <thead>
-                            < tr >
-                                <th className="border-0">Name</th>
-                                <th className="border-0"></th>
-                            </tr>
-                        </thead>
-                        <tbody 
-                        // style={{
-                        //     height: "50px !important",
-                        //     overflowY: "scroll"
-                        // }}
+                    </Modal.Header>
+                    <Modal.Body >
+                        <TextField
+                            id="standard-textarea"
+                            label="Name"
+                            placeholder="Name"
+                            style={{ marginTop: '15px', float: 'left', width: '75%' }}
+                            onChange={this.handleName}
+                            multiline
+                            on
+                        />
+                        <Button variant="contained"
+                            color="primary"
+                            disableElevation style={{ float: 'right', height: '43px', width: '129px', marginTop: '20px', fontSize: 'small' }}
+                            onClick={this.buttonCreate}
                         >
-                            {ViewDataTable}
-                        </tbody>
-                    </Table>
-                </Modal.Body >
-            </Modal >
+                            Create type
+                    </Button>
+                        <Table className="table-hover table-striped"
+                            style={{
+
+                                height: "300px",
+                                display: "block",
+                                overflowY: "scroll",
+                                width: "100%"
+                            }}
+                            fullWidth
+                        >
+                            <thead style={{ width: "100%" }}>
+                                < tr >
+                                    <th className="border-0">Name</th>
+                                    <th className="border-0"></th>
+                                </tr>
+                            </thead>
+                            <tbody
+                            // style={{
+                            //     height: "50px !important",
+                            //     overflowY: "scroll"
+                            // }}
+                            >
+                                {ViewDataTable}
+                            </tbody>
+                        </Table>
+                    </Modal.Body >
+                </Modal >
+                <Modal show={this.state.showModal} onHide={addModalClose} style={{ paddingTop: '250px' }}>
+                    <ModalBody>
+                        <TextField
+                            id="standard-textarea"
+                            name="topicEdit"
+                            label="topicEdit"
+
+                            placeholder="Name"
+                            value={this.state.topicEdit}
+                            //style={{ marginTop: '15px', float: 'left', width: '75%' }}
+                            onChange={this.handleChangeTopic}
+                            multiline
+                            on
+                        />
+                        <Button variant="contained"
+                            color="primary"
+                            disableElevation style={{ float: 'right', height: '43px', width: '129px', marginTop: '20px', fontSize: 'small' }}
+                            onClick={this.updateCreate}
+                        >
+                            Update  type
+                    </Button>
+                    </ModalBody>
+                </Modal>
+            </>
         )
     }
 }

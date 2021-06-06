@@ -43,7 +43,6 @@ class CreateExam extends React.Component {
       })
   }
   getAllLesson() {
-
     API.get(`lesson/findAll`).then((res) => {
       const dataLesson = res.data;
       this.setState({ dataLesson: dataLesson });
@@ -137,7 +136,7 @@ class CreateExam extends React.Component {
         alert(res.data);
         setTimeout(() => {
           window.location = "/admin/exam";
-        }, 150)
+        }, 1000)
       });
   }
   handleChange = (e) => {
@@ -261,7 +260,14 @@ class CreateExam extends React.Component {
                   ''
                 )}
 
-                <Table className="table-hover table-striped">
+                <Table className="table-hover table-striped"
+                  style={{
+                    height: "800px",
+                    display: "block",
+                    overflowY: "scroll",
+                    width: "100%"
+                  }}
+                >
                   <thead>
                     <tr>
                       <th className="border-0"></th>
