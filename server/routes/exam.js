@@ -1,5 +1,8 @@
 const router = require('express').Router();
 const Exam = require('../models/exam');
+const { validationResult } = require('express-validator');
+const { validate } = require('../util/validator');
+const snapType = require('../util/findAllExam');
 
 /**
  * @swagger
@@ -66,13 +69,19 @@ const Exam = require('../models/exam');
  *       500:
  *         description: Some server error
  */
-router.post('/save', (req, res) => {
+router.post('/save', 
+validate.validateExam(),
+(req, res) => {
     const exam = new Exam(
         req.body.title,
         req.body.type,
         req.body.timeSet,
         req.body.listQuestion
     );
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
     try {
         exam.save(exam, function(data) {
             res.send(data)
@@ -258,5 +267,29 @@ router.delete("/delete/:id", function(req, res) {
     })
 });
 
+
+/**
+ * @swagger
+ * /exam/findExamLesson:
+ *   get:
+ *     summary: Danh sách exam và lesson có type
+ *     tags: [Exam]
+ *     responses:
+ *       200:
+ *         description: The list of the exam
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Exam'
+ */
+ router.get('/findExamLesson', function(req, res) {
+    const exam = new Exam();
+    exam.findExamLessonHaveType(function(data) {
+        snapType.resetArr();
+        res.send(data)
+    })
+});
 module.exports = router;
 //ok

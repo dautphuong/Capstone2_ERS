@@ -1,10 +1,9 @@
 import React from "react";
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import CountDown from 'react-native-countdown-component';
 import {
     View,
     Text,
-    Button,
     StyleSheet,
     ScrollView,
     Alert,
@@ -12,6 +11,7 @@ import {
     TouchableOpacity,
     Image,
     Dimensions,
+
 } from "react-native";
 import DialogInput from "react-native-dialog-input";
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -27,37 +27,24 @@ class StartQuiz extends React.Component {
         super(props)
         this.state = {
             ready: "Bắt Đầu ...",
+            result: "Xem đáp án ...",
             start: false,
+            startResult: false,
             isDialogVisible: false,
             index: 0,
             correct: 0,
-            contentPractice: [{
-                answerChooses: []
-            }],
+            contentPractice: [],
             questionReport: '',
-            content: ''
+            content: '',
+            Chooses: [],
         };
     }
-    showDialog(isShow, question) {
 
-        this.setState(
-            {
-                questionReport: question,
-                isDialogVisible: isShow,
-
-            });
-
-    }
-    sendInput(inputText) {
-        this.setState({ isDialogVisible: false });
-        console.log("sendInput (DialogInput#1): " + inputText);
-    }
     async componentDidMount() {
         const { contentPractice } = this.state;
         const { id } = this.props.route.params;
         console.log(this.props.route);
         try {
-            console.log(AsyncStorage.getItem("id"));
             await axios.get(`/question/findAllByIdExam/${id}`)
                 .then(res => {
                     let listIdQuestion = res.data
@@ -77,33 +64,79 @@ class StartQuiz extends React.Component {
                                 )
                             })
                     }
+                    this.state.Chooses[listIdQuestion.length - 1] = undefined
                 })
         } catch (error) {
             console.error(error);
         }
     }
+    showDialog(isShow, question) {
 
+        this.setState(
+            {
+                questionReport: question,
+                isDialogVisible: isShow,
+
+            });
+        console.log(this.state.questionReport)
+    }
+    sendInput(text, question) {//??? truyền có cái à function 2 tham số
+        console.log("text :" + text)
+        console.log("question :" + question)
+        const req = {
+            "content": text,
+            "idQuestion": question
+        };
+        console.log("req :" + req)
+        axios.post('/report/save', req)
+            .then(
+                res => {
+                    console.log(res)
+                    this.setState({
+                        isDialogVisible: false,
+                        content: text
+
+                    })
+                }
+            ).catch(error => {
+                console.log(error)
+            })
+
+        console.log("Nội Dung Report: " + text);
+    }
+    choosesValue(number, value, idQuestion) {
+        const arrChoose = this.state.Chooses;
+        arrChoose[number] = { question: idQuestion, choose: value };
+    }
     final() {
         const { navigation } = this.props
         if (this.state.correct >= 5) {
             return (
                 Alert.alert(
-                    'Your Score is ' + this.state.correct + '\n Congratulations ❤❤❤',
-                    'You Want to Play Again',
+                    'Số câu đúng của bạn: ' + this.state.correct,
+                    'Chúc mừng bạn ❤❤❤',
                     [
                         {
-                            text: 'Yes', onPress: () => {
+                            text: 'Xem đáp án', onPress: () => {
+                                this.setState(
+                                    {
+                                        startResult: false,
+                                    }
+                                )
+                            }
+                        },
+                        {
+                            text: 'Làm lại', onPress: () => {
                                 this.setState(
                                     {
                                         start: false,
                                         correct: 0
-                                    }
+                                    },
+                                    navigation.navigate('Quiz')
                                 )
-                                navigation.navigate('Quiz')
                             }
                         },
 
-                        { text: 'No', onPress: () => this.setState({ start: true }) },
                         {
                             text: 'Kết Thúc', onPress: () => {
                                 this.setState({ start: true })
@@ -118,29 +151,36 @@ class StartQuiz extends React.Component {
         } else {
             return (
                 Alert.alert(
-                    'Your Score is ' + this.state.correct + '\n Come on 💪💪💪',
-                    'You Want to Play Again',
+                    'Số câu đúng của bạn: ' + this.state.correct,
+                    'Chúc mừng bạn 💪💪💪',
                     [
                         {
-                            text: 'Yes', onPress: () => {
+                            text: 'Xem đáp án', onPress: () => {
+                                this.setState(
+                                    {
+                                        startResult: true,
+                                    }
+                                )
+                            }
+                        },
+                        {
+                            text: 'Làm lại', onPress: () => {
                                 this.setState(
                                     {
                                         start: false,
                                         correct: 0
-                                    }
+                                    },
+                                    navigation.navigate('Quiz')
                                 )
-                                navigation.navigate('Quiz')
                             }
                         },
 
-                        { text: 'No', onPress: () => this.setState({ start: true }) },
                         {
                             text: 'Kết Thúc', onPress: () => {
                                 this.setState({ start: true })
                                 navigation.navigate('Home')
                             }
                         },
-
                     ],
                     { cancelable: false }
                 )
@@ -148,7 +188,8 @@ class StartQuiz extends React.Component {
         }
     }
     render() {
-        const { contentPractice, start, correct } = this.state;
+        const { navigation } = this.props
+        const { contentPractice, start, startResult, correct, content } = this.state;
         if (!start) {
             return (
                 <ImageBackground source={bgImage} style={{ flex: 1, flexDirection: "column", justifyContent: 'center', }}>
@@ -171,9 +212,53 @@ class StartQuiz extends React.Component {
                 </ImageBackground>
             );
         }
+        if (startResult) {
+            return (
+                <ImageBackground source={quiz} style={styles.container}>
+
+                    <ScrollView>
+                        {contentPractice.map((v, i) => {
+                            return (
+                                <View
+                                    key={`${i}`}
+                                    style={styles.paperQuestion}
+                                >
+                                    <Text style={styles.question}>
+                                        Câu Hỏi {i + 1}: {v.title}
+
+                                    </Text>
+                                    {this.state.Chooses.map((value, index) => {
+                                        if (i === index) {
+                                            return (
+                                                <Text
+                                                    key={index}
+                                                    style={styles.answer}>Đáp án bạn đã chọn: {value.choose}</Text>
+                                            )
+                                        }
+                                    })
+                                    }
+                                    <Text style={styles.answer}>Đáp án: {v.answerRight}</Text>
+                                    <Text style={styles.answer}>Giải thích:
+                                     {"\n"}
+                                        {v.note}
+                                    </Text>
+                                </View>
+                            )
+
+                        })
+                        }
+                        <TouchableOpacity
+                            style={styles.btnFinish}
+                            onPress={() => navigation.navigate('Home')}
+                        >
+                            <Text style={styles.textSubmit}>Kết Thúc</Text>
+                        </TouchableOpacity>
+                    </ScrollView>
+                </ImageBackground >
+            )
+        }
         else {
             return (
-
                 <ImageBackground source={quiz} style={styles.container}>
                     <ScrollView>
                         {contentPractice.map((v, i) => {
@@ -183,6 +268,12 @@ class StartQuiz extends React.Component {
                                 { label: v.answerChooses[2], value: v.answerChooses[2] },
                                 { label: v.answerChooses[3], value: v.answerChooses[3] },
                             ];
+
+                            let radio = v.answerChooses.map((answer) => {
+                                return (
+                                    <Text>{answer}</Text>
+                                )
+                            })
                             return (
                                 <View
                                     key={`${i}`}
@@ -195,9 +286,9 @@ class StartQuiz extends React.Component {
                                     <DialogInput
                                         isDialogVisible={this.state.isDialogVisible}
                                         title={this.state.questionReport.title}
-                                        message={"Message for DialogInput #1"}
-                                        hintInput={"HINT INPUT"}
-                                        submitInput={(inputText) => { this.sendInput(inputText) }}
+                                        message={"Vui lòng nhập báo cáo"}
+                                        hintInput={"............."}
+                                        submitInput={(inputText) => { this.sendInput(inputText, this.state.questionReport.id) }}//??? truyền có cái à function 2 tham số
                                         closeDialog={() => { this.showDialog(false, this.state.questionReport) }}
                                         modalStyle={{ backgroundColor: '#78C8E8' }}
                                     >
@@ -216,16 +307,11 @@ class StartQuiz extends React.Component {
                                             formHorizontal={false}
                                             labelHorizontal={true}
                                             buttonColor={'#000066'}
-                                            labelStyle={{ fontSize: 18, color: '#000066' }}
+                                            labelStyle={{ fontSize: 15, color: '#000066' }}
                                             animation={false}
                                             initial={-1}
                                             onPress={(value) => {
-                                                var result = this.state.correct;
-                                                if (value === v.answerRight) result++;
-                                                console.log("result :" + result)
-                                                this.setState(
-                                                    { correct: result }
-                                                )
+                                                this.choosesValue(i, value, v.id, v.answerRight);
                                             }}
                                         />
                                     </View>
@@ -237,7 +323,31 @@ class StartQuiz extends React.Component {
                         }
                         <TouchableOpacity
                             style={styles.btnSubmit}
-                            onPress={() => this.final()}
+                            onPress={() => {
+                                var result = this.state.correct;
+                                var contentPractice = this.state.contentPractice;
+                                const arrChoose = this.state.Chooses;
+                                if (arrChoose.includes(undefined)) {
+                                    return (
+                                        Alert.alert('Error', 'Vui lòng làm hết các câu hỏi',
+                                        )
+                                    )
+                                } else {
+                                    for (let i = 0; i < contentPractice.length; i++) {
+                                        if (arrChoose[i].choose === contentPractice[i].answerRight) {
+                                            result++;
+                                        }
+                                    }
+                                    this.setState({
+                                        correct: result
+                                    }, () => {
+                                        console.log(this.state.correct);
+                                        this.final()
+                                    });
+
+
+                                }
+                            }}
                         >
                             <Text style={styles.textSubmit}>Nộp bài</Text>
                         </TouchableOpacity>
@@ -263,7 +373,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.5,
         shadowRadius: 20,
         shadowOffset: { width: 0, height: 0 },
-        marginBottom: 16
+        marginBottom: 16,
+        marginRight: 30
     },
     container: {
         flex: 1,
@@ -277,13 +388,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         padding: 15,
+        marginTop: 10
     },
     image: {
         width: 55,
         height: 55,
         justifyContent: 'center',
         borderRadius: 50,
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+
     },
     Text: {
         fontSize: 25,
@@ -300,7 +413,7 @@ const styles = StyleSheet.create({
         bottom: 150
     },
     containerLogo: {
-        bottom: 200,
+        bottom: 150,
         alignItems: 'center',
     },
     logo: {
@@ -322,6 +435,15 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
         bottom: 10
     },
+    btnFinish: {
+        width: WIDTH - 40,
+        height: 60,
+        borderRadius: 25,
+        backgroundColor: '#003399',
+        justifyContent: 'center',
+        marginHorizontal: 5,
+        bottom: 10
+    },
     textSubmit: {
         textAlign: 'center',
         fontSize: 20,
@@ -330,6 +452,10 @@ const styles = StyleSheet.create({
     report: {
         fontSize: 50,
         color: 'red'
+    },
+    answer: {
+        color: "#ff0000",
+        fontSize: 18
     }
 });
 

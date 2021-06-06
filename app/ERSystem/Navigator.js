@@ -17,6 +17,7 @@ import Quiz from './Components/Quiz';
 import Result from './Components/Result';
 import Profile from './Components/Profile';
 import PracticeList from './Components/PracticeList';
+import quizLesson from './Components/quizLesson';
 const Stack = createStackNavigator();
 const TabNavigator = createBottomTabNavigator();
 function AppNavigator() {
@@ -40,18 +41,15 @@ function AppNavigator() {
         />
         <Stack.Screen name="Home"
           component={TabScreen}
-          options={({ route }) =>
-          ({
-            headerStyle: {
-              backgroundColor: '#78C8E8',
-            },
-            headerTitleStyle: {
-              fontWeight: 'bold',
-              fontSize: 15,
-              right: 25
-            },
-          })
-          }
+          options={{
+            headerShown: false
+          }}
+        />
+        <Stack.Screen name="History"
+          component={TabScreen}
+          options={{
+            headerShown: false
+          }}
         />
         <Stack.Screen name="ListTopic"
           component={ListTopic}
@@ -67,19 +65,15 @@ function AppNavigator() {
         />
         <Stack.Screen name="Profile"
           component={Profile}
-          options={({ route }) =>
-          ({
-            headerTitle: 'Trang cá nhân',
+          options={{
+            headerTitle: 'Trang Cá Nhân',
             headerStyle: {
               backgroundColor: '#78C8E8',
             },
             headerTitleStyle: {
               fontWeight: 'bold',
-              fontSize: 15,
-              right: 25
             },
-          })
-          }
+          }}
         />
         <Stack.Screen name="ListLesson"
           component={ListLesson}
@@ -134,8 +128,9 @@ function AppNavigator() {
           component={ReadyContest}
           options={({ route }) =>
           ({
-            id: route.params.id,
+            idExam: route.params.idExam,
             title: route.params.Contest,
+            idContest: route.params.idContest,
             headerStyle: {
               backgroundColor: '#78C8E8',
             },
@@ -144,25 +139,12 @@ function AppNavigator() {
               fontSize: 15,
               right: 25
             },
+            unmountOnBlur: true
           })
           }
-        />
-        <Stack.Screen name="Quiz"
-          component={Quiz}
-          options={({ route }) =>
-          ({
-            id: route.params.id,
-            title: route.params.name,
-            headerStyle: {
-              backgroundColor: '#78C8E8',
-            },
-            headerTitleStyle: {
-              fontWeight: 'bold',
-              fontSize: 15,
-              right: 25
-            },
-          })
-          }
+          listeners={({ navigation }) => ({
+            blur: () => navigation.setParams({ screen: undefined }),
+          })}
         />
         <Stack.Screen name="PracticeList"
           component={PracticeList}
@@ -177,7 +159,59 @@ function AppNavigator() {
           }}
 
         />
-
+        <Stack.Screen name="Quiz"
+          component={Quiz}
+          options={({ route }) =>
+          ({
+            id: route.params.id,
+            title: route.params.name,
+            timeSet: route.params.timeSet,
+            headerStyle: {
+              backgroundColor: '#78C8E8',
+            },
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 15,
+              right: 25
+            },
+          })
+          }
+        />
+        <Stack.Screen name="quizLesson"
+          component={quizLesson}
+          options={({ route }) =>
+          ({
+            idLesson: route.params.idLesson,
+            title: route.params.title,
+            headerStyle: {
+              backgroundColor: '#78C8E8',
+            },
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 15,
+              right: 25
+            },
+          })
+          }
+        />
+        <Stack.Screen name="Result"
+          component={Result}
+          options={({ route }) =>
+          ({
+            idExam: route.params.idExam,
+            title: route.params.Contest,
+            idHistory: route.params.idHistory,
+            headerStyle: {
+              backgroundColor: '#78C8E8',
+            },
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 15,
+              right: 25
+            },
+          })
+          }
+        />
       </Stack.Navigator>
     </NavigationContainer >
   );
@@ -200,19 +234,23 @@ function TabScreen() {
         }}
       />
       <TabNavigator.Screen
-        name="Translate"
+        name="Dịch"
         component={Translate}
         options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="google-translate" color={color} size={size} />
           ),
         }} />
-      <TabNavigator.Screen name="History" component={History}
+      <TabNavigator.Screen name="Lịch Sử" component={History}
         options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="history" color={color} size={size} />
           ),
+          unmountOnBlur: true
         }}
+        listeners={({ navigation }) => ({
+          blur: () => navigation.setParams({ screen: undefined }),
+        })}
       />
     </TabNavigator.Navigator>
 

@@ -53,19 +53,20 @@ export default class Login extends Component {
                                 "messageSuccess": this.state.messageSuccess,
                                 messageError: ''
                             }))
-                        const item = res.data
-                        console.log(res.data.id),
-                        AsyncStorage.setItem("token", res.data.token)
-                        AsyncStorage.setItem("id", res.data.id)
-                            
 
+                        AsyncStorage.setItem("token", res.data.token)
+                        console.log(res.data.token)
+                        AsyncStorage.setItem("id", res.data.id)
                     },
-                    
-            ).then(
-                res => {
-                    navigation.navigate('Home')
-                }
-            )
+
+                ).then(
+                    res => {
+                        this.setState({
+                            loading: false,
+                        })
+                        navigation.navigate('Home')
+                    }
+                )
                 .catch(err => {
                     console.log(err)
                     Alert.alert('Error', 'Tài khoản/ Mật khẩu không đúng',
@@ -138,6 +139,7 @@ export default class Login extends Component {
                             secureTextEntry={this.state.showPass}
                             placeholderTextColor={'rgba(68, 248, 161, 0.7)'}
                             underlineColorAndroid='transparent'
+                            value={password}
                             onChangeText={(text) => this.setState({ password: text })}
                         />
                         <TouchableOpacity style={styles.btnEye}
@@ -157,9 +159,9 @@ export default class Login extends Component {
                         onPress={() => this.checkLogin()}
                         disabled={loading}
                     >
-                        <Text style={styles.Text}>
-                            {loading ? "Loading..." : "Đăng Nhập"}
-                        </Text>
+                    <Text style={styles.Text}>
+                    {loading ? "Loading..." : "Đăng Nhập"}
+                    </Text> 
                     </TouchableOpacity>
 
                     <TouchableOpacity
@@ -167,14 +169,6 @@ export default class Login extends Component {
                         onPress={() => navigation.navigate('Register')}
                     >
                         <Text style={styles.Text}>Tạo tài khoản</Text>
-                    </TouchableOpacity>
-                    <Divider style={styles.divider}></Divider>
-                    <TouchableOpacity style={styles.btnGoogle}>
-                        <Ionicons name={'logo-google'}
-                            size={28}
-                            color={'rgba(238,0,0,0.7)'}
-                            style={styles.inputIconGoogle} />
-                        <Text style={styles.textGoogle}>Đăng nhập với Google</Text>
                     </TouchableOpacity>
                 </ImageBackground>
             </TouchableWithoutFeedback>

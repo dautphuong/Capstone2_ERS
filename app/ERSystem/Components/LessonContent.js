@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import HTMLView from 'react-native-htmlview';
 import axios from 'axios';
 import {
     StyleSheet,
@@ -51,12 +52,14 @@ export default class LessonContent extends Component {
                     renderItem={({ item }) => (
                         <View style={styles.container}>
                             <Text style={styles.title}>{item.title}</Text>
-                            <Text style={styles.content}>{item.content}</Text>
-
+                            <HTMLView
+                                value={item.content}
+                            />
                             <TouchableOpacity
                                 style={styles.btnPractice}
-                                onPress={() => navigation.navigate('Quiz', {
+                                onPress={() => navigation.navigate('quizLesson', {
                                     idLesson: item.id,
+                                    title: item.title,
                                 })}
                             >
                                 <Text style={styles.Text}>Làm Bài Tập</Text>
@@ -99,10 +102,6 @@ const styles = StyleSheet.create({
         textTransform: 'uppercase',
         marginBottom: 8,
         fontWeight: 'bold',
-    },
-    content: {
-        marginBottom: 8,
-        fontWeight: '200',
     },
     btnPractice: {
         width: 100,
