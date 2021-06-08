@@ -46,6 +46,9 @@ export default class Profile extends Component {
     }
 
     async componentDidMount() {
+        this.reload();
+    }
+    async reload (){
         let token = await AsyncStorage.getItem('token');
         let idUser = await AsyncStorage.getItem('id');
         console.log(idUser)
@@ -59,7 +62,7 @@ export default class Profile extends Component {
         } catch (error) {
             console.error(error);
         }
-    }
+    } 
     setModalVisible = (visible) => {
         this.setState({ modalVisible: visible });
     }
@@ -194,6 +197,7 @@ export default class Profile extends Component {
                     Alert.alert('Error', 'Thất bại')
                 });
             this.setModalVisible2(false)
+            this.reload();
         }
     }
     launchImageLibrary = () => {
