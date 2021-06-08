@@ -2,8 +2,21 @@ import React, { Component } from 'react';
 import { View, FlatList, Modal, Pressable, Alert, TouchableOpacity, Image, Text, StyleSheet, ImageBackground, TextInput } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as ImagePicker from "react-native-image-picker"; 
+import * as ImagePicker from "react-native-image-picker";
+import * as firebase from 'firebase';
 import storage from '@react-native-firebase/storage';
+
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCSPHnqJ20SJ2IUXhLVR-elG1JcaMCNPMg",
+    authDomain: "er-system-2b346.firebaseapp.com",
+    databaseURL: "https://er-system-2b346-default-rtdb.firebaseio.com",
+    projectId: "er-system-2b346",
+    storageBucket: "er-system-2b346.appspot.com",
+    messagingSenderId: "458386443472",
+};
+firebase.initializeApp(firebaseConfig);
+
 
 export default class Profile extends Component {
     constructor(props) {
@@ -17,16 +30,18 @@ export default class Profile extends Component {
             modalVisible1: false,
             modalVisible2: false,
             email: '',
+            password: '',
             rePassNew: '',
             passOld: '',
             passnew: '',
             showPass: true,
-            filepath: {
-                data: '',
-                uri: ''
-              },
-            fileData: '',
-            fileUri: ''
+            fileUri: '',
+            fileName: '',
+            uploading: false,
+            setUploading: false,
+            transferred: 0,
+            setTransferred: 0,
+            URL: ''
         };
     }
 
@@ -140,47 +155,58 @@ export default class Profile extends Component {
             this.setState({ showPass: true, press: false })
         }
     }
-    //Sau khi  lấy được tên file, 
-    //onclick on button upload
-    // uploadFile() {
-    //     if (this.state.file !== '') {
-    //         const uploadTask = storage.ref(`images/${this.state.file.name}`).put(this.state.file);
-    //         uploadTask.on(
-    //           "state_changed",
-    //           snapshot => {
-    //           },
-    //           error => {
-    //             console.log(error);
-    //           },
-    //           () => {
-    //             storage
-    //               .ref("images")
-    //               .child(this.state.file.name)
-    //               .getDownloadURL()
-    //               .then(url => {
-    //                 this.updateUrlBE(url);
-    //               });
-    //           }
-    //         )
-    //       }
-    //   }
-    uploadFile(){
-        const reference = storage().ref(this.state.fileUri);
-        const task = reference.putFile(pathToFile);
-        console.log(task)
-   
+    uploadimage = async (uri, fileName) => {
+        console.log("haaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+        console.log("URI:", uri)
+        const response = await fetch(uri);
+        const blod = await response.blob();
+        var ref = firebase.storage().ref().child("avatars/" + fileName);
+        //const url = await response.getDownloadURL().catch((error) => { throw error });
+        const url = await firebase.storage().ref("avatars/" + fileName).getDownloadURL();
+        this.setState({ URL: url })
+        console.log("URL:", url)
+        // console.log(response);
+        // console.log(blod);
+        return ref.put(blod);
     }
+    save = async () => {
+        const uri = this.state.fileUri;
 
+        if (uri != '') {
+            await this.uploadimage(uri)
+            const URL = this.state.URL;
+            console.log(URL)
+            const data = {
+                id: await AsyncStorage.getItem('id'),
+                avatar: URL
+            }
+            console.log(data)
+            axios.put(`/user/updateAvatar`, data)
+                .then((res) => {
+                    console.log("Status:", res.data)
+                    AsyncStorage.removeItem('token')
+                    AsyncStorage.removeItem('id')
+                    Alert.alert("thay ảnh đại diện thành công");
+                  
+                })
+                .catch((error) => {
+                    Alert.alert(error);
+                    Alert.alert('Error', 'Thất bại')
+                });
+            this.setModalVisible2(false)
+        }
+    }
     launchImageLibrary = () => {
         let options = {
             storageOptions: {
                 skipBackup: true,
-                path: 'images',
+                path: 'avatar',
             },
         };
         ImagePicker.launchImageLibrary(options, (response) => {
             console.log('Response = ', response);
             const imageUrl = response.assets[0].uri;
+            const imagefilename = response.assets[0].fileName
             console.log(imageUrl)
             if (response.didCancel) {
                 console.log('User cancelled image picker');
@@ -190,36 +216,37 @@ export default class Profile extends Component {
                 console.log('User tapped custom button: ', response.customButton);
                 alert(response.customButton);
             } else {
-                const source = { uri: response.uri };
+                const source = { uri: response.uri, fileName: response.fileName };
                 console.log('response', JSON.stringify(response));
                 this.setState({
-                    filePath: response,
-                    fileData: response.data,
-                    fileUri: imageUrl
+                    fileUri: imageUrl,
+                    fileName: imagefilename
                 });
             }
         });
     }
+
     renderFileUri() {
-        const {fileUri} =this.state
-        console.log("uri : ", fileUri);
-        if (this.state.fileUri) {
+        const { fileUri } = this.state
+        console.log("uri : ", this.state.learners);
+        if (this.state.fileUri.length > 0) {
             return <Image
-                source={{ uri:this.state.fileUri }}
+                source={{ uri: this.state.fileUri }}
                 style={styles.Image3}
             />
-          } else {
+        } else {
             return <Image
-                source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/er-system-2b346.appspot.com/o/avatar.jpg?alt=media&token=0ebb592a-5e15-42d1-8f0f-04998873d251' }}
+                source={{ uri: this.state.learners.avatar }}
                 style={styles.Image3}
             />
-          }
+        }
     }
     render() {
         const { learners } = this.state;
         const { modalVisible } = this.state;
         const { modalVisible1 } = this.state;
         const { modalVisible2 } = this.state;
+        const { password } = this.state;
         return (
             <ImageBackground source={require('../image/logins.jpg')} style={styles.ImageBackground} >
                 <FlatList
@@ -238,13 +265,13 @@ export default class Profile extends Component {
                                         <View style={styles.centeredView}>
                                             <View style={styles.modalView3}>
                                                 <Text style={styles.user5}>Ảnh đại diện</Text>
-                                                <View>
+                                                <View >
                                                     {this.renderFileUri()}
                                                 </View>
                                                 <View style={styles.save1}>
                                                     <Text style={styles.textStyle}
-                                                        onPress={() =>this.launchImageLibrary()}>chọn ảnh</Text>
-                                                    <Text style={styles.textStyle} onPress={() =>this.uploadFile()}>Lưu</Text>
+                                                        onPress={() => this.launchImageLibrary()}>chọn ảnh</Text>
+                                                    <Text style={styles.textStyle} onPress={() => this.save()}>Lưu</Text>
                                                     <Pressable
                                                         onPress={() => this.setModalVisible2(!modalVisible2)}
                                                     >
@@ -259,7 +286,9 @@ export default class Profile extends Component {
                                         <View>
                                             <View style={styles.avatar}>
                                                 <Image style={styles.Image2}
-                                                    source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/er-system-2b346.appspot.com/o/avatar.jpg?alt=media&token=0ebb592a-5e15-42d1-8f0f-04998873d251' }} />
+                                                    source={{ uri: item.avatar }}
+
+                                                />
                                             </View>
                                         </View>
                                     </Pressable>
