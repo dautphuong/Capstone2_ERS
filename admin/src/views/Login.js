@@ -27,9 +27,8 @@ class Login extends React.Component {
                     window.location = "/admin/dashboard";
                 }, 1000)
             }
-            else {
-                alert("Username or password incorrect");
-            }
+            if(res.status === 400)
+                alert("User and password incorrect")
         });
     }
 

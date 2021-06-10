@@ -17,6 +17,7 @@ import {
 } from "react-bootstrap";
 import API from '../api';
 import UpdateReport from './Notification/UpdateReport'
+import { LaptopWindowsRounded } from "@material-ui/icons";
 class Notifications extends React.Component {
   constructor(props) {
     super(props);
@@ -104,6 +105,7 @@ class Notifications extends React.Component {
           answerD: "",
         });
         this.getAllNotifications();
+        window.location.reload;
       }
     });
   }

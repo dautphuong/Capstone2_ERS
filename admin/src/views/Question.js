@@ -3,7 +3,7 @@ import { DataGrid } from "@material-ui/data-grid";
 import Grid from "@material-ui/core/Grid";
 import API from "../api";
 import ModalQuestion from "./Question/ModalQuestion";
-
+import InputLabel from '@material-ui/core/InputLabel';
 import {
   Badge,
   Card,
@@ -19,15 +19,24 @@ import Button from "@material-ui/core/Button";
 // react-bootstrap components
 import { storage } from "../util/firebase_connect";
 import ImportFile from './Question/ImportFile'
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import NativeSelect from '@material-ui/core/NativeSelect';
+import InputBase from '@material-ui/core/InputBase';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 class Question extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       dataQuestion: [],
+      dataAllQuestion: [],
+      dataLesson: [],
       addModalShow: false,
       addModalTypeQuestion: true,
       addModalFile: false,
+      dataView: [],
       idTopicFile: "",
+      type: '',
       file: '',
       selectedFile: "",
       answerA: "",
@@ -46,8 +55,10 @@ class Question extends React.Component {
     API.get(`question/findAll`).then((res) => {
       const dataQuestion = res.data;
       this.setState({ dataQuestion });
+      this.setState({ dataAllQuestion: dataQuestion })
     });
   }
+
   //  onFileChange = async (e) => {
   //   const file = e.target.files[0];
   //   const storageRef = app.storage().ref();
@@ -57,6 +68,7 @@ class Question extends React.Component {
   // };
   componentDidMount() {
     this.getAllQuestion();
+    this.getAllLesson();
   }
   DeleteQuestion(id) {
     const dataQuestion = [...this.state.dataQuestion];
@@ -71,6 +83,14 @@ class Question extends React.Component {
         this.getAllQuestion();
       });
     }
+  }
+  getAllLesson() {
+    API.get(`topic/findAll`)
+      .then(res => {
+        const dataLesson = res.data;
+        this.setState({ dataLesson });
+        console.log(res.data)
+      })
   }
   validate() {
     if (!this.state.data.answerRight) {
@@ -106,6 +126,20 @@ class Question extends React.Component {
       return false;
     }
     return true
+  }
+  handleChange = (e) => {
+    this.setState({ type: e.target.value })
+    const type = e.target.value;
+    console.log("Type:",type)
+    if (type === '') {
+      this.setState({ dataQuestion: this.state.dataAllQuestion })
+    }
+    else {
+     const dataE = this.state.dataAllQuestion.filter(data => data.nameTopic === type)
+     console.log("Data exam: " , dataE)
+      this.setState({dataQuestion : dataE})
+      console.log("Exam:", this.state.dataQuestion);
+    }
   }
   createQuestion() {
     // if (this.state.file !== '') {
@@ -164,6 +198,7 @@ class Question extends React.Component {
             answerC: "",
             answerD: "",
           });
+          window.location.reload;
           this.getAllQuestion();
         }
       });
@@ -205,6 +240,7 @@ class Question extends React.Component {
           answerC: "",
           answerD: "",
         });
+        window.location.reload;
         this.getAllQuestion();
       }
     });
@@ -272,11 +308,12 @@ class Question extends React.Component {
     let ViewDataTable = this.state.dataQuestion.map((data, i) => {
       let ViewAnswerChooses = data.answerChooses.map((answer) => {
         return (<li
-         // style={{ "list-style-type": "none" }}
+        // style={{ "list-style-type": "none" }}
         >
           {answer}
         </li>)
       });
+
       //console.log(data.answerChooses)
       return (
         <tr>
@@ -313,6 +350,16 @@ class Question extends React.Component {
         </tr>
       );
     });
+    const useStyles = makeStyles((theme) => ({
+      margin: {
+        margin: theme.spacing(1),
+      },
+    }));
+    const ViewTopic = this.state.dataLesson.map((data) => {
+      return (
+        <option value={data.name}>{data.name}</option>
+      )
+    })
     return (
       <Container fluid>
         <Row>
@@ -320,7 +367,22 @@ class Question extends React.Component {
             <Card className="strpied-tabled-with-hover">
               <Card.Header>
                 <Card.Title as="h4">List of question</Card.Title>
-
+                <FormControl className={useStyles.margin}>
+                  <InputLabel htmlFor="demo-customized-select-native">Type</InputLabel>
+                  <NativeSelect
+                    id="demo-customized-select-native"
+                    value={this.state.type}
+                    onChange={(e) => this.handleChange(e)}
+                    //input={<BootstrapInput />}
+                    style={{ width: "300px" }}
+                  >
+                    <option aria-label="None" value="" />
+                    {ViewTopic}
+                    {/* <option value="exam">Exam</option>
+                    <option value="lesson">Lesson</option>
+                    <option value='practice'>Practice</option> */}
+                  </NativeSelect>
+                </FormControl>
                 <Button
                   variant="contained"
                   color="primary"

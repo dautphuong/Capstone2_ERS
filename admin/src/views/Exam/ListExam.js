@@ -28,12 +28,13 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import InputBase from '@material-ui/core/InputBase';
+import DownloadLink from "react-download-link";
 //import CreateExam from "./Exam/CreateExam";
 
 function ListExam() {
   const [dataExam, setDataExam] = useState([]);
-  const [dataViewExam,setDataViewExam]= useState([]);
-  const [type,setType] = useState('');
+  const [dataViewExam, setDataViewExam] = useState([]);
+  const [type, setType] = useState('');
   const getAllApi = () => {
     API.get(`exam/findExamLesson `).then((res) => {
       const dataExam = res.data;
@@ -59,11 +60,28 @@ function ListExam() {
       });
     }
   };
-  const UpdateExam = (id,type) => {
+  const UpdateExam = (id, type) => {
     sessionStorage.setItem("idExam", id);
     sessionStorage.setItem("type", type);
     window.location = "/admin/exam/updateExam";
   }
+  // const ExportExam = (id) => {
+  //   console.log("idExam:", id)
+  //   API.get(`exam/downDoc/${id}`)
+  //     .then((res) => {
+  //       console.log("data file", res.data)
+  //       return res.data;
+  //     })
+  // }
+  const getDataFromURL = (id) => new Promise((resolve, reject) => {
+    setTimeout(() => {
+      fetch(`https://ersystems.herokuapp.com/exam/downDoc/${id}`)
+        .then(response => response.text())
+        .then(data => {
+          resolve(data)
+        });
+    });
+  }, 2000);
   // let { path, url } = useRouteMatch();
   const ViewDataTable = dataViewExam.map((data, i) => {
     return (
@@ -76,38 +94,54 @@ function ListExam() {
           <i
             className="zmdi zmdi-edit"
             style={{ width: "10%", marginRight: "10px" }}
-            onClick={() => UpdateExam(data.id,data.type)}
+            onClick={() => UpdateExam(data.id, data.type, data.data)}
           />
           <i
             className="zmdi zmdi-delete"
             style={{ width: "10%", marginRight: "10px" }}
             onClick={() => DeleteExam(data.id)}
           />
+          {data.type !== 'lesson' ? (
+            // <i class="zmdi zmdi-download">
+            //</i>
+            <DownloadLink
+              label="Export"
+              filename="fileName.doc"
+              style={{
+                margin: "5px 5px 0px 0px  ",
+                textDecoration: "underline",
+                color: "blue",
+                cursor: "pointer"
+              }}
+              exportFile={() => Promise.resolve(getDataFromURL(data.id))}
+            />
+          ) : ""}
+
         </td>
-      </tr>
+      </tr >
     );
   });
   const getAllDataExamAndPractice = (type) => {
     API.get(`exam/findByType/${type}`).then((res) => {
       const dataExam = res.data;
-     // setDataExam(dataExam);
+      // setDataExam(dataExam);
       setDataViewExam(dataExam);
     });
   };
-  
-  const  handleChange = (e) => {
+
+  const handleChange = (e) => {
     setType(e.target.value);
-    let type= e.target.value;  
+    let type = e.target.value;
     let dataE = dataExam;
-    console.log({dataExam})
-    if(type===''){
+    console.log({ dataExam })
+    if (type === '') {
       setDataViewExam(dataExam);
       console.log("haha : ", dataViewExam);
     }
-    else{
+    else {
       dataE = dataE.filter(data => data.type === type)
       setDataViewExam(dataE)
-      console.log("Exam:",dataViewExam);
+      console.log("Exam:", dataViewExam);
     }
   };
 
@@ -133,7 +167,7 @@ function ListExam() {
                     value={type}
                     onChange={handleChange}
                     //input={<BootstrapInput />}
-                    style={{width:"300px"}}
+                    style={{ width: "300px" }}
                   >
                     <option aria-label="None" value="" />
                     <option value="exam">Exam</option>

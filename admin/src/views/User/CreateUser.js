@@ -71,6 +71,7 @@ class CreateUser extends React.Component {
                         id="standard-textarea"
                         label="UserName"
                         placeholder="UserName"
+                 
                         name="userName"
                         // value={this.props.data.title}
                         style={{ marginTop: "15px", width: '30%' }}
@@ -83,11 +84,14 @@ class CreateUser extends React.Component {
                         label="Password"
                         placeholder="Password"
                         name="password"
+                        type="password"
+                       //hintText="Password"
                         // value={this.props.data.title}
                         style={{ marginTop: "15px", width: '30%', marginLeft: '120px' }}
                         onChange={(e) => this.props.handleChangeInput(e)}
                         multiline
                         on
+                        required
                     />
                     <br />
                     <TextField
@@ -106,6 +110,7 @@ class CreateUser extends React.Component {
                         label="Re-Password"
                         placeholder="Re-Password"
                         name="rePassword"
+                        type="Password"
                         // value={this.props.data.title}
                         style={{ marginTop: "15px", width: '30%', marginLeft: '120px' }}
                         onChange={(e) => this.props.handleChangeInput(e)}
