@@ -48,7 +48,7 @@ export default class Profile extends Component {
     async componentDidMount() {
         this.reload();
     }
-    async reload (){
+    async reload() {
         let token = await AsyncStorage.getItem('token');
         let idUser = await AsyncStorage.getItem('id');
         console.log(idUser)
@@ -62,7 +62,7 @@ export default class Profile extends Component {
         } catch (error) {
             console.error(error);
         }
-    } 
+    }
     setModalVisible = (visible) => {
         this.setState({ modalVisible: visible });
     }
@@ -96,7 +96,7 @@ export default class Profile extends Component {
         console.log("Email: ", this.state.email)
         const emailUpdateObject = learnerInfo[0];
         emailUpdateObject['email'] = this.state.email;
-        if (this.state.email !== '') {
+        if (this.state.email !== '' && this.state.email.includes("@")) {
             console.log("data payload 123: ", emailUpdateObject);
             axios.put('/user/updateEmail', emailUpdateObject)
                 .then(
@@ -107,13 +107,11 @@ export default class Profile extends Component {
 
                 .catch(err => {
                     console.log(err)
-                    Alert.alert('Error', 'Email không hợp lệ',
-                    )
                 })
             this.setModalVisible(false)
         } else {
-            Alert.alert('Error', 'Vui lòng điền đây đủ thông tin', [{
-                text: 'Oke'
+            Alert.alert('Error', 'Email không hợp lệ', [{
+                text: 'Làm lại'
             }])
         }
     }
@@ -190,7 +188,7 @@ export default class Profile extends Component {
                     AsyncStorage.removeItem('token')
                     AsyncStorage.removeItem('id')
                     Alert.alert("thay ảnh đại diện thành công");
-                  
+
                 })
                 .catch((error) => {
                     Alert.alert(error);

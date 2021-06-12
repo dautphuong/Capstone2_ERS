@@ -68,7 +68,7 @@ export default class Register extends Component {
                 .then(res => {
                     console.log(res.data)
                     if (res.data === "Account already exists") {
-                        Alert.alert("'Error', 'Vui lòng Tên tài khoản và Mật khẩu'")
+                        Alert.alert("'Error', 'Tên tài khoản đã được sử dụng'")
                     } else {
                         Alert.alert('Bạn đã đăng ký thành công',
                             navigation.navigate('Login'),

@@ -134,6 +134,7 @@ function AppNavigator() {
             headerStyle: {
               backgroundColor: '#78C8E8',
             },
+            headerShown: false,
             headerTitleStyle: {
               fontWeight: 'bold',
               fontSize: 15,
@@ -169,6 +170,7 @@ function AppNavigator() {
             headerStyle: {
               backgroundColor: '#78C8E8',
             },
+            headerShown: false,
             headerTitleStyle: {
               fontWeight: 'bold',
               fontSize: 15,
@@ -186,6 +188,7 @@ function AppNavigator() {
             headerStyle: {
               backgroundColor: '#78C8E8',
             },
+            headerShown: false,
             headerTitleStyle: {
               fontWeight: 'bold',
               fontSize: 15,

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import axios from 'axios';
-import CountDown from 'react-native-countdown-component';
 import {
     View,
     Text,
@@ -117,7 +116,7 @@ export default class quizLesson extends Component {
                             text: 'Xem đáp án', onPress: () => {
                                 this.setState(
                                     {
-                                        startResult: false,
+                                        startResult: true,
                                     }
                                 )
                             }
@@ -210,7 +209,6 @@ export default class quizLesson extends Component {
         if (startResult) {
             return (
                 <ImageBackground source={quiz} style={styles.container}>
-
                     <ScrollView>
                         {contentPractice.map((v, i) => {
                             return (

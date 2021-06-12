@@ -151,7 +151,7 @@ export default class Contest extends Component {
             return (
                 Alert.alert(
                     'Số câu đúng của bạn: ' + this.state.correct,
-                    'Chúc mừng bạn ❤❤❤',
+                    'Đáp án sẽ có bên phần Lịch Sử khi cuộc thi kết thúc',
                     [
                         {
                             text: 'Kết Thúc', onPress: () => {
@@ -168,7 +168,7 @@ export default class Contest extends Component {
             return (
                 Alert.alert(
                     'Số câu đúng của bạn: ' + this.state.correct,
-                    'Chúc mừng bạn 💪💪💪',
+                    'Đáp án sẽ có bên phần Lịch Sử khi cuộc thi kết thúc',
                     [
                         {
                             text: 'Kết Thúc', onPress: () => {
