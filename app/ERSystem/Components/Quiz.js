@@ -120,7 +120,7 @@ class StartQuiz extends React.Component {
                             text: 'Xem đáp án', onPress: () => {
                                 this.setState(
                                     {
-                                        startResult: false,
+                                        startResult: true,
                                     }
                                 )
                             }

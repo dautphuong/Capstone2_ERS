@@ -11,9 +11,6 @@ import {
     Image,
     Dimensions,
 } from "react-native";
-import DialogInput from "react-native-dialog-input";
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import RadioForm from 'react-native-simple-radio-button';
 import bgImage from '../image/logins.jpg';
 import Learn from '../image/startlearn.jpg';
 import logo from '../image/English_REVIEW.png';

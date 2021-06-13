@@ -42,8 +42,7 @@ export default class CalendarExam extends Component {
     checkOpen(content) {
         var timeStart = (content.contest.timeStart.split(' ')[0].split('-')).concat(content.contest.timeStart.split(' ')[1].split(':'));
         var timeEnd = (content.contest.timeEnd.split(' ')[0].split('-')).concat(content.contest.timeEnd.split(' ')[1].split(':'));
-        var d1 = new Date(timeStart[0], timeStart[1] - 1, timeStart[2], timeStart[3], timeStart[4], timeStart[5]);
-        var d2 = new Date(timeEnd[0], timeEnd[1] - 1, timeEnd[2] - 1, timeEnd[3], timeEnd[4], timeEnd[5]);
+        var d2 = new Date(timeEnd[0], timeEnd[1] - 1, timeEnd[2], timeEnd[3] - 10.5, timeEnd[4], timeEnd[5]);
         var now = new Date();
         console.log(d2);
         console.log(now);
@@ -76,7 +75,8 @@ export default class CalendarExam extends Component {
                             >
                                 <View style={styles.container}>
                                     <Text style={styles.title}>{item.contest.title}</Text>
-                                    <Text style={styles.title}>Thời gian nộp bài: {item.createOnUTC}</Text>
+                                    {/* <Text style={styles.title}>Thời gian nộp bài: {item.createOnUTC}</Text> */}
+                                    <Text style={styles.title}>Thời gian kết thúc cuộc thi: {item.contest.timeEnd}</Text>
                                     <Image style={styles.bookImage} source={contest}></Image>
                                 </View>
                             </TouchableOpacity>
