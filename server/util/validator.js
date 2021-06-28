@@ -52,6 +52,7 @@ let validateRegisterUser = () => {
       check('url').not().isEmpty().withMessage('url does not Empty'),
     ]
   }
+  
 
   let validate = {
     validateRegisterUser:validateRegisterUser,

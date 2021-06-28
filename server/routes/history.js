@@ -2,6 +2,8 @@ const router = require('express').Router();
 const History = require('../models/history');
 const { validationResult } = require('express-validator');
 const { validate } = require('../util/validator');
+const snapHistory = require('../util/findHistoryContest')
+
 /**
  * @swagger
  * components:
@@ -210,6 +212,38 @@ const { validate } = require('../util/validator');
 router.get('/findByid/:id', function(req, res) {
     const history = new History();
     history.findById(req.params.id, function(data) {
+        res.send(data)
+    })
+});
+
+
+/**
+ * @swagger
+ * /history/findHistoryByUser/{idUser}:
+ *   get:
+ *     summary: danh sách History theo id user
+ *     tags: [History]
+ *     parameters:
+ *       - in: path
+ *         name: idUser
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The id user 
+ *     responses:
+ *       200:
+ *         description: The history description by user
+ *         contens:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/History'
+ *       404:
+ *         description: The user was not found
+ */
+ router.get('/findHistoryByUser/:user', function(req, res) {
+    const history = new History();
+    history.findHistoryByUser(req.params.user, function(data) {
+        snapHistory.resetArr();
         res.send(data)
     })
 });

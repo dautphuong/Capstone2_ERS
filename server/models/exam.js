@@ -1,6 +1,9 @@
 const firebase = require('../util/firebase_connect');
 const snapArray = require('../util/snapshot_to_array');
 const snapType = require('../util/findAllExam');
+const download=require('../util/exportFile')
+var fs = require('fs');
+
 module.exports = class Exam {
     title; //String
     type; //Bài tập - Thực hành - Thi
@@ -66,6 +69,10 @@ module.exports = class Exam {
     }
 
     update(req, callback) {
+        const file='file/f'+req.id+'.doc'
+        if (fs.existsSync(file)) {
+            fs.unlinkSync(file)
+        }
         firebase.database().ref("exams/" + req.id).once("value").then(function(snapshot) {
             if (snapshot.exists()) {
                 firebase.database().ref("exams/" + req.id).update({
@@ -73,15 +80,21 @@ module.exports = class Exam {
                     type: req.type,
                     timeSet: req.timeSet, 
                 });
-                if(req.listQuestion!=null){
-
-                    req.listQuestion.forEach(function(item){
-                        firebase.database().ref("exam-question/").push().set({
-                            idExam: req.id,
-                            idQuestion: item
+                firebase.database().ref("exam-question/").once("value").then(function(snapshot) {
+                    if (snapshot.exists()) {
+                        snapArray.snap_array(snapshot).filter(value => value.idExam == req.id).forEach(function(item){
+                            firebase.database().ref("exam-question/" + item.id).remove();
                         });
-                    });
-                    }
+                    } 
+                    if(req.listQuestion!=null){
+                        req.listQuestion.forEach(function(item){
+                            firebase.database().ref("exam-question/").push().set({
+                                idExam: req.id,
+                                idQuestion: item
+                            });
+                        });
+                        }
+                });
                 callback("successfull");
             } else {
                 callback("Data does not exist");
@@ -149,5 +162,12 @@ module.exports = class Exam {
 
     findExamLessonHaveType(callback) {
         callback(snapType.findAllType());
+    }
+
+    downFiles(idExam, callback) {
+        firebase.database().ref("exam-question").orderByChild("idExam").equalTo(idExam).once('value')
+        .then(function (snapshot) {
+            callback(download.downDoc(snapshot,idExam));
+        });
     }
 }

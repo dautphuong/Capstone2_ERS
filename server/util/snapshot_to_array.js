@@ -1,7 +1,7 @@
 const firebase = require("./firebase_connect");
 var returnArr2=[];
 var returnArr3=[];
-
+var returnArr4=[];
 module.exports = {
     snap_array: function (snapshot) {
         var returnArr = [];
@@ -51,6 +51,22 @@ module.exports = {
 
         return questionArr;
     },
+    snap_arrInfoQuestionbyExam: function (snapshot) {
+
+        snapshot.forEach(function (childSnapshot) {
+            var item = childSnapshot.val();
+            firebase.database().ref("questions/" + item.idQuestion).once("value").then(function(snapshot) {
+                if (snapshot.exists()) {
+                    var item = snapshot.val();
+                    item.id = snapshot.key;
+                    returnArr4.push(item);                  
+                } 
+            });
+        });
+
+        return returnArr4;
+    },
+
     snap_type_lesson: function (snapshot) {
         var lessonArr = [];
 
@@ -68,8 +84,10 @@ module.exports = {
     },
     resetArr2:function(){
         returnArr3=[];
+    },
+    resetArr3:function(){
+        returnArr4=[];
     }
-    
 }
 var getNameTopicQ = (item, nameTopic) => {
     item.nameTopic = nameTopic;

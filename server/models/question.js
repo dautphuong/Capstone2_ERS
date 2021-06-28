@@ -183,11 +183,17 @@ module.exports = class Quetion {
             callback(snapArray.snap_arrQuestionbyExam(snapshot));
         });
     }
-
     findQuestionByIdLesson(idLesson, callback) {
         firebase.database().ref("lesson-question").orderByChild("idLesson").equalTo(idLesson).once('value')
         .then(function (snapshot) {
             callback(snapArray.snap_arrQuestionbyExam(snapshot));
+        });
+    }
+
+    findInfoQuestionByExam(idExam, callback) {
+        firebase.database().ref("exam-question").orderByChild("idExam").equalTo(idExam).once('value')
+        .then(function (snapshot) {
+            callback(snapArray.snap_arrInfoQuestionbyExam(snapshot));
         });
     }
 }
