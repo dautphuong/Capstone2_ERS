@@ -43,7 +43,7 @@ module.exports=class History{
     findByUser(idUser, callback) {
         firebase.database().ref("historys/").once("value").then(function(snapshot) {
             if (snapshot.exists()) {
-                callback(snapHistory.snap_array(snapshot).filter(value => value.idUser == idUser));
+                callback(snapArray.snap_array(snapshot).filter(value => value.idUser == idUser));
             } else {
                 callback("Data does not exist");
             }
@@ -83,13 +83,13 @@ module.exports=class History{
             }
         });
     }
-
+    
     findHistoryByUser(idUser, callback) {
         firebase.database().ref("historys/").once("value").then(function(snapshot) {
             if (snapshot.exists()) {
                 callback(snapHistory.snap_array(snapshot).filter(value => value.idUser == idUser));
             } else {
-                callback("Data does not exist");
+                callback([]);
             }
         });
     }

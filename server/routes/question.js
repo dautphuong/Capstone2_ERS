@@ -395,7 +395,7 @@ router.delete("/delete/:id", function(req, res) {
  *         description: The id exam 
  *     responses:
  *       200:
- *         description: The questions description by exam
+ *         description: The questions description by lesson
  *         contens:
  *           application/json:
  *             schema:
@@ -439,5 +439,37 @@ router.delete("/delete/:id", function(req, res) {
         res.send(data)
     })
 });
+
+/**
+ * @swagger
+ * /question/findInfoQuestionByExam/{idExam}:
+ *   get:
+ *     summary: danh sách question theo exam
+ *     tags: [Question]
+ *     parameters:
+ *       - in: path
+ *         name: idExam
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The id exam 
+ *     responses:
+ *       200:
+ *         description: The questions description by lesson
+ *         contens:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Question'
+ *       404:
+ *         description: The user was not found
+ */
+ router.get('/findInfoQuestionByExam/:idExam', function(req, res) {
+    const question = new Question();
+    question.findInfoQuestionByExam(req.params.idExam, function(data) {
+        snapArray.resetArr3();
+        res.send(data)
+    })
+});
+
 
 module.exports = router;

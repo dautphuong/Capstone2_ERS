@@ -238,4 +238,8 @@ module.exports = class User {
             }
         });
     }
+
+    getPass(iduser,callback){
+        
+    }
 }

@@ -291,5 +291,39 @@ router.delete("/delete/:id", function(req, res) {
         res.send(data)
     })
 });
+
+/**
+ * @swagger
+ * /exam/downDoc/{id}:
+ *   get:
+ *     summary: down FIle
+ *     tags: [Exam]
+ *     parameters: 
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The id
+ *     responses:
+ *       200:
+ *         description: The file by id Exam
+ *         contens:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Exam'
+ *       404:
+ *         description: The user was not found
+ */
+ router.get('/downDoc/:id', function(req, res) {
+    const exam = new Exam();
+    try {
+        exam.downFiles(req.params.id, function(data) {
+            res.download(data)
+        });
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});
 module.exports = router;
 //ok

@@ -23,7 +23,7 @@ const swaggerSpec = swaggerJsdoc({
           "A sample project to understand how easy it is to document and Express API",
       },
       servers: [{
-                    url: "http://localhost:3000",
+                    url: "https://ersystems.herokuapp.com",
                 }, ],
     },
      components: {
